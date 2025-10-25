@@ -1,0 +1,10 @@
+.nav_hero
+{
+    background-color: blueviolet;
+    padding: 10px;
+
+}
+.nav_hero:hover
+{
+    color: black;
+}
