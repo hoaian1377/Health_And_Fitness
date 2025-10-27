@@ -1,154 +1,277 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
+/* Reset cơ bản */
+* {
   margin: 0;
   padding: 0;
-  background-color: #f8f9fa;
+  box-sizing: border-box;
 }
 
-/* ===== THANH MENU ===== */
-.nav_hero {
-  background-color: #5b31ff;
-  padding: 15px 0;
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #5b3ff6, #00b4ff);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  position: relative;
+  padding: 15px 50px;
+  background: linear-gradient(135deg, #5b3ff6, #00b4ff);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-.nav_hero a {
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.logo span span {
+  color: #ffea00;
+}
+
+.logo img {
+  width: 40px;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.menu a {
   color: #fff;
   text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.menu a:hover {
+  color: #ffea00;
+}
+
+/* Nút đăng nhập / đăng ký */
+.btn-login, .btn-register {
+  padding: 8px 14px;
+  border-radius: 8px;
   font-weight: 600;
-  font-size: 17px;
-  transition: 0.3s;
 }
 
-.nav_hero a:hover {
-  color: yellow;
+.btn-login {
+  background-color: #fff;
+  color: #5b3ff6;
 }
 
-/* User section */
-.nav_user {
-  position: absolute;
-  right: 30px;
-  top: 50%;
-  transform: translateY(-50%);
+.btn-login:hover {
+  background-color: #ffea00;
+  color: #222;
 }
 
-.nav_user span {
-  color: #fff;
-  margin-right: 10px;
-  font-weight: bold;
-}
-
-.logout-btn {
-  background: transparent;
+.btn-register {
   border: 2px solid #fff;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
+  color: #fff;
 }
 
-.logout-btn:hover {
-  background: white;
-  color: #5b31ff;
+.btn-register:hover {
+  background-color: #fff;
+  color: #5b3ff6;
 }
 
-/* ===== HERO SECTION ===== */
+/* Hero */
 .hero {
   text-align: center;
   padding: 100px 20px;
-  background: linear-gradient(135deg, #5b31ff, #00c6ff);
-  color: white;
+  background: linear-gradient(135deg, #5b3ff6, #00b4ff);
 }
 
-.hero h1 {
-  font-size: 42px;
+.hero-content h1 {
+  font-size: 2.4rem;
   font-weight: 700;
 }
 
-.hero h1 span {
-  color: #ffdf00;
+.hero-content span {
+  color: #ffea00;
 }
 
-.hero p {
-  margin-top: 10px;
-  font-size: 18px;
+.hero-content p {
+  margin-top: 15px;
+  font-size: 1.1rem;
 }
 
 .btn-primary {
   display: inline-block;
   margin-top: 25px;
-  background: white;
-  color: #5b31ff;
-  padding: 12px 24px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
+  padding: 12px 25px;
+  background: #fff;
+  color: #5b3ff6;
+  font-weight: 700;
+  border-radius: 25px;
   transition: 0.3s;
 }
 
 .btn-primary:hover {
-  background: #ffdf00;
-  color: #333;
+  background: #ffea00;
+  color: #222;
 }
 
-/* ===== FEATURES ===== */
-.features {
+/* Footer */
+footer {
   text-align: center;
-  padding: 80px 20px;
-  background: #fff;
-}
-
-.features h2 {
-  font-size: 32px;
-  color: #333;
-  margin-bottom: 40px;
-}
-
-.feature-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 30px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.feature-item {
-  background: #f5f5ff;
   padding: 25px;
-  border-radius: 12px;
+  background-color: rgba(0,0,0,0.1);
+  color: #f8f8f8;
+}
+
+/* Responsive */
+.menu-toggle {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menu {
+    position: absolute;
+    top: 65px;
+    right: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #5b3ff6, #00b4ff);
+    flex-direction: column;
+    text-align: center;
+    display: none;
+  }
+
+  .menu.show {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .btn-primary {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+}
+/* --- User menu khi đã đăng nhập --- */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 25px;
   transition: 0.3s;
 }
 
-.feature-item:hover {
-  background: #eae8ff;
-  transform: translateY(-5px);
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
-.feature-item img {
-  width: 80px;
-  margin-bottom: 15px;
+.user-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
 }
 
-.feature-item h3 {
-  color: #4b2eff;
-  margin-bottom: 10px;
+.user-info span {
+  font-weight: 600;
+  color: #fff;
 }
 
-.feature-item p {
-  color: #555;
-  font-size: 15px;
+.logout-form {
+  display: inline;
 }
 
-/* ===== FOOTER ===== */
-footer {
-  text-align: center;
-  background: #5b31ff;
-  color: white;
-  padding: 20px 0;
-  font-size: 15px;
+.logout-btn {
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: #fff;
+  color: #5b3ff6;
+}
+
+/* Responsive chỉnh lại user info cho mobile */
+@media (max-width: 768px) {
+  .user-menu {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .user-info {
+    justify-content: center;
+  }
+}
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-login,
+.btn-register {
+  font-weight: 600;
+  border-radius: 25px;
+  padding: 8px 18px;
+  transition: 0.3s;
+}
+
+/* Nút đăng nhập nổi bật hơn */
+.btn-login {
+  background: #ffea00;
+  color: #222;
+  border: none;
+}
+
+.btn-login:hover {
+  background: #fff;
+  color: #5b3ff6;
+}
+
+/* Nút đăng ký trong suốt */
+.btn-register {
+  border: 2px solid #fff;
+  color: #fff;
+}
+
+.btn-register:hover {
+  background: #fff;
+  color: #5b3ff6;
+}
+
+/* Responsive cho auth buttons */
+@media (max-width: 768px) {
+  .auth-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

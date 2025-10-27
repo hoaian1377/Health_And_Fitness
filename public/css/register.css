@@ -1,62 +1,134 @@
+/* ======= Toàn trang ======= */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #fafafa;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #5b3ff6, #00b4ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   margin: 0;
-  padding: 0;
 }
 
+/* ======= Khung form ======= */
 .register-container {
-  width: 450px;
-  margin: 100px auto;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 30px;
+  width: 400px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 40px 30px;
   text-align: center;
+  animation: fadeIn 0.5s ease;
 }
 
+/* ======= Tiêu đề ======= */
 .register-container h2 {
-  color: rgb(44, 10, 236);
+  color: #2a2ae6;
+  font-weight: 700;
   margin-bottom: 25px;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
+/* ======= Ô nhập ======= */
+.input-group {
+  position: relative;
+  margin: 12px 0;
 }
 
+.input-group .icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #6b6fb1;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 14px 12px 42px; /* chừa chỗ cho icon */
+  border: 1px solid #cdd2ff;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #f9faff;
+  box-sizing: border-box;
+}
+
+.input-group input:focus {
+  border-color: #3b4bff;
+  box-shadow: 0 0 6px rgba(59, 75, 255, 0.3);
+  background: #fff;
+}
+
+/* ======= Nút ======= */
 button {
   width: 100%;
   padding: 12px;
-  background-color: rgb(13, 20, 210);
+  background: linear-gradient(135deg, #3b4bff, #2a2ae6);
   color: white;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
   transition: all 0.3s ease;
 }
 
 button:hover {
-  background-color: rgb(54, 10, 230);
+  background: linear-gradient(135deg, #2a2ae6, #1b1bbf);
+  transform: scale(1.03);
 }
 
+/* ======= Liên kết ======= */
 p {
-  margin-top: 15px;
-  color: #555;
+  margin-top: 18px;
+  color: #666;
+  font-size: 14px;
 }
 
 a {
-  color: rgb(9, 9, 234);
+  color: #2a2ae6;
+  font-weight: 600;
   text-decoration: none;
 }
 
 a:hover {
   text-decoration: underline;
+}
+
+/* ======= Hộp báo lỗi ======= */
+.error-box {
+  background: #ffe5e5;
+  color: #c0392b;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* ======= Hiệu ứng xuất hiện ======= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ======= Responsive cho iPhone ======= */
+@media (max-width: 480px) {
+  .register-container {
+    width: 90%;
+    padding: 25px 20px;
+  }
+
+  .register-container h2 {
+    font-size: 20px;
+  }
+
+  input, button {
+    font-size: 15px;
+  }
+
+  .input-group .icon {
+    font-size: 16px;
+    left: 12px;
+  }
 }
