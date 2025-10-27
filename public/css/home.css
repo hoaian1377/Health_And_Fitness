@@ -1,0 +1,154 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+/* ===== THANH MENU ===== */
+.nav_hero {
+  background-color: #5b31ff;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.nav_hero a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 17px;
+  transition: 0.3s;
+}
+
+.nav_hero a:hover {
+  color: yellow;
+}
+
+/* User section */
+.nav_user {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nav_user span {
+  color: #fff;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 2px solid #fff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: white;
+  color: #5b31ff;
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+  background: linear-gradient(135deg, #5b31ff, #00c6ff);
+  color: white;
+}
+
+.hero h1 {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.hero h1 span {
+  color: #ffdf00;
+}
+
+.hero p {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.btn-primary {
+  display: inline-block;
+  margin-top: 25px;
+  background: white;
+  color: #5b31ff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background: #ffdf00;
+  color: #333;
+}
+
+/* ===== FEATURES ===== */
+.features {
+  text-align: center;
+  padding: 80px 20px;
+  background: #fff;
+}
+
+.features h2 {
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+.feature-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.feature-item {
+  background: #f5f5ff;
+  padding: 25px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.feature-item:hover {
+  background: #eae8ff;
+  transform: translateY(-5px);
+}
+
+.feature-item img {
+  width: 80px;
+  margin-bottom: 15px;
+}
+
+.feature-item h3 {
+  color: #4b2eff;
+  margin-bottom: 10px;
+}
+
+.feature-item p {
+  color: #555;
+  font-size: 15px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  background: #5b31ff;
+  color: white;
+  padding: 20px 0;
+  font-size: 15px;
+}
