@@ -1,3 +1,5 @@
+@extends('base')
+@section('content')
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -10,37 +12,6 @@
 
 </head>
 <body>
-    <!-- Thanh điều hướng -->
-    <nav class="navbar">
-        <!-- Logo -->
-        <a href="#" class="logo">
-            <img src="https://cdn-icons-png.flaticon.com/512/2966/2966486.png" alt="Logo">
-            <span>Health<span>Fit</span></span>
-        </a>
-
-        <!-- Nút mở menu trên mobile -->
-        <div class="menu-toggle" id="menu-toggle">
-            <i class="fa-solid fa-bars"></i>
-        </div>
-
-        <!-- Menu chính -->
-        <div class="menu" id="menu">
-            <a href="{{ route('home.page') }}">Trang Chủ</a>
-            <a href="{{ route('health.page') }}">Sức Khỏe</a>
-            <a href="{{ route('fitness.page') }}">Tập Luyện</a>
-            <a href="{{ route('nutrition.page') }}">Dinh Dưỡng</a>
-            <a href="{{ route('community.page') }}">Cộng Đồng</a>
-
-            <!-- Auth buttons (có thể thay đổi tùy trạng thái đăng nhập) -->
-            <div class="auth-buttons">
-                <a href="#" class="btn-login">Đăng nhập</a>
-                <a href="#" class="btn-register">Đăng ký</a>
-            </div>
-
-            
-        </div>
-    </nav>
-
     <div class="app-container">
         <!-- Main Content -->
         <div class="main-content">
@@ -411,12 +382,9 @@
         </div>
     </div>  
 
-    <!-- Footer -->
-    <footer>
-        <p>© 2025 Health & Fitness App — Giữ sức khỏe, sống hạnh phúc 🌿</p>
-    </footer>
-
     <!-- Scripts -->
     <script defer src="{{ asset('js/fitness.js') }}"></script>
 
 </body>
+</html>
+@endsection
