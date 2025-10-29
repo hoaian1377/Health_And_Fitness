@@ -38,41 +38,51 @@
         });
     }
 
-    // Tabs / workout filter
+    // Tabs / workout filter (scoped per tabs-container -> its adjacent .workout-grid)
     function initWorkoutFilter() {
-        const tabs = document.querySelectorAll('.tabs-container .tab[data-category]');
-        const grids = document.querySelectorAll('.workout-grid');
-        if (!tabs.length || !grids.length) return;
+        const containers = document.querySelectorAll('.tabs-container');
+        if (!containers.length) return;
 
-        const allCards = [];
-        grids.forEach(grid => grid.querySelectorAll('.workout-card').forEach(c => allCards.push(c)));
+        containers.forEach(container => {
+            const tabs = Array.from(container.querySelectorAll('.tab[data-category]'));
 
-        function showCategory(category) {
-            allCards.forEach(card => {
-                const cat = card.dataset.category || 'all';
-                if (category === 'all' || category === cat) {
-                    card.style.display = '';
-                    // fade in
-                    requestAnimationFrame(() => { card.style.opacity = '0';
-                        requestAnimationFrame(() => card.style.opacity = '1');
-                    });
-                } else {
-                    card.style.display = 'none';
-                }
+            // find the nearest .workout-grid after this container
+            let grid = container.nextElementSibling;
+            while (grid && !grid.classList.contains('workout-grid')) {
+                grid = grid.nextElementSibling;
+            }
+            if (!grid) return;
+
+            const cards = Array.from(grid.querySelectorAll('.workout-card'));
+
+            function showCategory(category) {
+                cards.forEach(card => {
+                    const cat = card.dataset.category || 'all';
+                    if (category === 'all' || category === cat) {
+                        card.style.display = '';
+                        requestAnimationFrame(() => {
+                            card.style.opacity = '0';
+                            requestAnimationFrame(() => card.style.opacity = '1');
+                        });
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // only remove active within this container
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    showCategory(this.dataset.category || 'all');
+                });
             });
-        }
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                showCategory(this.dataset.category || 'all');
-            });
+            // initialize this container (use its active tab or show all)
+            const active = container.querySelector('.tab.active[data-category]');
+            showCategory(active ? active.dataset.category : 'all');
         });
-
-        // Init to active or all
-        const active = document.querySelector('.tabs-container .tab.active[data-category]');
-        showCategory(active ? active.dataset.category : 'all');
     }
 
     // Slider
@@ -112,11 +122,63 @@
         goTo(0);
     }
 
+    // Search: lọc các workout-card theo tiêu đề và ưu tiên các badge 'MỚI' lên đầu
+    function initSearch() {
+        const input = document.getElementById('exercise-search');
+        const clearBtn = document.getElementById('search-clear');
+        if (!input) return;
+
+        // lấy tất cả các card trên trang
+        const allCards = Array.from(document.querySelectorAll('.workout-card'));
+
+        function normalize(s) {
+            return (s || '').toLowerCase().trim();
+        }
+
+        function isNew(card) {
+            const badge = card.querySelector('.workout-badge');
+            return badge && /mới|moi|new/i.test(badge.textContent);
+        }
+
+        function applyFilter() {
+            const q = normalize(input.value);
+
+            // filter
+            let matched = allCards.filter(card => {
+                if (!q) return true; // khi rỗng thì hiện tất cả
+                const title = normalize(card.querySelector('.workout-card-title')?.textContent);
+                const meta = normalize(card.querySelector('.workout-card-meta')?.textContent);
+                return title.includes(q) || meta.includes(q);
+            });
+
+            // sắp xếp: các thẻ mới (isNew) lên trước
+            matched.sort((a, b) => {
+                const na = isNew(a) ? 0 : 1;
+                const nb = isNew(b) ? 0 : 1;
+                return na - nb;
+            });
+
+            // hide all, then append matched in order (trick: set display)
+            allCards.forEach(card => card.style.display = 'none');
+            matched.forEach(card => card.style.display = '');
+        }
+
+        input.addEventListener('input', applyFilter);
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                input.value = '';
+                input.dispatchEvent(new Event('input'));
+                input.focus();
+            });
+        }
+    }
+
     // Initialize all
     function initAll() {
         initMenuToggle();
         initCardObserver();
         initWorkoutFilter();
+        initSearch();
         initSlider();
     }
 
@@ -126,61 +188,4 @@
         initAll();
     }
 
-})();
-(function(){
-    // Safe init
-    function initWorkoutFilter() {
-        const tabs = document.querySelectorAll('.tabs-container .tab[data-category]');
-        const grids = document.querySelectorAll('.workout-grid');
-
-        if (!tabs.length || !grids.length) return;
-
-        // Gather all cards from all grids
-        const allCards = [];
-        grids.forEach(grid => {
-            grid.querySelectorAll('.workout-card').forEach(card => allCards.push(card));
-        });
-
-        function showCategory(category) {
-            allCards.forEach(card => {
-                // default category value
-                const cat = card.dataset.category || 'all';
-                if (category === 'all' || category === cat) {
-                    card.style.display = '';
-                    // small transition
-                    requestAnimationFrame(() => {
-                        card.style.opacity = '0';
-                        requestAnimationFrame(() => card.style.opacity = '1');
-                    });
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                // remove active from all
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-
-                const cat = this.dataset.category || 'all';
-                showCategory(cat);
-            });
-        });
-
-        // Initialize (show all)
-        const active = document.querySelector('.tabs-container .tab.active[data-category]');
-        if (active) {
-            showCategory(active.dataset.category || 'all');
-        } else {
-            showCategory('all');
-        }
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initWorkoutFilter);
-    } else {
-        initWorkoutFilter();
-    }
 })();
