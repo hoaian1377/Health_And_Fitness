@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('css/fitness.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slider.css') }}">
 
+
+
 </head>
 <body>
     <div class="app-container">
