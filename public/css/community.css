@@ -11,6 +11,8 @@ html, body {
     background: linear-gradient(135deg, #f7f9ff 0%, #e4edff 100%); /* Nền gradient từ xanh nhạt đến xanh dương nhạt */
     color: #222; /* Màu chữ chính là xám đen */
     scroll-behavior: smooth; /* Hiệu ứng cuộn mượt mà */
+    max-width: 100%; /* Ngăn tràn ngang ngoài ý muốn */
+    overflow-x: hidden; /* Ẩn thanh cuộn ngang trên mobile */
 }
 
 /* ================= NAVBAR CONSISTENCY (Community page) ================= */
@@ -61,6 +63,43 @@ html, body {
 }
 .navbar .logout-btn:hover { 
     background: #ffd700; /* Nền vàng đậm hơn khi hover */
+}
+
+/* ================= AUTH BUTTONS (match home page) ================= */
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-login,
+.btn-register {
+    border-radius: 25px;
+    padding: 8px 18px;
+    font-weight: 600;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.btn-login {
+    background: #ffea00;
+    color: #222;
+}
+
+.btn-login:hover {
+    background: #fff;
+    color: #000;
+}
+
+.btn-register {
+    border: 2px solid #fff;
+    color: #fff;
+    background: transparent;
+}
+
+.btn-register:hover {
+    background: #fff;
+    color: #000;
 }
 
 /* Hành vi menu di động nhất quán với base.css */
@@ -1014,17 +1053,18 @@ html, body {
 
 @media (max-width: 992px) {
     .community-main {
-        grid-template-columns: 1fr; /* Chuyển sang một cột trên tablet */
+        display: flex; /* Chuyển sang flex để điều khiển thứ tự */
+        flex-direction: column; /* Một cột trên tablet/mobile */
     }
 
     .community-sidebar {
         position: relative; /* Bỏ sticky */
         top: 0; /* Vị trí gốc */
-        order: 2; /* Đặt sidebar sau feed */
+        order: 1; /* Sidebar lên trước feed */
     }
 
     .posts-feed {
-        order: 1; /* Feed trước sidebar */
+        order: 2; /* Feed sau sidebar */
     }
 
     .hero-stats {
@@ -1042,17 +1082,27 @@ html, body {
     }
 
     .community-hero {
-        padding: 40px 30px; /* Giảm padding hero */
+        padding: 80px 24px 40px; /* Tăng top để không bị navbar che */
         flex-direction: column; /* Chuyển sang cột */
         text-align: center; /* Căn giữa chữ */
     }
 
     .hero-title {
         font-size: 32px; /* Giảm kích thước tiêu đề */
+        line-height: 1.25;
+        overflow-wrap: anywhere; /* Xuống dòng linh hoạt */
+        word-break: break-word; /* Phòng từ quá dài */
     }
 
     .hero-subtitle {
         font-size: 16px; /* Giảm kích thước phụ đề */
+        line-height: 1.5;
+        margin-bottom: 18px; /* Tạo khoảng cách rõ ràng với stats */
+    }
+
+    /* Ẩn thống kê trên mobile để tránh che chữ */
+    .hero-stats {
+        display: none !important;
     }
 
     .hero-stats {
@@ -1081,6 +1131,18 @@ html, body {
     .contributors-list {
         display: grid; /* Lưới cho trending và contributors */
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Tự động cột */
+    }
+
+    /* Giữ hero đứng yên trên mobile: tắt animation và phần tử nổi */
+    .community-hero::before,
+    .community-hero::after {
+        animation: none !important;
+        display: none !important; /* Ẩn các hình tròn động để không gây xê dịch */
+    }
+
+    .floating-card {
+        animation: none !important; /* Tắt hiệu ứng nổi */
+        transform: none !important; /* Tránh dịch chuyển */
     }
 }
 
