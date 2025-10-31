@@ -1,47 +1,86 @@
-/* --- Reset --- */
+/* ==================== RESET ==================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* --- Toàn trang --- */
+/* ==================== TOÀN TRANG ==================== */
 body {
   font-family: "Segoe UI", sans-serif;
   background: linear-gradient(135deg, #5b3ff6, #00b4ff);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  color: #222;
 }
 
-/* --- Khung chính --- */
+/* ==================== KHUNG CHÍNH ==================== */
 .login-wrapper {
   width: 100%;
   padding: 20px;
 }
 
 .login-card {
+  position: relative; /* ✅ để cố định nút X trong khung */
   background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
   max-width: 400px;
   margin: 0 auto;
-  padding: 40px 30px;
+  padding: 45px 35px 40px;
   text-align: center;
   animation: fadeIn 0.8s ease;
+  overflow: hidden;
 }
 
-/* --- Header --- */
+/* ==================== NÚT X THOÁT ==================== */
+.btn-exit {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  background: #f2f3ff;
+  border: 1.5px solid #d0d0ff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #555;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.btn-exit::before {
+  content: "✕";
+}
+
+.btn-exit:hover {
+  background: #e1e3ff;
+  color: #2a2ae6;
+  transform: rotate(90deg);
+}
+
+/* ==================== HEADER ==================== */
+.login-header {
+  margin-bottom: 20px;
+}
+
 .login-header .logo {
-  width: 60px;
-  margin-bottom: 10px;
+  width: 70px;
+  margin-bottom: 12px;
 }
 
 .login-header h2 {
   color: #4a3cf0;
-  font-size: 1.8rem;
-  margin-bottom: 5px;
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
 .login-header p {
@@ -49,7 +88,11 @@ body {
   font-size: 0.95rem;
 }
 
-/* --- Form --- */
+/* ==================== FORM ==================== */
+.login-form {
+  margin-top: 10px;
+}
+
 .form-group {
   margin-top: 15px;
 }
@@ -57,7 +100,7 @@ body {
 input[type="email"],
 input[type="password"] {
   width: 100%;
-  padding: 12px;
+  padding: 12px 14px;
   border: 1.5px solid #ddd;
   border-radius: 8px;
   font-size: 15px;
@@ -67,13 +110,13 @@ input[type="password"] {
 
 input:focus {
   border-color: #5b3ff6;
-  box-shadow: 0 0 5px rgba(91, 63, 246, 0.3);
+  box-shadow: 0 0 6px rgba(91, 63, 246, 0.3);
 }
 
-/* --- Nút đăng nhập --- */
+/* ==================== NÚT ĐĂNG NHẬP ==================== */
 .btn-login {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 22px;
   background: linear-gradient(135deg, #5b3ff6, #00b4ff);
   border: none;
   color: #fff;
@@ -82,27 +125,30 @@ input:focus {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(91, 63, 246, 0.3);
 }
 
 .btn-login:hover {
-  background: linear-gradient(135deg, #4a2eff, #00a3e6);
+  background: linear-gradient(135deg, #4a2eff, #009be0);
   transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(91, 63, 246, 0.4);
 }
 
-/* --- Lỗi đăng nhập --- */
+/* ==================== THÔNG BÁO LỖI ==================== */
 .error-message {
   background-color: rgba(255, 0, 0, 0.1);
   color: #d8000c;
   border-left: 4px solid #d8000c;
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 6px;
-  margin: 15px 0;
+  margin: 18px 0;
   text-align: left;
   font-size: 0.9rem;
+  animation: shake 0.4s ease;
 }
 
-/* --- Đăng ký --- */
+/* ==================== LINK ĐĂNG KÝ ==================== */
 .register-link {
   margin-top: 20px;
   font-size: 0.95rem;
@@ -113,17 +159,19 @@ input:focus {
   color: #5b3ff6;
   font-weight: 600;
   text-decoration: none;
+  transition: 0.3s;
 }
 
 .register-link a:hover {
   text-decoration: underline;
+  color: #2a2ae6;
 }
 
-/* --- Animation --- */
+/* ==================== HIỆU ỨNG ==================== */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(25px);
   }
   to {
     opacity: 1;
@@ -131,17 +179,32 @@ input:focus {
   }
 }
 
-/* --- Responsive --- */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* ==================== RESPONSIVE ==================== */
 @media (max-width: 480px) {
   .login-card {
-    padding: 30px 20px;
+    padding: 35px 25px 30px;
+    max-width: 90%;
   }
 
   .login-header h2 {
     font-size: 1.6rem;
   }
 
-  input, .btn-login {
+  input,
+  .btn-login {
     font-size: 0.95rem;
+  }
+
+  .btn-exit {
+    top: 10px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
   }
 }

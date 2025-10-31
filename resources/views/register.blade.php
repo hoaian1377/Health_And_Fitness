@@ -8,6 +8,7 @@
 </head>
 <body>
   <div class="register-container">
+    <a href="{{ url('/') }}" class="btn-exit" title="Thoát"></a>
     <h2>✨ Tạo tài khoản mới</h2>
 
     @if ($errors->any())

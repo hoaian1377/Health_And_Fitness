@@ -1,33 +1,68 @@
-/* ======= Toàn trang ======= */
+/* ==================== TOÀN TRANG ==================== */
 body {
   font-family: "Segoe UI", sans-serif;
   background: linear-gradient(135deg, #5b3ff6, #00b4ff);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
+  color: #222;
 }
 
-/* ======= Khung form ======= */
+/* ==================== KHUNG FORM ==================== */
 .register-container {
+  position: relative; /* ✅ để đặt nút Thoát trong khung */
   width: 400px;
   background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  padding: 40px 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 45px 30px 40px;
   text-align: center;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.6s ease;
+  overflow: hidden;
 }
 
-/* ======= Tiêu đề ======= */
+/* ==================== NÚT X THOÁT ==================== */
+.btn-exit {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  background: #f2f3ff;
+  border: 1.5px solid #d0d0ff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #555;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.btn-exit::before {
+  content: "✕";
+}
+
+.btn-exit:hover {
+  background: #e1e3ff;
+  color: #2a2ae6;
+  transform: rotate(90deg);
+}
+
+/* ==================== TIÊU ĐỀ ==================== */
 .register-container h2 {
   color: #2a2ae6;
   font-weight: 700;
   margin-bottom: 25px;
+  font-size: 1.8rem;
 }
 
-/* ======= Ô nhập ======= */
+/* ==================== NHÓM Ô NHẬP ==================== */
 .input-group {
   position: relative;
   margin: 12px 0;
@@ -45,7 +80,7 @@ body {
 .input-group input {
   width: 100%;
   padding: 12px 14px 12px 42px; /* chừa chỗ cho icon */
-  border: 1px solid #cdd2ff;
+  border: 1.5px solid #cdd2ff;
   border-radius: 8px;
   font-size: 15px;
   outline: none;
@@ -60,26 +95,28 @@ body {
   background: #fff;
 }
 
-/* ======= Nút ======= */
+/* ==================== NÚT ĐĂNG KÝ ==================== */
 button {
   width: 100%;
   padding: 12px;
   background: linear-gradient(135deg, #3b4bff, #2a2ae6);
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
   margin-top: 15px;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(59, 75, 255, 0.25);
 }
 
 button:hover {
   background: linear-gradient(135deg, #2a2ae6, #1b1bbf);
-  transform: scale(1.03);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(59, 75, 255, 0.35);
 }
 
-/* ======= Liên kết ======= */
+/* ==================== LIÊN KẾT (ĐĂNG NHẬP) ==================== */
 p {
   margin-top: 18px;
   color: #666;
@@ -90,37 +127,54 @@ a {
   color: #2a2ae6;
   font-weight: 600;
   text-decoration: none;
+  transition: 0.3s;
 }
 
 a:hover {
   text-decoration: underline;
+  color: #1b1bbf;
 }
 
-/* ======= Hộp báo lỗi ======= */
+/* ==================== HỘP BÁO LỖI ==================== */
 .error-box {
   background: #ffe5e5;
   color: #c0392b;
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 8px;
   font-size: 14px;
   margin-bottom: 15px;
+  text-align: left;
+  border-left: 4px solid #c0392b;
+  animation: shake 0.4s ease;
 }
 
-/* ======= Hiệu ứng xuất hiện ======= */
+/* ==================== HIỆU ỨNG ==================== */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ======= Responsive cho iPhone ======= */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* ==================== RESPONSIVE CHO ĐIỆN THOẠI ==================== */
 @media (max-width: 480px) {
   .register-container {
     width: 90%;
-    padding: 25px 20px;
+    padding: 30px 20px 25px;
   }
 
   .register-container h2 {
-    font-size: 20px;
+    font-size: 1.5rem;
   }
 
   input, button {
@@ -130,5 +184,12 @@ a:hover {
   .input-group .icon {
     font-size: 16px;
     left: 12px;
+  }
+
+  .btn-exit {
+    top: 10px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
   }
 }

@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 <body>
+    
     <div class="login-wrapper">
         <div class="login-card">
+            <a href="{{ url('/') }}" class="btn-exit" title="Thoát"></a>
             <div class="login-header">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo">
                 <h2>Đăng nhập tài khoản</h2>
