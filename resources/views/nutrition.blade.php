@@ -28,7 +28,7 @@
                 </div>
                 <!-- Illustration on the right to make hero visually balanced -->
                 <div class="hero-illustration">
-                    <img src="{{ asset('images/nutrition-hero.jpg') }}" alt="Nutrition illustration">
+                    <img src="{{ asset('images/meal19.webp') }}" alt="Nutrition illustration">
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
                 <!-- Món 1 -->
                 <div class="workout-card" data-category="weight-loss">
                     <div class="workout-card-image">
-                        <img src="{{ asset('images/meal1.jpg') }}" alt="Meal">
+                        <img src="{{ asset('images/meal1.avif') }}" alt="Meal">
                         <div class="workout-badge">MỚI</div>
                         <div class="difficulty-indicator">
                             <div class="difficulty-dot"></div>
@@ -76,7 +76,7 @@
                 <!-- Món 2 -->
                 <div class="workout-card" data-category="muscle-gain">
                     <div class="workout-card-image">
-                        <img src="{{ asset('images/meal2.jpg') }}" alt="Meal">
+                        <img src="{{ asset('images/meal2.avif') }}" alt="Meal">
                         <div class="workout-badge">PHỔ BIẾN</div>
                         <div class="difficulty-indicator">
                             <div class="difficulty-dot"></div>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="workout-card-footer">
                             <div class="workout-level intermediate">Trung bình</div>
-                            <a href="resources/views/meal-detail" class="start-btn">Xem công thức</a>
+                            <a href="{{ route('meal.detail.page') }}" class="start-btn">Xem công thức</a>
                         </div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                 <!-- Món 3 -->
                 <div class="workout-card" data-category="weight-loss">
                     <div class="workout-card-image">
-                        <img src="{{ asset('images/meal3.jpg') }}" alt="Meal">
+                        <img src="{{ asset('images/meal3.webp') }}" alt="Meal">
                         <div class="workout-badge">DETOX</div>
                         <div class="difficulty-indicator">
                             <div class="difficulty-dot"></div>
@@ -151,7 +151,7 @@
                 <!-- Món 5 -->
                 <div class="workout-card" data-category="vegetarian">
                     <div class="workout-card-image">
-                        <img src="{{ asset('images/meal5.jpg') }}" alt="Meal">
+                        <img src="{{ asset('images/meal5.webp') }}" alt="Meal">
                         <div class="workout-badge">CHAY</div>
                         <div class="difficulty-indicator">
                             <div class="difficulty-dot"></div>
@@ -366,7 +366,7 @@
 
                 <div class="workout-card" data-category="vegetarian">
                     <div class="workout-card-image">
-                        <img src="{{ asset('images/meal14.jpg') }}" alt="Meal">
+                        <img src="{{ asset('images/meal14.webp') }}" alt="Meal">
                         <div class="workout-badge">PLANT-BASED</div>
                         <div class="difficulty-indicator">
                             <div class="difficulty-dot"></div>
@@ -429,7 +429,7 @@
             <div class="workout-grid">
                 <div class="workout-card" data-category="breakfast">
                     <div class="workout-card-image">
-                        <img src="{{ asset('images/meal16.jpg') }}" alt="Meal">
+                        <img src="{{ asset('images/meal16.webp') }}" alt="Meal">
                         <div class="workout-badge">BREAKFAST</div>
                         <div class="difficulty-indicator">
                             <div class="difficulty-dot"></div>
@@ -477,7 +477,7 @@
 
                 <div class="workout-card" data-category="snack">
                     <div class="workout-card-image">
-                        <img src="{{ asset('images/meal18.jpg') }}" alt="Meal">
+                        <img src="{{ asset('images/meal18.webp') }}" alt="Meal">
                         <div class="workout-badge">SNACK</div>
                         <div class="difficulty-indicator">
                             <div class="difficulty-dot"></div>

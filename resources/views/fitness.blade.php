@@ -71,7 +71,8 @@
                         </div>
                         <div class="workout-card-footer">
                             <div class="workout-level beginner">Người bắt đầu</div>
-                            <button class="start-btn">Bắt đầu</button>
+                           <a href="{{ route('workout.detail', ['id' => 1]) }}" class="start-btn">Bắt đầu</a>
+
                         </div>
                     </div>
                 </div>
@@ -95,7 +96,7 @@
                         </div>
                         <div class="workout-card-footer">
                             <div class="workout-level intermediate">Trung bình</div>
-                            <button class="start-btn">Bắt đầu</button>
+                            <a href="{{ route('workout.detail', ['id' => 2]) }}" target="_self" class="start-btn">Bắt đầu</a>
                         </div>
                     </div>
                 </div>
@@ -119,7 +120,7 @@
                         </div>
                         <div class="workout-card-footer">
                             <div class="workout-level advanced">Nâng cao</div>
-                            <button class="start-btn">Bắt đầu</button>
+                            <a href="{{ route('workout.detail', ['id' => 3]) }}" target="_blank" class="start-btn">Bắt đầu</a>
                         </div>
                     </div>
                 </div>

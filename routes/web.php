@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\WorkoutController;
+
 
 // 🔹 Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home.page');
@@ -41,3 +43,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 
 // 🔹 Đăng xuất (nên dùng POST để bảo mật)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// 🔹 Chi tiết bài tập
+
+
+Route::get('/workout/{id}', [WorkoutController::class, 'show'])->name('workout.detail');

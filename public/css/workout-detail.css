@@ -1,0 +1,255 @@
+/* ================= WORKOUT DETAIL PAGE ================= */
+.workout-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 20px 60px;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  color: #222;
+  background: linear-gradient(145deg, #f9fafb 0%, #eef7f4 100%);
+}
+
+/* Tiêu đề chính */
+.workout-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.workout-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 10px;
+}
+
+.workout-header p {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.workout-meta span {
+  background: #e6f4ef;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin: 0 6px;
+  display: inline-block;
+  font-weight: 600;
+  color: #047857;
+}
+
+/* Video giữa */
+.video-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.video-wrapper video {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s ease;
+}
+
+.video-wrapper video:hover {
+  transform: scale(1.02);
+}
+
+/* Phần món ăn gợi ý */
+.meal-section {
+  text-align: center;
+}
+
+.meal-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 35px;
+  color: #111;
+  position: relative;
+  display: inline-block;
+}
+
+.meal-section h2::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 25%;
+  width: 50%;
+  height: 3px;
+  background-color: #10b981;
+  border-radius: 2px;
+}
+
+/* Grid món ăn (ngang cuộn đẹp) */
+.meal-grid {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 10px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.meal-grid::-webkit-scrollbar {
+  height: 8px;
+}
+.meal-grid::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+/* Card món ăn */
+.meal-card {
+  flex: 0 0 250px;
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+.meal-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Ảnh vuông và đều */
+.meal-card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Vuông tuyệt đối */
+  overflow: hidden;
+  background: linear-gradient(135deg, #f1f5f9, #e2f7f1);
+}
+
+.meal-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.meal-card:hover .meal-card-image img {
+  transform: scale(1.08);
+}
+
+.meal-card-content {
+  padding: 14px 16px 20px;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.meal-card-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.meal-card-meta {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+/* Nút xem chi tiết */
+.meal-card-footer button {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.meal-card-footer button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .video-wrapper video {
+    width: 95%;
+  }
+
+  .workout-header h1 {
+    font-size: 2rem;
+  }
+
+  .meal-card {
+    flex: 0 0 200px;
+  }
+}
+.workout-info {
+  max-width: 700px;
+  margin: 0 auto 60px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  padding: 24px 28px;
+  line-height: 1.7;
+}
+
+.workout-info h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 14px;
+}
+
+.workout-info ul li {
+  background: #f9fafb;
+  border-left: 4px solid #10b981;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.workout-info .note {
+  font-style: italic;
+  color: #6b7280;
+  margin-top: 10px;
+  text-align: center;
+}
+.video-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.video-frame {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9; /* Giữ tỉ lệ giống YouTube */
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background-color: #000;
+  transition: all 0.3s ease;
+}
+
+.video-frame:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.video-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
