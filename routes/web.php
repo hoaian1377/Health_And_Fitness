@@ -27,6 +27,10 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile.page');
 
+route::get('/meal-detail', function () {
+    return view('meal-detail');
+})->name('meal.detail.page');
+
 // 🔹 Đăng nhập / Đăng xuất
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login.page');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
