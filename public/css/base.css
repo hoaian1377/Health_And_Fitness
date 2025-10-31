@@ -45,6 +45,20 @@
   transform: scale(1.03);
 }
 
+/* Current plan badge next to logo */
+.plan-badge {
+  display: none;
+  background: #ffea00;
+  color: #111;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 1;
+}
+.logo .plan-badge { margin-left: 10px; }
+.plan-badge.show { display: inline-block; }
+
 /* ================= MENU ================= */
 /* Menu chính */
 .menu {
