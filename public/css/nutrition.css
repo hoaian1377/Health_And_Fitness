@@ -736,3 +736,64 @@ html, body {
 .difficulty-indicator {
     display: none !important;
 }
+@media (max-width: 992px) {
+  .navbar {
+    padding: 12px 25px;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 75px;
+    right: 15px;
+    width: 220px;
+    background: #111;
+    padding: 15px 0;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .menu.show {
+    display: flex;
+    animation: slideIn 0.3s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .menu a {
+    padding: 10px 20px;
+    width: 100%;
+    text-align: left;
+    border-radius: 12px;
+    transition: background 0.25s;
+    font-size: 15px;
+  }
+
+  .menu a:hover {
+    background: #222;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .user-menu,
+  .auth-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+    gap: 10px;
+  }
+}

@@ -1,350 +1,374 @@
-// ================= TAB FILTERING =================
-const tabs = document.querySelectorAll('.tab');
-const workoutCards = document.querySelectorAll('.workout-card');
+/* Merged JS: animations, tab filter, slider, menu toggle
+   This single file replaces separate slider.js and workout-filter.js
+*/
+(function(){
+    'use strict';
 
-tabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-        const category = this.getAttribute('data-category');
-        const tabsContainer = this.closest('.tabs-container');
-        const section = tabsContainer.nextElementSibling;
+    // ================= MOBILE MENU TOGGLE (CẢI TIẾN) =================
+    function initMenuToggle() {
+        console.log('🔄 Initializing menu toggle...');
         
-        // Remove active class from all tabs in this section
-        tabsContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Filter cards in this section only
-        const cards = section.querySelectorAll('.workout-card');
-        cards.forEach(card => {
-            if (category === 'all' || card.getAttribute('data-category') === category) {
-                card.classList.remove('hidden');
-                card.style.display = 'block';
-            } else {
-                card.classList.add('hidden');
-                card.style.display = 'none';
-            }
-        });
-    });
-});
-
-// ================= SEARCH FUNCTIONALITY =================
-const searchInput = document.getElementById('meal-search');
-const searchClearBtn = document.getElementById('search-clear');
-
-if (searchInput) {
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        
-        // Show/hide clear button
-        if (searchTerm.length > 0) {
-            searchClearBtn.style.display = 'block';
-        } else {
-            searchClearBtn.style.display = 'none';
-        }
-        
-        // Filter cards
-        workoutCards.forEach(card => {
-            const title = card.querySelector('.workout-card-title').textContent.toLowerCase();
-            const badge = card.querySelector('.workout-badge').textContent.toLowerCase();
-            
-            if (title.includes(searchTerm) || badge.includes(searchTerm)) {
-                card.style.display = 'block';
-                card.classList.remove('hidden');
-            } else {
-                card.style.display = 'none';
-                card.classList.add('hidden');
-            }
-        });
-        
-        // Check if no results
-        const visibleCards = Array.from(workoutCards).filter(card => 
-            card.style.display !== 'none'
-        );
-        
-        if (visibleCards.length === 0) {
-            showNoResults();
-        } else {
-            hideNoResults();
-        }
-    });
-}
-
-// Clear search
-if (searchClearBtn) {
-    searchClearBtn.addEventListener('click', function() {
-        searchInput.value = '';
-        this.style.display = 'none';
-        
-        // Show all cards
-        workoutCards.forEach(card => {
-            card.style.display = 'block';
-            card.classList.remove('hidden');
-        });
-        
-        hideNoResults();
-        searchInput.focus();
-    });
-}
-
-// ================= NO RESULTS MESSAGE =================
-function showNoResults() {
-    let noResultsMsg = document.querySelector('.no-results-message');
-    if (!noResultsMsg) {
-        noResultsMsg = document.createElement('div');
-        noResultsMsg.className = 'no-results-message';
-        noResultsMsg.innerHTML = `
-            <i class="fa-solid fa-search"></i>
-            <h3>Không tìm thấy món ăn phù hợp</h3>
-            <p>Thử tìm kiếm với từ khóa khác hoặc xem tất cả thực đơn</p>
-        `;
-        
-        // Add styles
-        noResultsMsg.style.cssText = `
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            color: #6c757d;
-        `;
-        
-        const workoutGrid = document.querySelector('.workout-grid');
-        workoutGrid.appendChild(noResultsMsg);
-    }
-    noResultsMsg.style.display = 'block';
-}
-
-function hideNoResults() {
-    const noResultsMsg = document.querySelector('.no-results-message');
-    if (noResultsMsg) {
-        noResultsMsg.style.display = 'none';
-    }
-}
-
-// ================= MEAL CARD CLICK HANDLER =================
-const startButtons = document.querySelectorAll('.start-btn');
-
-startButtons.forEach((btn, index) => {
-    btn.addEventListener('click', function(e) {
-        // Nếu không phải là link <a>, thì xử lý click
-        if (btn.tagName !== 'A') {
-            e.preventDefault();
-            
-            // Lấy thông tin món ăn
-            const card = this.closest('.workout-card');
-            const mealTitle = card.querySelector('.workout-card-title').textContent;
-            const mealCategory = card.getAttribute('data-category');
-            
-            // Tạo ID từ index (trong thực tế bạn sẽ có ID từ database)
-            const mealId = index + 1;
-            
-            // Chuyển hướng đến trang chi tiết
-            window.location.href = `/meal/${mealId}`;
-            
-            // Hoặc nếu dùng Laravel route:
-            // window.location.href = `{{ route('meal.detail', ['id' => '${mealId}']) }}`;
-        }
-    });
-});
-
-// ================= HERO BUTTON =================
-const heroBtn = document.querySelector('.hero-btn');
-if (heroBtn) {
-    heroBtn.addEventListener('click', function() {
-        // Scroll to meal grid
-        const mealGrid = document.querySelector('.workout-grid');
-        if (mealGrid) {
-            mealGrid.scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-}
-
-// ================= SMOOTH SCROLL =================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// ================= ANIMATION ON SCROLL =================
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observe all workout cards
-workoutCards.forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(20px)';
-    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    observer.observe(card);
-});
-
-// ================= HOVER EFFECTS =================
-workoutCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-8px)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-
-// ================= BOOKMARK FUNCTIONALITY (OPTIONAL) =================
-const bookmarkIcons = document.querySelectorAll('.bookmark-icon');
-
-bookmarkIcons.forEach(icon => {
-    icon.addEventListener('click', function(e) {
-        e.stopPropagation();
-        this.classList.toggle('bookmarked');
-        
-        if (this.classList.contains('bookmarked')) {
-            this.classList.remove('fa-regular');
-            this.classList.add('fa-solid');
-            showNotification('Đã lưu món ăn vào danh sách yêu thích!');
-        } else {
-            this.classList.remove('fa-solid');
-            this.classList.add('fa-regular');
-            showNotification('Đã bỏ lưu món ăn!');
-        }
-    });
-});
-
-// ================= NOTIFICATION =================
-function showNotification(message) {
-    // Remove old notification if exists
-    const oldNotification = document.querySelector('.notification');
-    if (oldNotification) {
-        oldNotification.remove();
-    }
-    
-    // Create new notification
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.innerHTML = `
-        <i class="fa-solid fa-check-circle"></i>
-        <span>${message}</span>
-    `;
-    
-    // Add styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 30px;
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        padding: 16px 24px;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        z-index: 9999;
-        animation: slideInRight 0.4s ease;
-        font-weight: 600;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.4s ease';
-        setTimeout(() => notification.remove(), 400);
-    }, 3000);
-}
-
-// ================= ADD ANIMATIONS CSS =================
-const style = document.createElement('style');
-style.innerHTML = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-    }
-    
-    .notification i {
-        font-size: 20px;
-    }
-    
-    .no-results-message i {
-        font-size: 48px;
-        color: #dee2e6;
-        margin-bottom: 15px;
-    }
-    
-    .no-results-message h3 {
-        font-size: 20px;
-        color: #495057;
-        margin-bottom: 8px;
-    }
-    
-    .no-results-message p {
-        font-size: 14px;
-        color: #6c757d;
-    }
-`;
-document.head.appendChild(style);
-
-// ================= LOADING STATE =================
-window.addEventListener('load', function() {
-    document.body.classList.add('loaded');
-});
-
-// ================= PREVENT DOUBLE CLICK =================
-let isNavigating = false;
-startButtons.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        if (isNavigating) {
-            e.preventDefault();
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) {
+            console.warn('⚠️ Navbar not found');
             return;
         }
-        isNavigating = true;
-        
-        // Show loading
-        const originalText = this.innerHTML;
-        this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
-        this.style.pointerEvents = 'none';
-        
-        // Reset after 2 seconds (in case navigation fails)
-        setTimeout(() => {
-            this.innerHTML = originalText;
-            this.style.pointerEvents = 'auto';
-            isNavigating = false;
-        }, 2000);
-    });
-});
 
-console.log(' Nutrition Page Loaded Successfully!');
+        // Tạo overlay nếu chưa có
+        let overlay = document.querySelector('.menu-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'menu-overlay';
+            document.body.appendChild(overlay);
+            console.log('✅ Overlay created');
+        }
+
+        // Tạo hoặc lấy menu toggle button
+        let menuToggle = document.querySelector('.menu-toggle');
+        if (!menuToggle) {
+            // Thử tìm theo ID (backward compatibility)
+            menuToggle = document.getElementById('menu-toggle');
+        }
+        
+        if (!menuToggle) {
+            // Tạo mới nếu không có
+            menuToggle = document.createElement('button');
+            menuToggle.className = 'menu-toggle';
+            menuToggle.setAttribute('aria-label', 'Menu');
+            menuToggle.innerHTML = `
+                <span></span>
+                <span></span>
+                <span></span>
+            `;
+            navbar.appendChild(menuToggle);
+            console.log('✅ Menu toggle button created');
+        }
+
+        // Lấy menu
+        let menu = document.querySelector('.menu');
+        if (!menu) {
+            menu = document.getElementById('menu');
+        }
+        
+        if (!menu) {
+            console.error('❌ Menu element not found!');
+            return;
+        }
+
+        console.log('✅ Menu toggle initialized');
+
+        // Toggle menu khi click
+        menuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isActive = menu.classList.contains('active') || menu.classList.contains('show');
+            console.log(isActive ? '🔽 Closing menu...' : '🔼 Opening menu...');
+            
+            menuToggle.classList.toggle('active');
+            menu.classList.toggle('active');
+            menu.classList.toggle('show');
+            overlay.classList.toggle('active');
+        });
+
+        // Click overlay để đóng
+        overlay.addEventListener('click', function() {
+            console.log('✖️ Menu closed (overlay)');
+            closeMenu();
+        });
+
+        // Click link trong menu
+        const menuLinks = menu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 992) {
+                    setTimeout(() => {
+                        console.log('✖️ Menu closed (link)');
+                        closeMenu();
+                    }, 150);
+                }
+            });
+        });
+
+        // Resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992 && menu.classList.contains('active')) {
+                console.log('✖️ Menu closed (resize)');
+                closeMenu();
+            }
+        });
+
+        // ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && menu.classList.contains('active')) {
+                console.log('✖️ Menu closed (ESC)');
+                closeMenu();
+            }
+        });
+
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            menu.classList.remove('active');
+            menu.classList.remove('show');
+            overlay.classList.remove('active');
+        }
+    }
+
+    // ================= INTERSECTION OBSERVER FOR CARDS =================
+    function initCardObserver() {
+        const cards = document.querySelectorAll('.workout-card');
+        if (!cards.length) return;
+        
+        const observerOptions = { 
+            threshold: 0.1, 
+            rootMargin: '0px 0px -50px 0px' 
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+    }
+
+    // ================= WORKOUT FILTER (TABS) =================
+    function initWorkoutFilter() {
+        const containers = document.querySelectorAll('.tabs-container');
+        if (!containers.length) return;
+
+        containers.forEach(container => {
+            const tabs = Array.from(container.querySelectorAll('.tab[data-category]'));
+
+            // Find the nearest .workout-grid after this container
+            let grid = container.nextElementSibling;
+            while (grid && !grid.classList.contains('workout-grid')) {
+                grid = grid.nextElementSibling;
+            }
+            if (!grid) return;
+
+            const cards = Array.from(grid.querySelectorAll('.workout-card'));
+
+            function showCategory(category) {
+                cards.forEach(card => {
+                    const cat = card.dataset.category || 'all';
+                    if (category === 'all' || category === cat) {
+                        card.style.display = '';
+                        requestAnimationFrame(() => {
+                            card.style.opacity = '0';
+                            requestAnimationFrame(() => card.style.opacity = '1');
+                        });
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    showCategory(this.dataset.category || 'all');
+                });
+            });
+
+            // Initialize
+            const active = container.querySelector('.tab.active[data-category]');
+            showCategory(active ? active.dataset.category : 'all');
+        });
+    }
+
+    // ================= SLIDER =================
+    function initSlider() {
+        const slidesWrap = document.querySelector('.slides');
+        const slides = document.querySelectorAll('.slide');
+        const prev = document.querySelector('.prev-arrow');
+        const next = document.querySelector('.next-arrow');
+        const dots = document.querySelectorAll('.dot');
+        if (!slidesWrap || slides.length === 0) return;
+
+        let index = 0;
+        const total = slides.length;
+
+        function goTo(i) {
+            index = (i + total) % total;
+            const offset = -index * 100;
+            slidesWrap.style.transform = `translateX(${offset}%)`;
+            dots && dots.forEach(d => d.classList.remove('active'));
+            if (dots && dots[index]) dots[index].classList.add('active');
+        }
+
+        if (prev) prev.addEventListener('click', () => goTo(index-1));
+        if (next) next.addEventListener('click', () => goTo(index+1));
+        if (dots) dots.forEach((d,i) => d.addEventListener('click', () => goTo(i)));
+
+        slidesWrap.style.width = (100 * total) + '%';
+        slides.forEach(slide => slide.style.width = (100/total) + '%');
+
+        let timer = setInterval(() => goTo(index+1), 5000);
+        const slider = document.querySelector('.slider');
+        if (slider) {
+            slider.addEventListener('mouseenter', () => clearInterval(timer));
+            slider.addEventListener('mouseleave', () => timer = setInterval(() => goTo(index+1), 5000));
+        }
+
+        goTo(0);
+    }
+
+    // ================= SEARCH FUNCTION =================
+    function initSearch() {
+        const input = document.getElementById('exercise-search') || document.getElementById('meal-search');
+        const clearBtn = document.getElementById('search-clear');
+        if (!input) return;
+
+        const allCards = Array.from(document.querySelectorAll('.workout-card'));
+
+        function normalize(s) {
+            return (s || '').toLowerCase().trim();
+        }
+
+        function isNew(card) {
+            const badge = card.querySelector('.workout-badge');
+            return badge && /mới|moi|new/i.test(badge.textContent);
+        }
+
+        function applyFilter() {
+            const q = normalize(input.value);
+
+            // Show/hide clear button
+            if (clearBtn) {
+                clearBtn.style.display = q ? 'flex' : 'none';
+            }
+
+            let matched = allCards.filter(card => {
+                if (!q) return true;
+                const title = normalize(card.querySelector('.workout-card-title')?.textContent);
+                const badge = normalize(card.querySelector('.workout-badge')?.textContent);
+                const meta = normalize(card.querySelector('.workout-card-meta')?.textContent);
+                return title.includes(q) || badge.includes(q) || meta.includes(q);
+            });
+
+            // Sort: New items first
+            matched.sort((a, b) => {
+                const na = isNew(a) ? 0 : 1;
+                const nb = isNew(b) ? 0 : 1;
+                return na - nb;
+            });
+
+            // Hide all, then show matched
+            allCards.forEach(card => card.style.display = 'none');
+            matched.forEach(card => card.style.display = '');
+
+            // Show no results message if needed
+            if (matched.length === 0) {
+                showNoResults();
+            } else {
+                hideNoResults();
+            }
+        }
+
+        function showNoResults() {
+            let noResultsMsg = document.querySelector('.no-results-message');
+            if (!noResultsMsg) {
+                noResultsMsg = document.createElement('div');
+                noResultsMsg.className = 'no-results-message';
+                noResultsMsg.style.gridColumn = '1 / -1';
+                noResultsMsg.style.textAlign = 'center';
+                noResultsMsg.style.padding = '60px 20px';
+                noResultsMsg.style.color = '#6c757d';
+                noResultsMsg.innerHTML = `
+                    <i class="fa-solid fa-search" style="font-size: 48px; color: #dee2e6; margin-bottom: 15px;"></i>
+                    <h3 style="font-size: 20px; color: #495057; margin-bottom: 8px;">Không tìm thấy kết quả</h3>
+                    <p style="font-size: 14px;">Thử tìm kiếm với từ khóa khác</p>
+                `;
+                const grid = document.querySelector('.workout-grid');
+                if (grid) grid.appendChild(noResultsMsg);
+            }
+            noResultsMsg.style.display = 'block';
+        }
+
+        function hideNoResults() {
+            const noResultsMsg = document.querySelector('.no-results-message');
+            if (noResultsMsg) {
+                noResultsMsg.style.display = 'none';
+            }
+        }
+
+        input.addEventListener('input', applyFilter);
+        
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                input.value = '';
+                input.dispatchEvent(new Event('input'));
+                input.focus();
+            });
+        }
+    }
+
+    // ================= HERO BUTTON SCROLL =================
+    function initHeroButton() {
+        const heroBtn = document.querySelector('.hero-btn');
+        if (heroBtn) {
+            heroBtn.addEventListener('click', function() {
+                const grid = document.querySelector('.workout-grid');
+                if (grid) {
+                    const offset = grid.getBoundingClientRect().top + window.pageYOffset - 80;
+                    window.scrollTo({
+                        top: offset,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+    }
+
+    // ================= SMOOTH SCROLL =================
+    function initSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '#!') return;
+                
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    const offset = target.getBoundingClientRect().top + window.pageYOffset - 80;
+                    window.scrollTo({
+                        top: offset,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+
+    // ================= INITIALIZE ALL =================
+    function initAll() {
+        console.log('🚀 Initializing all features...');
+        initMenuToggle();
+        initCardObserver();
+        initWorkoutFilter();
+        initSearch();
+        initSlider();
+        initHeroButton();
+        initSmoothScroll();
+        console.log('✅ All features initialized!');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAll);
+    } else {
+        initAll();
+    }
+
+})();
+
