@@ -237,3 +237,28 @@ html, body {
 .about-image img:hover {
   transform: scale(1.05);
 }
+
+/* ================= MOBILE: FIXED NAVBAR ON HOME ================= */
+@media (max-width: 992px) {
+  /* Keep navbar fixed on mobile for the home page only */
+  .home-page .navbar {
+    position: fixed !important; /* force fixed on mobile */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1200; /* above other UI elements */
+    width: 100%;
+  }
+
+  /* Make sure the dropdown mobile menu still appears below the fixed navbar */
+  .home-page .menu {
+    top: 70px; /* adjust if your navbar height differs */
+  }
+
+  /* Add top padding to the main content so it's not hidden underneath the fixed navbar */
+  .home-page main,
+  .home-page .container,
+  .home-page .slideshow-section {
+    padding-top: 64px; /* adjust this value to match the actual navbar height on mobile */
+  }
+}

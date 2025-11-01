@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/payment.css') }}">
     <title>Document</title>
 </head>
-<body>
+<body class="{{ request()->routeIs('home.page') ? 'home-page' : '' }}">
       <!-- Thanh điều hướng -->
     <nav class="navbar">
         <!-- Logo -->

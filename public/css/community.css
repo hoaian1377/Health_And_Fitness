@@ -125,6 +125,21 @@ html, body {
     width: 100%; /* Chiều rộng đầy đủ */
     text-align: left; /* Căn trái */
   }
+      /* Make the global navbar follow the viewport on mobile when visiting the community page */
+    .navbar {
+        position: fixed; /* Giữ navbar cố định trên viewport */
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999; /* Đặt lên trên các phần tử khác */
+        transition: transform 0.25s ease, box-shadow 0.25s ease; /* Mượt khi ẩn/hiện (nếu cần) */
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    /* Add top spacing so page content won't be hidden under the fixed navbar */
+    .community-container {
+        padding-top: 86px; /* Adjust based on your navbar height (logo + padding) */
+    }
 }
 
 /* ================= COMMUNITY CONTAINER ================= */
@@ -1078,7 +1093,8 @@ html, body {
 
 @media (max-width: 768px) {
     .community-container {
-        padding: 15px; /* Giảm padding container trên mobile */
+        /* Giữ khoảng trống trên cùng bằng chiều cao navbar để nội dung không bị che */
+        padding: 86px 15px 15px; /* top right/left bottom */
     }
 
     .community-hero {
