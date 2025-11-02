@@ -47,5 +47,6 @@
 
     <p>Đã có tài khoản? <a href="{{ route('login.page') }}">Đăng nhập</a></p>
   </div>
+  <script src="{{ asset('js/register.js') }}"></script>
 </body>
 </html>
