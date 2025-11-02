@@ -227,5 +227,6 @@
     </div>
 
     <script defer src="{{ asset('js/payment.js') }}"></script>
+    
 </body>
 </html>

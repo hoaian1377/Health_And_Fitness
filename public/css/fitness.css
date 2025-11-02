@@ -258,6 +258,16 @@ html, body {
 }
 
 /* ================= SEARCH BAR ================= */
+.search-bar .search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6f86ff;
+  font-size: 18px;
+  pointer-events: none;
+}
+
 .hero-content .search-bar {
   margin-top: 18px;
   display: flex;

@@ -8,6 +8,8 @@
     <title>Chi Tiết Món Ăn - Health & Fitness App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/meal-detail.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <linh scr="
 </head>
 <body>
     <div class="app-container">

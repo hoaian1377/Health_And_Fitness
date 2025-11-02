@@ -1,22 +1,12 @@
 @extends('base')
 @section('content')
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ asset('css/workout-detail.css') }}">
-  <title>Document</title>
-</head>
-<body>
-  
-</body>
-</html>
-
 <div class="workout-detail-page">
+  <link rel="stylesheet" href="{{ asset('css/workout-detail.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
   <!-- Header -->
-  <div class="workout-header">
+  <div class="workout-header text-center">
     <h1>💪 BÀI TẬP TOÀN THÂN CƯỜNG ĐỘ CAO</h1>
     <p class="workout-meta">
       <span>⏱️ 45 phút</span>
@@ -24,15 +14,15 @@
     </p>
   </div>
 
- <!-- Video đẹp kiểu YouTube -->
-<div class="video-container">
-  <div class="video-frame">
-    <video controls poster="/images/thumbnail.jpg">
-      <source src="{{ asset('videos/workout1.mp4') }}" type="video/mp4">
-      Trình duyệt của bạn không hỗ trợ phát video.
-    </video>
+  <!-- Video kiểu YouTube -->
+  <div class="video-container">
+    <div class="video-frame">
+      <video controls poster="{{ asset('images/thumbnail.jpg') }}">
+        <source src="{{ asset('videos/workout1.mp4') }}" type="video/mp4">
+        Trình duyệt của bạn không hỗ trợ phát video.
+      </video>
+    </div>
   </div>
-</div>
 
   <!-- Chi tiết bài tập -->
   <section class="workout-info">
@@ -54,7 +44,6 @@
     <h2>🥗 Món ăn gợi ý sau buổi tập</h2>
 
     <div class="meal-grid">
-      <!-- Meal card 1 -->
       <div class="meal-card">
         <div class="meal-card-image">
           <img src="{{ asset('images/meal1.avif') }}" alt="Salad Ức Gà">
@@ -63,7 +52,9 @@
           <div class="meal-card-title">Salad Ức Gà</div>
           <div class="meal-card-meta">🔥 250 calo · ⏱️ 15 phút</div>
           <div class="meal-card-footer">
-            <button onclick="openModal('Salad Ức Gà', 'Ức gà nướng, rau xanh và dầu ô liu — cung cấp đạm và chất xơ.');">Xem công thức</button>
+            <button onclick="openModal('Salad Ức Gà', 'Ức gà nướng, rau xanh và dầu ô liu — cung cấp đạm và chất xơ.')">
+              Xem công thức
+            </button>
           </div>
         </div>
       </div>
@@ -77,7 +68,9 @@
           <div class="meal-card-title">Cơm Gạo Lứt & Cá Hồi</div>
           <div class="meal-card-meta">🔥 480 calo · ⏱️ 25 phút</div>
           <div class="meal-card-footer">
-            <button onclick="openModal('Cơm Gạo Lứt & Cá Hồi', 'Kết hợp gạo lứt và cá hồi để bổ sung protein và carb tốt.');">Xem công thức</button>
+            <button onclick="openModal('Cơm Gạo Lứt & Cá Hồi', 'Kết hợp gạo lứt và cá hồi để bổ sung protein và carb tốt.')">
+              Xem công thức
+            </button>
           </div>
         </div>
       </div>
@@ -91,29 +84,25 @@
           <div class="meal-card-title">Sinh Tố Chuối & Yến Mạch</div>
           <div class="meal-card-meta">🔥 320 calo · ⏱️ 5 phút</div>
           <div class="meal-card-footer">
-            <button onclick="openModal('Sinh tố Chuối & Yến Mạch', 'Cung cấp năng lượng nhanh với yến mạch, sữa và chuối.');">Xem công thức</button>
+            <button onclick="openModal('Sinh tố Chuối & Yến Mạch', 'Cung cấp năng lượng nhanh với yến mạch, sữa và chuối.')">
+              Xem công thức
+            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Modal -->
+  <div id="mealModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3 id="mealTitle"></h3>
+      <p id="mealDesc"></p>
+    </div>
+  </div>
+
 </div>
 
-<script>
-  const modal = document.getElementById('mealModal');
-  const title = document.getElementById('mealTitle');
-  const desc = document.getElementById('mealDesc');
-
-  function openModal(mealName, mealDesc) {
-    title.textContent = mealName;
-    desc.textContent = mealDesc;
-    modal.classList.add('show');
-  }
-
-  function closeModal() {
-    modal.classList.remove('show');
-  }
-</script>
-
+<script src="{{ asset('js/workout.js') }}"></script>
 @endsection

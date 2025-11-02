@@ -369,6 +369,25 @@
     } else {
         initAll();
     }
+// Khi click ra ngoài menu thì đóng lại (hoạt động với .active / .show)
+document.addEventListener('click', function (e) {
+  const menu = document.querySelector('.menu');
+  const menuToggle = document.querySelector('.menu-toggle') || document.getElementById('menu-toggle');
+  const overlay = document.querySelector('.menu-overlay');
+
+  // Nếu chưa có menu thì bỏ qua
+  if (!menu || !menuToggle) return;
+
+  const isMenuOpen = menu.classList.contains('active') || menu.classList.contains('show');
+
+  // Nếu click ra ngoài cả menu và nút toggle
+  if (isMenuOpen && !menu.contains(e.target) && !menuToggle.contains(e.target)) {
+    menu.classList.remove('active', 'show');
+    menuToggle.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
+    console.log('✖️ Menu closed (click outside)');
+  }
+});
 
 })();
 

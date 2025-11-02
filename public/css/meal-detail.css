@@ -473,64 +473,6 @@ html, body {
   line-height: 1.6;
 }
 
-/* ================= SIDEBAR CARDS ================= */
-.tips-card,
-.video-card,
-.tags-card,
-.storage-card {
-  background: white;
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-}
-
-.tips-card h3,
-.video-card h3,
-.tags-card h3,
-.storage-card h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: #212529;
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.tips-card h3 i {
-  color: #f59e0b;
-}
-
-.video-card h3 i {
-  color: #ef4444;
-}
-
-.tags-card h3 i {
-  color: #8b5cf6;
-}
-
-.storage-card h3 i {
-  color: #3b82f6;
-}
-
-.tips-card ul {
-  list-style: none;
-}
-
-.tips-card li {
-  padding: 10px 0;
-  font-size: 14px;
-  color: #6c757d;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.tips-card li i {
-  color: #10b981;
-  margin-top: 3px;
-}
-
 /* ================= VIDEO PLACEHOLDER ================= */
 .video-placeholder {
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -862,5 +804,265 @@ html, body {
 
   .related-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ================= USER & AUTH ================= */
+.user-menu,
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-menu {
+  margin-left: 20px;
+}
+
+.user-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffea00;
+}
+
+.logout-btn {
+  background: #ffea00;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #000;
+}
+
+.logout-btn:hover {
+  background: #ffd700;
+  transform: translateY(-1px);
+}
+
+/* ================= MENU TOGGLE ================= */
+.menu-toggle {
+  display: none;
+  font-size: 30px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ================= AUTH BUTTONS ================= */
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-login, .btn-register {
+  border-radius: 25px;
+  padding: 8px 18px;
+  font-weight: 600;
+  transition: 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-login {
+  background: #ffea00;
+  color: #222;
+  border: none;
+}
+
+.btn-login:hover {
+  background: #fff;
+  color: #000;
+}
+
+.btn-register {
+  border: 2px solid #fff;
+  color: #fff;
+  background: transparent;
+}
+
+.btn-register:hover {
+  background: #fff;
+  color: #000;
+}
+/* ================= AUTH BUTTONS ================= */
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-login, .btn-register {
+  border-radius: 25px;
+  padding: 8px 18px;
+  font-weight: 600;
+  transition: 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-login {
+  background: #ffea00;
+  color: #222;
+  border: none;
+}
+
+.btn-login:hover {
+  background: #fff;
+  color: #000;
+}
+
+.btn-register {
+  border: 2px solid #fff;
+  color: #fff;
+  background: transparent;
+}
+
+.btn-register:hover {
+  background: #fff;
+  color: #000;
+}
+/* Ẩn menu mặc định trên mobile */
+.navbar-menu {
+  display: flex;
+  gap: 20px;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .navbar-menu {
+    display: none;
+    flex-direction: column;
+    background: white;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .navbar-menu.active {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+}
+@media (max-width: 992px) {
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 75px;
+    right: 15px;
+    width: 220px;
+    background: #111;
+    padding: 15px 0;
+    border-radius: 20px; /* ✅ Bo tròn */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .menu.show {
+    display: flex;
+    animation: slideIn 0.3s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+/* ================= MOBILE MENU — HƠI MẬP ================= */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.menu-toggle:hover {
+  transform: scale(1.1);
+}
+
+.menu {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 68px;
+  right: 12px;
+  width: 220px;                /* tăng ngang, hơi mập */
+  min-height: 320px;           /* cao hơn 1 chút */
+  max-height: calc(100vh - 80px);
+  background: rgba(17, 17, 17, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 25px 16px;           /* padding lớn hơn để menu đầy đặn */
+  border-radius: 18px;          /* bo tròn nhẹ hơn */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 999;
+  gap: 16px;                     /* khoảng cách giữa các link hơi lớn */
+  text-align: left;
+  justify-content: flex-start;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.menu.show {
+  display: flex;
+  animation: slideIn 0.3s ease forwards;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;             /* chữ to hơn 1 chút */
+  padding: 12px 16px;          /* link đầy đặn hơn */
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.menu a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Animation xổ menu */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  .navbar-menu {
+    display: none; /* ẩn menu gốc nếu có */
   }
 }
