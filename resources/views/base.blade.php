@@ -6,9 +6,11 @@
     <link rel="stylesheet" href="{{ asset('css/base.css')  }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/payment.css') }}">
+    @stack('styles')
     <title>Document</title>
+    
 </head>
-<body class="{{ request()->routeIs('home.page') ? 'home-page' : '' }}">
+<body>
       <!-- Thanh điều hướng -->
     <nav class="navbar">
         <!-- Logo -->
@@ -226,7 +228,14 @@
         </div>
     </div>
 
-    <script defer src="{{ asset('js/payment.js') }}"></script>
+    <!-- Global Scripts -->
+    <script defer src="{{ asset('js/app.js') }}"></script>
+    <script defer src="{{ asset('js/bootstrap.js') }}"></script>
     
+    <!-- Page Specific Scripts -->
+    @stack('scripts')
+    
+    <!-- Payment Scripts -->
+    <script defer src="{{ asset('js/payment.js') }}"></script>
 </body>
 </html>

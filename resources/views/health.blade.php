@@ -3,75 +3,95 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sức Khỏe - Health & Fitness App</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/health.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sức Khỏe | Health & Fitness</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ asset('css/health.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- JS -->
+  <script defer src="{{ asset('js/health.js') }}"></script>
 </head>
 <body>
-    <div class="container">
-    <header>
-        <h1><i class="fa-solid fa-heart-pulse"></i> SỨC KHỎE CỦA BẠN</h1>
-    </header>
+  <div class="health-container">
+    <!-- ========== PHẦN 1: TÍNH BMI ========== -->
+    <section class="bmi-section">
+      <div class="bmi-card">
+        <h2>🔹 Tính Chỉ Số BMI Của Bạn</h2>
+        <p class="bmi-subtext">Kiểm tra sức khỏe và nhận gợi ý tập luyện phù hợp 💪</p>
 
-    <main>
-        <!-- Chỉ số sức khỏe động -->
-        <section class="health-metrics">
-            <div class="metric">
-                <i class="fa-solid fa-heart"></i>
-                <h3>Nhịp Tim</h3>
-                <p id="heart-rate">-- bpm</p>
-            </div>
-            <div class="metric">
-                <i class="fa-solid fa-shoe-prints"></i>
-                <h3>Bước Chân</h3>
-                <p id="steps">-- bước</p>
-            </div>
-            <div class="metric">
-                <i class="fa-solid fa-bed"></i>
-                <h3>Giờ Ngủ</h3>
-                <p id="sleep-hours">-- giờ</p>
-            </div>
-        </section>
+        <form id="bmiForm" class="bmi-form">
+          <div class="form-group">
+            <label for="height">Chiều cao (cm)</label>
+            <input type="number" id="height" required placeholder="Nhập chiều cao...">
+          </div>
 
-        <!-- Nhập chỉ số cơ thể -->
-        <section class="body-metrics">
-            <h2><i class="fa-solid fa-scale-balanced"></i> Nhập Chỉ Số Cơ Thể</h2>
-            <form id="bodyMetricsForm">
-                <div class="form-group">
-                    <label for="height">Chiều cao (cm)</label>
-                    <input type="number" id="height" placeholder="Nhập chiều cao" required>
-                </div>
-                <div class="form-group">
-                    <label for="weight">Cân nặng (kg)</label>
-                    <input type="number" id="weight" placeholder="Nhập cân nặng" required>
-                </div>
-                <div class="form-group">
-                    <label for="goal">Mục tiêu</label>
-                    <select id="goal">
-                        <option value="weight_loss">Giảm Cân</option>
-                        <option value="muscle_gain">Tăng Cơ</option>
-                        <option value="fat_loss">Giảm Béo</option>
-                    </select>
-                </div>
-                <button type="submit">Tính BMI</button>
-            </form>
+          <div class="form-group">
+            <label for="weight">Cân nặng (kg)</label>
+            <input type="number" id="weight" required placeholder="Nhập cân nặng...">
+          </div>
 
-            <section class="bmi-display">
-  <h2>Kết Quả</h2>
-  <p id="bmi-result">--</p>
-  <div id="recommendation-content"></div>
+          <div class="form-group">
+            <label for="gender">Giới tính</label>
+            <select id="gender" required>
+              <option value="">-- Chọn giới tính --</option>
+              <option value="male">Nam</option>
+              <option value="female">Nữ</option>
+            </select>
+          </div>
 
-  <div id="exercise-button" style="display:none; margin-top:15px;">
-    <a href="{{ route('fitness.page') }}" class="btn-primary">Xem Bài Tập</a>
+          <button type="submit" class="bmi-btn">Tính BMI</button>
+        </form>
+
+        <div id="bmiResult" class="bmi-result hidden">
+          <h3>Kết quả BMI của bạn: <span id="bmiValue"></span></h3>
+          <p id="bmiStatus"></p>
+
+          <div class="goal-buttons">
+            <button class="goal-btn" data-goal="gain">Tăng cân</button>
+            <button class="goal-btn" data-goal="muscle">Tăng cơ</button>
+            <button class="goal-btn" data-goal="lose">Giảm cân</button>
+          </div>
+
+          <p class="goal-note">Chọn mục tiêu để đến trang bài tập phù hợp</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PHẦN 2: HÀNH TRÌNH SỨC KHỎE ========== -->
+    <section id="journeySection" class="journey-section hidden">
+      <div class="journey-header">
+        <h2>🏋️ Khám Phá Hành Trình Sức Khỏe Của Bạn</h2>
+        <p>Bạn có thể bắt đầu với những mục tiêu nhỏ và đạt kết quả lớn. Chúng tôi gợi ý cho bạn 3 hướng đi phù hợp!</p>
+      </div>
+
+      <div class="journey-cards">
+        <div class="journey-card">
+          <i class="fa-solid fa-bowl-rice icon"></i>
+          <h3>Tăng Cân</h3>
+          <p>Chế độ ăn giàu dinh dưỡng và bài tập giúp tăng cân lành mạnh.</p>
+          <a href="{{ route('nutrition.page') }}" class="journey-btn">Khám phá ngay</a>
+        </div>
+
+        <div class="journey-card">
+          <i class="fa-solid fa-dumbbell icon"></i>
+          <h3>Tăng Cơ</h3>
+          <p>Các bài tập sức mạnh kết hợp protein giúp cơ thể săn chắc.</p>
+          <a href="{{ route('fitness.page') }}" class="journey-btn">Xem Bài Tập</a>
+        </div>
+
+        <div class="journey-card">
+          <i class="fa-solid fa-fire-flame-curved icon"></i>
+          <h3>Giảm Cân</h3>
+          <p>Các bài học được chia sẻ của các chuyên gia.</p>
+          <a href="{{ route('community.page') }}" class="journey-btn">Xem Bài Viết</a>
+        </div>
+      </div>
+    </section>
+    
   </div>
-</section>
-        </section>
-    </main>
-</div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{{ asset('js/health.js') }}"></script>
+</body>
+</html>
 @endsection

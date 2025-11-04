@@ -1,87 +1,53 @@
-// =================== Cập nhật chỉ số ngẫu nhiên ===================
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const bmiForm = document.getElementById("bmiForm");
+  const resultBox = document.getElementById("bmiResult");
+  const journeySection = document.getElementById("journeySection");
+  const bmiValue = document.getElementById("bmiValue");
+  const bmiStatus = document.getElementById("bmiStatus");
 
-function updateHealthMetrics() {
-  document.getElementById('heart-rate').textContent = getRandomInt(60, 100) + ' bpm';
-  document.getElementById('steps').textContent = getRandomInt(3000, 12000) + ' bước';
-  document.getElementById('sleep-hours').textContent = getRandomInt(5, 9) + ' giờ';
-}
-setInterval(updateHealthMetrics, 3000);
-updateHealthMetrics();
+  bmiForm.addEventListener("submit", (e) => {
+    e.preventDefault();
 
+    const height = parseFloat(document.getElementById("height").value) / 100;
+    const weight = parseFloat(document.getElementById("weight").value);
+    const gender = document.getElementById("gender").value;
 
-// =================== Tính toán BMI + Gợi ý ===================
-document.getElementById('bodyMetricsForm').addEventListener('submit', function(e) {
-  e.preventDefault();
+    if (!height || !weight || height <= 0 || weight <= 0) {
+      alert("⚠️ Vui lòng nhập giá trị hợp lệ!");
+      return;
+    }
 
-  const height = parseFloat(document.getElementById('height').value) / 100;
-  const weight = parseFloat(document.getElementById('weight').value);
-  const goal = document.getElementById('goal').value;
-  const bmiResult = document.getElementById('bmi-result');
-  const recommendation = document.getElementById('recommendation-content');
-  const exerciseButton = document.getElementById('exercise-button');
+    const bmi = (weight / (height * height)).toFixed(1);
+    bmiValue.textContent = bmi;
 
-  if (height <= 0 || weight <= 0) {
-    bmiResult.textContent = "⚠️ Vui lòng nhập giá trị hợp lệ.";
-    recommendation.innerHTML = "";
-    exerciseButton.style.display = "none";
-    return;
-  }
+    let status = "";
+    if (bmi < 18.5) {
+      status = "💡 Bạn đang gầy. Hãy chọn mục tiêu *Tăng cân* hoặc *Tăng cơ* nhé!";
+    } else if (bmi < 24.9) {
+      status = "✅ Cơ thể bạn đang ở mức lý tưởng! Có thể *Tăng cơ* để khỏe mạnh hơn.";
+    } else if (bmi < 29.9) {
+      status = "⚠️ Bạn đang thừa cân nhẹ. Hãy chọn mục tiêu *Giảm cân* để cải thiện vóc dáng.";
+    } else {
+      status = "🚨 Bạn đang béo phì. Khuyên bạn nên *Giảm cân kết hợp tập luyện thường xuyên*!";
+    }
 
-  const bmi = (weight / (height * height)).toFixed(1);
-  let status = "";
-  if (bmi < 18.5) status = "Thiếu cân 🦴";
-  else if (bmi < 23) status = "Bình thường 💪";
-  else if (bmi < 25) status = "Thừa cân ⚖️";
-  else status = "Béo phì 🍔";
+    bmiStatus.textContent = status;
+    resultBox.classList.remove("hidden");
 
-  bmiResult.innerHTML = `BMI của bạn là <strong>${bmi}</strong> — ${status}`;
+    // Hiện phần hành trình sau khi tính xong
+    journeySection.classList.remove("hidden");
+    journeySection.scrollIntoView({ behavior: "smooth" });
+  });
 
-  // Gợi ý theo mục tiêu
-  let tips = "";
-  if (goal === "weight_loss") {
-    tips = `
-      <h3>🎯 Mục tiêu: Giảm cân</h3>
-      <ul>
-        <li>Tập cardio 30 phút/ngày: chạy, đạp xe, bơi.</li>
-        <li>Giảm tinh bột nhanh, tăng rau và protein.</li>
-        <li>Ngủ đủ 7–8 tiếng để hỗ trợ trao đổi chất.</li>
-      </ul>`;
-  } else if (goal === "muscle_gain") {
-    tips = `
-      <h3>🎯 Mục tiêu: Tăng cơ</h3>
-      <ul>
-        <li>Tập tạ 4–5 buổi/tuần, chú trọng bài compound.</li>
-        <li>Ăn đủ protein (1.8–2g/kg cân nặng).</li>
-        <li>Thêm tinh bột tốt như khoai lang, yến mạch.</li>
-      </ul>`;
-  } else if (goal === "fat_loss") {
-    tips = `
-      <h3>🎯 Mục tiêu: Giảm béo</h3>
-      <ul>
-        <li>Kết hợp HIIT & ăn kiêng ít dầu mỡ, ít đường.</li>
-        <li>Uống đủ nước, tránh ăn khuya.</li>
-        <li>Tập plank và cardio để đốt mỡ nhanh.</li>
-      </ul>`;
-  }
-
-  // Gợi ý thêm theo tình trạng BMI
-  let extraTip = "";
-  if (status.includes("Thiếu cân")) {
-    extraTip = "<p>👉 Nên ăn thêm calo và tập tăng cơ nhẹ để cải thiện cân nặng.</p>";
-  } else if (status.includes("Béo phì")) {
-    extraTip = "<p>⚠️ Nên giảm lượng calo và tăng vận động mỗi ngày.</p>";
-  }
-
-  // Hiển thị nội dung gợi ý
-  recommendation.innerHTML = tips + extraTip;
-
-  // Hiện nút "Xem Bài Tập"
-  exerciseButton.style.display = "block";
+  // Chuyển hướng khi chọn mục tiêu
+  document.querySelectorAll(".goal-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const goal = btn.dataset.goal;
+      window.location.href = `/fitness?goal=${goal}`;
+    });
+  });
 });
-  // ===== Menu Toggle =====
+// ===== Menu Toggle =====
   const toggle = document.getElementById("menu-toggle");
   const menu = document.getElementById("menu");
   if (toggle) {
@@ -89,4 +55,3 @@ document.getElementById('bodyMetricsForm').addEventListener('submit', function(e
       menu.classList.toggle("show");
     });
   }
-
