@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WorkoutController;
-
+use Illuminate\Routing\Router;
+use App\Http\Controllers\LoginController;
 
 // 🔹 Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home.page');
@@ -34,16 +35,14 @@ route::get('/meal-detail', function () {
 })->name('meal.detail.page');
 
 // 🔹 Đăng nhập / Đăng xuất
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login.page');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/login', [LoginController::class, 'LoginFrom'])->name('login.LoginFrom');
+Route::post('/login', [LoginController::class, 'login'])->name('login.login');
 
 // 🔹 Đăng ký
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register.page');
-Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.register');
 
-// 🔹 Đăng xuất (nên dùng POST để bảo mật)
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-// 🔹 Chi tiết bài tập
-
+//logout
+Route::post('logout',[LoginController::class,'logout'])->name('logout');
 
 Route::get('/workout/{id}', [WorkoutController::class, 'show'])->name('workout.detail');

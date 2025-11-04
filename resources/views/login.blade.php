@@ -17,26 +17,28 @@
                 <p>Chào mừng bạn quay lại 💪</p>
             </div>
 
-            @if(session('error'))
-                <div class="error-message">
-                    {{ session('error') }}
-                </div>
+            @if ($errors->has('login_error'))
+                <div class="alert alert-danger">{{ $errors->first('login_error') }}</div>
             @endif
 
-            <form action="{{ route('login.post') }}" method="POST" class="login-form">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            <form action="{{ route('login.login') }}" method="POST" class="login-form">
                 @csrf
                 <div class="form-group">
-                    <input type="email" name="email" placeholder="📧 Nhập email" required>
+                    <input type="username" name="username" placeholder="Nhập Tên Đăng Nhập" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" name="password" placeholder="🔒 Nhập mật khẩu" required>
+                    <input type="password" name="passwords" placeholder="🔒 Nhập mật khẩu" required>
                 </div>
 
                 <button type="submit" class="btn-login">Đăng nhập</button>
             </form>
 
             <div class="register-link">
-                <p>Chưa có tài khoản? <a href="{{ route('register.page') }}">Đăng ký ngay</a></p>
+                <p>Chưa có tài khoản? <a href="{{ route('register.create') }}">Đăng ký ngay</a></p>
             </div>
         </div>
     </div>
