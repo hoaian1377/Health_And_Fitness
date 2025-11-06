@@ -19,12 +19,11 @@
       </div>
     @endif
 
-    <form action="{{ route('register.register') }}" method="POST">
+    <form action="{{ route('register') }}" method="POST">
       @csrf
-
       <div class="input-group">
         <span class="icon">👤</span>
-        <input type="text" name="username" placeholder="Tên Đăng Nhập" required>
+        <input type="text" name="name" placeholder="Tên Đăng Nhập" required>
       </div>
 
       <div class="input-group">
@@ -34,7 +33,7 @@
 
       <div class="input-group">
         <span class="icon">🔒</span>
-        <input type="password" name="passwords" placeholder="Mật khẩu" required>
+        <input type="password" name="password" placeholder="Mật khẩu" required>
       </div>
 
       <div class="input-group">
@@ -45,7 +44,7 @@
       <button type="submit">Đăng ký ngay</button>
     </form>
 
-    <p>Đã có tài khoản? <a href="{{ route('login.LoginFrom') }}">Đăng nhập</a></p>
+    <p>Đã có tài khoản? <a href="{{ route('login.show') }}">Đăng nhập</a></p>
   </div>
   <script src="{{ asset('js/register.js') }}"></script>
 </body>

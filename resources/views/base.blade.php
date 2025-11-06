@@ -34,11 +34,11 @@
             <a href="{{ route('community.page') }}">Cộng Đồng</a>
             <a href="#" class="btn-pay" id="openPaymentBtn"><i class="fa-solid fa-bolt"></i>&nbsp;Mua gói</a>
 
-            @if(Session::has('user'))
+            @auth
             <div class="user-menu">
                 <div class="user-info">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User" class="user-icon">
-                <span>{{ Session::get('user')->name }}</span>
+                <span>{{ Auth::user()->name }}</span>
                 </div>
                 <form action="{{ route('logout') }}" method="POST" class="logout-form">
                 @csrf
@@ -47,8 +47,8 @@
             </div>
             @else
             <div class="auth-buttons">
-                <a href="{{ route('login.login') }}" class="btn-login">Đăng nhập</a>
-                <a href="{{ route('register.create') }}" class="btn-register">Đăng ký</a>
+                <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
+                <a href="{{ route('register') }}" class="btn-register">Đăng ký</a>
             </div>
             @endauth
         </div>

@@ -423,16 +423,25 @@ document.addEventListener('DOMContentLoaded', () => { // Sự kiện DOM sẵn s
     });
     
     // Thiết lập xem trước upload ảnh (nếu cần)
-    const imageUpload = document.getElementById('imageUpload'); // Lấy input upload ảnh
-    if (imageUpload) { // Kiểm tra tồn tại
-        imageUpload.addEventListener('change', (e) => { // Sự kiện thay đổi file
-            const files = e.target.files; // Lấy danh sách file
-            if (files.length > 0) { // Nếu có file
-                // Có thể hiển thị preview ảnh ở đây
-                console.log(`${files.length} image(s) selected`); // In ra console (demo)
+    const imageUpload = document.getElementById('imageUpload');
+    if (imageUpload) {
+        const preview = document.getElementById('previewImage');
+        imageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+                preview.src = '';
             }
         });
     }
+
     
     console.log('Community page initialized!'); // In thông báo khởi tạo xong
 });
