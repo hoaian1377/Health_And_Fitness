@@ -8,6 +8,8 @@ use Illuminate\Routing\Router;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\WorkoutExerciseController;
+
 // 🔹 Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home.page');
 
@@ -16,9 +18,6 @@ Route::get('/health', function () {
     return view('health');
 })->name('health.page');
 
-Route::get('/fitness', function () {
-    return view('fitness');
-})->name('fitness.page');
 Route::get('/nutrition', function () {
     return view('nutrition');
 })->name('nutrition.page');   
@@ -58,4 +57,5 @@ Route::middleware('guest')->group(function(){
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 
-Route::get('/workout/{id}', [WorkoutController::class, 'show'])->name('workout.detail');
+Route::get('/workouts', [WorkoutExerciseController::class, 'index'])->name('workouts.page');
+Route::get('/workouts/{id}', [WorkoutExerciseController::class, 'show'])->name('workouts.detail');

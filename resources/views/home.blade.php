@@ -63,7 +63,7 @@
             Với giao diện trực quan và tính năng thông minh, bạn có thể dễ dàng duy trì 
             thói quen tốt và đạt được mục tiêu mỗi ngày.
           </p>
-          <a href="{{ route('fitness.page') }}" class="btn-primary">Khám phá ngay</a>
+          <a href="{{ route('workouts.page') }}" class="btn-primary">Khám phá ngay</a>
         </div>
         <div class="about-image">
           <img src="{{ asset('images/fitness.jpg') }}" alt="Health & Fitness">

@@ -29,7 +29,7 @@
         <div class="menu" id="menu">
             <a href="{{ route('home.page') }}">Trang Chủ</a>
             <a href="{{ route('health.page') }}">Sức Khỏe</a>
-            <a href="{{ route('fitness.page') }}">Tập Luyện</a>
+            <a href="{{ route('workouts.page') }}">Tập Luyện</a>
             <a href="{{ route('nutrition.page') }}">Dinh Dưỡng</a>
             <a href="{{ route('community.page') }}">Cộng Đồng</a>
             <a href="#" class="btn-pay" id="openPaymentBtn"><i class="fa-solid fa-bolt"></i>&nbsp;Mua gói</a>
