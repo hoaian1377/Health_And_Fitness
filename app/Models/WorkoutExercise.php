@@ -19,5 +19,5 @@ class WorkoutExercise extends Model
         'video_urls'
     ];
 
-    public $timestamps = false; // bảng này không có created_at / updated_at
+    public $timestamps = false; 
 }

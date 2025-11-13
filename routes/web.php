@@ -8,7 +8,9 @@ use Illuminate\Routing\Router;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\MealPlanController;
 use App\Http\Controllers\WorkoutExerciseController;
+use App\Http\Controllers\MealController;
 
 // 🔹 Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home.page');
@@ -18,9 +20,6 @@ Route::get('/health', function () {
     return view('health');
 })->name('health.page');
 
-Route::get('/nutrition', function () {
-    return view('nutrition');
-})->name('nutrition.page');   
 
 
 
@@ -41,10 +40,6 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile.page');
 
-route::get('/meal-detail', function () {
-    return view('meal-detail');
-})->name('meal.detail.page');
-
 // 🔹 Đăng nhập / Đăng xuất
 Route::middleware('guest')->group(function(){
     Route::get('register', [AuthController::class, 'showRegister'])->name('register.show');
@@ -59,3 +54,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->na
 
 Route::get('/workouts', [WorkoutExerciseController::class, 'index'])->name('workouts.page');
 Route::get('/workouts/{id}', [WorkoutExerciseController::class, 'show'])->name('workouts.detail');
+
+
+Route::get('/nutrition',[MealPlanController::class,'index'])->name('nutrition.page');
+Route::get('/nutrition/{id}',[MealPlanController::class,'show'])->name('meal-detail');
