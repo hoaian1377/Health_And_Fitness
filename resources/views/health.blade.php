@@ -79,7 +79,7 @@
           <i class="fa-solid fa-dumbbell icon"></i>
           <h3>Tăng Cơ</h3>
           <p>Các bài tập sức mạnh kết hợp protein giúp cơ thể săn chắc.</p>
-          <a href="{{ route('fitness.page') }}" class="journey-btn">Xem Bài Tập</a>
+          <a href="{{ route('workouts.page') }}" class="journey-btn">Xem Bài Tập</a>
         </div>
 
         <div class="journey-card">

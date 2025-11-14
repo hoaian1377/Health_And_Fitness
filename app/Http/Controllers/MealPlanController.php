@@ -9,7 +9,7 @@ class MealPlanController extends Controller
     //
     public function index()
     {
-        $mealplan=MealPlan::wiht('fitness_goal')->orderby('meal_planID','asc')->get();
+        $mealplan=MealPlan::with('fitness_goal')->orderby('meal_planID','asc')->get();
         return view('nutrition',compact('mealplan'));
     }
 
