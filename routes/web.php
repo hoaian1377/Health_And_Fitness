@@ -4,43 +4,60 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WorkoutController;
-use Illuminate\Routing\Router;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\MealPlanController;
 use App\Http\Controllers\WorkoutExerciseController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\ProfileController;
 
-// 🔹 Trang chủ
+// =================== TRANG CHỦ ===================
 Route::get('/', [HomeController::class, 'index'])->name('home.page');
 
-// 🔹 Các trang tĩnh
+
+// =================== TRANG TĨNH ===================
 Route::get('/health', function () {
     return view('health');
 })->name('health.page');
 
 
-
-
-// Trang cộng đồng
+// =================== CỘNG ĐỒNG ===================
 Route::get('/community', [CommunityController::class, 'index'])->name('community.page');
 
 // Đăng bài
-Route::post('/community/post', [CommunityController::class, 'storePost'])->name('community.post')->middleware('auth');
+Route::post('/community/post', [CommunityController::class, 'storePost'])
+    ->name('community.post')
+    ->middleware('auth');
 
 // Bình luận
-Route::post('/community/{post}/comment', [CommunityController::class, 'storeComment'])->name('community.comment')->middleware('auth');
+Route::post('/community/{post}/comment', [CommunityController::class, 'storeComment'])
+    ->name('community.comment')
+    ->middleware('auth');
 
 // Like / Unlike
-Route::post('/community/{post}/like', [CommunityController::class, 'toggleLike'])->name('community.like')->middleware('auth');
+Route::post('/community/{post}/like', [CommunityController::class, 'toggleLike'])
+    ->name('community.like')
+    ->middleware('auth');
 
 
-Route::get('/profile', function () {
-    return view('profile');
-})->name('profile.page');
+// =================== TRANG CÁ NHÂN ===================
+// Profile
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile.page');
+Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-// 🔹 Đăng nhập / Đăng xuất
+
+// =================== ĐỔI MẬT KHẨU (NEW) ===================
+Route::middleware('auth')->group(function () {
+    Route::get('/change-password', [ProfileController::class, 'changePassword'])
+        ->name('password.change');
+
+    Route::post('/change-password', [ProfileController::class, 'updatePassword'])
+        ->name('password.update');
+});
+
+
+// =================== AUTH ===================
 Route::middleware('guest')->group(function(){
     Route::get('register', [AuthController::class, 'showRegister'])->name('register.show');
     Route::post('register', [AuthController::class, 'register'])->name('register');
@@ -49,12 +66,16 @@ Route::middleware('guest')->group(function(){
     Route::post('login', [AuthController::class, 'login'])->name('login');
 });
 
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::post('logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
 
 
+// =================== WORKOUTS ===================
 Route::get('/workouts', [WorkoutExerciseController::class, 'index'])->name('workouts.page');
 Route::get('/workouts/{id}', [WorkoutExerciseController::class, 'show'])->name('workouts.detail');
 
 
-Route::get('/nutrition',[MealPlanController::class,'index'])->name('nutrition.page');
-Route::get('/nutrition/{id}',[MealPlanController::class,'show'])->name('meal-detail');
+// =================== DINH DƯỠNG ===================
+Route::get('/nutrition', [MealPlanController::class, 'index'])->name('nutrition.page');
+Route::get('/nutrition/{id}', [MealPlanController::class, 'show'])->name('meal-detail');

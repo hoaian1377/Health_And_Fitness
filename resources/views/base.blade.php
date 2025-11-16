@@ -35,16 +35,30 @@
             <a href="#" class="btn-pay" id="openPaymentBtn"><i class="fa-solid fa-bolt"></i>&nbsp;Mua gói</a>
 
             @auth
-            <div class="user-menu">
-                <div class="user-info">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User" class="user-icon">
-                <span>{{ Auth::user()->name }}</span>
-                </div>
-                <form action="{{ route('logout') }}" method="POST" class="logout-form">
-                @csrf
-                <button type="submit" class="logout-btn">Đăng xuất</button>
-                </form>
-            </div>
+            <div class="user-dropdown">
+    <div class="user-trigger" id="userMenuToggle">
+        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="user-avatar">
+        <span>{{ Auth::user()->name }}</span>
+        <i class="fa-solid fa-chevron-down arrow"></i>
+    </div>
+
+    <div class="dropdown-menu" id="userDropdown">
+        <a href="{{ route('profile.page') }}">
+            <i class="fa-solid fa-user"></i> Thông tin cá nhân
+        </a>
+
+        <a href="{{ route('password.change') }}">
+            <i class="fa-solid fa-lock"></i> Đổi mật khẩu
+        </a>
+
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+            </button>
+        </form>
+    </div>
+</div>
             @else
             <div class="auth-buttons">
                 <a href="{{ route('login') }}" class="btn-login">Đăng nhập</a>
