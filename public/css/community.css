@@ -1,106 +1,97 @@
 /* ================= RESET ================= */
-/* Phần reset: Đặt lại các thuộc tính mặc định cho tất cả các phần tử để đảm bảo tính nhất quán */
+/* Đặt lại margin, padding và box-sizing cho tất cả phần tử */
 * {
-    margin: 0; /* Đặt lề ngoài về 0 */
-    padding: 0; /* Đặt khoảng đệm về 0 */
-    box-sizing: border-box; /* Đặt mô hình hộp để bao gồm padding và border trong kích thước tổng */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* Cấu hình cơ bản cho html và body */
 html, body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Font chữ chính cho toàn bộ trang */
-    background: linear-gradient(135deg, #f7f9ff 0%, #e4edff 100%); /* Nền gradient từ xanh nhạt đến xanh dương nhạt */
-    color: #222; /* Màu chữ chính là xám đen */
-    scroll-behavior: smooth; /* Hiệu ứng cuộn mượt mà */
-    max-width: 100%; /* Ngăn tràn ngang ngoài ý muốn */
-    overflow-x: hidden; /* Ẩn thanh cuộn ngang trên mobile */
+  height: auto;
+  scroll-behavior: smooth; /* cuộn mượt */
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #f7f9ff, #e4edff);
+  color: #222;
+  overflow-x: hidden;
+  overflow-y: auto; /* bật lại cuộn dọc */
 }
 
-/* ================= NAVBAR CONSISTENCY (Community page) ================= */
-/* Đảm bảo navbar trên trang cộng đồng hiển thị giống các trang khác */
-.navbar { 
-    background: #000; /* Nền đen cho navbar */
-    color: #fff; /* Màu chữ trắng */
-}
-.navbar .logo img { 
-    width: 40px; /* Chiều rộng logo */
-    height: 40px; /* Chiều cao logo */
-    object-fit: contain; /* Giữ tỷ lệ hình ảnh */
-}
-.navbar .menu { 
-    display: flex; /* Hiển thị menu dạng flexbox */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    gap: 28px; /* Khoảng cách giữa các item menu */
-}
-.navbar .menu a { 
-    color: #fff; /* Màu chữ trắng */
-    text-decoration: none; /* Bỏ gạch chân */
-    font-weight: 500; /* Độ đậm chữ trung bình */
-    padding: 6px 0; /* Khoảng đệm trên dưới */
-}
-.navbar .menu a:hover { 
-    color: #ffea00; /* Màu vàng khi hover */
-}
-.navbar .user-menu { 
-    display: flex; /* Hiển thị menu người dùng dạng flexbox */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    gap: 15px; /* Khoảng cách giữa các item */
-}
-.navbar .user-icon { 
-    width: 35px !important; /* Chiều rộng icon người dùng, !important để ghi đè */
-    height: 35px !important; /* Chiều cao icon người dùng */
-    border-radius: 50%; /* Bo tròn thành hình tròn */
-    object-fit: cover; /* Giữ tỷ lệ hình ảnh */
-    border: 2px solid #ffea00; /* Viền vàng */
-}
-.navbar .logout-btn { 
-    background: #ffea00; /* Nền vàng cho nút đăng xuất */
-    color: #000; /* Màu chữ đen */
-    border: none; /* Bỏ viền */
-    padding: 6px 14px; /* Khoảng đệm */
-    border-radius: 6px; /* Bo góc */
-    font-weight: 600; /* Độ đậm chữ */
-    cursor: pointer; /* Con trỏ chuột dạng tay */
-}
-.navbar .logout-btn:hover { 
-    background: #ffd700; /* Nền vàng đậm hơn khi hover */
-}
 
-/* ================= AUTH BUTTONS (match home page) ================= */
+/* ================= USER & AUTH ================= */
+/* Menu người dùng và nút đăng nhập/đăng ký */
+.user-menu,
 .auth-buttons {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.btn-login,
-.btn-register {
-    border-radius: 25px;
-    padding: 8px 18px;
-    font-weight: 600;
-    transition: 0.3s;
-    text-decoration: none;
+.user-menu {
+  margin-left: 20px;
+}
+
+/* Avatar người dùng */
+.user-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffea00;
+}
+
+/* Nút đăng xuất */
+.logout-btn {
+  background: #ffea00;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #000;
+}
+
+.logout-btn:hover {
+  background: #ffd700;
+  transform: translateY(-1px);
+}
+
+
+/* ================= AUTH BUTTONS ================= */
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-login, .btn-register {
+  border-radius: 25px;
+  padding: 8px 18px;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
 .btn-login {
-    background: #ffea00;
-    color: #222;
+  background: #ffea00;
+  color: #222;
 }
 
 .btn-login:hover {
-    background: #fff;
-    color: #000;
+  background: #fff;
+  color: #000;
 }
 
 .btn-register {
-    border: 2px solid #fff;
-    color: #fff;
-    background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
 }
-
+ 
 .btn-register:hover {
     background: #fff;
     color: #000;
 }
+
 
 /* Hành vi menu di động nhất quán với base.css */
 @media (max-width: 992px) {

@@ -43,8 +43,15 @@ Route::post('/community/{post}/like', [CommunityController::class, 'toggleLike']
 
 // =================== TRANG CÁ NHÂN ===================
 // Profile
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile.page');
-Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+Route::middleware('auth')->get('/profile', [ProfileController::class, 'index'])->name('profile.page');
+Route::middleware('auth')->put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+// Profile API (JSON endpoints)
+Route::middleware('auth')->group(function () {
+    Route::post('/api/profile/update', [ProfileController::class, 'updateApi']);
+    Route::post('/api/profile/avatar', [ProfileController::class, 'updateAvatar']);
+    Route::delete('/api/profile', [ProfileController::class, 'deleteAccount']);
+});
 
 
 // =================== ĐỔI MẬT KHẨU (NEW) ===================

@@ -1,16 +1,9 @@
 @extends('base')
 @section('content')
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <!-- Phần khai báo meta và liên kết tài nguyên -->
-    <meta charset="UTF-8"> <!-- Định dạng ký tự UTF-8 để hỗ trợ tiếng Việt -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Thiết lập viewport cho thiết bị di động -->
-    <title>Cộng Đồng - Health & Fitness App</title> <!-- Tiêu đề trang web -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> <!-- Liên kết thư viện Font Awesome cho icon -->
-    <link rel="stylesheet" href="{{ asset('css/community.css') }}"> <!-- Liên kết file CSS tùy chỉnh cho trang cộng đồng -->
-</head>
-<body>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/community.css') }}">
+@endpush
+
     <!-- Container chính bao bọc toàn bộ nội dung trang cộng đồng -->
     <div class="community-container">
         <!-- Phần Hero Section: Phần giới thiệu nổi bật ở đầu trang -->
@@ -223,7 +216,7 @@
         </div>
     </div>
 
+@push('scripts')
     <script src="{{ asset('js/community.js') }}"></script>
-</body>
-</html>
+@endpush
 @endsection
