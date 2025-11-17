@@ -80,7 +80,7 @@ Route::post('logout', [AuthController::class, 'logout'])
 
 // =================== WORKOUTS ===================
 Route::get('/workouts', [WorkoutExerciseController::class, 'index'])->name('workouts.page');
-Route::get('/workouts/{id}', [WorkoutExerciseController::class, 'show'])->name('workouts.detail');
+Route::get('/workouts/{id}', [WorkoutExerciseController::class, 'show'])->name('workouts-detail');
 
 
 // =================== DINH DƯỠNG ===================

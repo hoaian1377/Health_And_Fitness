@@ -89,7 +89,7 @@
 
                         <div class="workout-card-footer">
                             <div class="workout-level beginner">Cấp độ</div>
-                            <a href="{{ route('workouts.detail', ['id' => $ex->workout_exerciseID]) }}" class="start-btn">Xem chi tiết</a>
+                            <a href="{{ route('workouts.detail', ['id'=>$ex->workout_exerciseID]) }}" class="start-btn">Xem chi tiết</a>
                         </div>
                     </div>
 

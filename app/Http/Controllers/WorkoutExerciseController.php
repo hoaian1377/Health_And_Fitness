@@ -20,8 +20,8 @@ class WorkoutExerciseController extends Controller
     // chi tiết 1 bài tập
     public function show($id)
     {
-        $exercise = WorkoutExercise::findOrFail($id);
+        $exercise = WorkoutExercise::with('fitness_goal')->find($id);
 
-        return view('workouts.show', compact('exercise'));
+        return view('workouts-detail', compact('exercise'));
     }
 }

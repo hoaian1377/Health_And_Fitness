@@ -19,5 +19,9 @@ class WorkoutExercise extends Model
         'video_urls'
     ];
 
+    public function fitness_goal()
+    {
+        return $this->belongsTo(FitnessGoal::class,'fitness_goalID');
+    }
     public $timestamps = false; 
 }
