@@ -11,6 +11,8 @@ use App\Http\Controllers\MealPlanController;
 use App\Http\Controllers\WorkoutExerciseController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FitnessDashboardController;
+use App\Http\Controllers\AccountController;
 
 // =================== TRANG CHỦ ===================
 Route::get('/', [HomeController::class, 'index'])->name('home.page');
@@ -86,3 +88,7 @@ Route::get('/workouts/{id}', [WorkoutExerciseController::class, 'show'])->name('
 // =================== DINH DƯỠNG ===================
 Route::get('/nutrition', [MealPlanController::class, 'index'])->name('nutrition.page');
 Route::get('/nutrition/{id}', [MealPlanController::class, 'show'])->name('meal-detail');
+
+
+Route::get('/profile', [FitnessDashboardController::class,'index'])->name('profile.page');
+Route::put('/profile/update', [AccountController::class, 'update'])->name('profile.update');

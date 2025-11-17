@@ -1,522 +1,188 @@
-/* ============================================
-   PROFILE PAGE JAVASCRIPT
-   ============================================ */
+const initialWorkouts = [
+  { id: 1, date: '2025-11-16', type: 'Run', duration: 42, calories: 420 },
+  { id: 2, date: '2025-11-15', type: 'Strength', duration: 55, calories: 380 },
+  { id: 3, date: '2025-11-14', type: 'Yoga', duration: 35, calories: 150 },
+  { id: 4, date: '2025-11-12', type: 'HIIT', duration: 30, calories: 360 },
+  { id: 5, date: '2025-11-10', type: 'Bike', duration: 60, calories: 520 },
+];
 
-document.addEventListener('DOMContentLoaded', function() {
-    initProfilePage();
-});
+// state
+let workouts = [...initialWorkouts];
+let chart = null;
 
-/**
- * Khởi tạo trang profile
- */
-function initProfilePage() {
-    setupNavbarMenuToggle();
-    setupMenuNavigation();
-    setupFormEditing();
-    setupDeleteModal();
-    setupAvatarUpload();
-    setupMenuToggle();
+function formatDateISO(d){
+  const dt = new Date(d);
+  return dt.toISOString().slice(0,10);
 }
 
-/**
- * Setup navbar menu toggle cho mobile
- */
-function setupNavbarMenuToggle() {
-    const toggle = document.getElementById("menu-toggle");
-    const menu = document.getElementById("menu");
-    if (toggle) {
-        toggle.addEventListener("click", () => {
-            menu.classList.toggle("show");
-        });
-    }
+// compute totals
+function computeTotals(list){
+  const calories = list.reduce((s,w)=>s+(w.calories||0),0);
+  const minutes = list.reduce((s,w)=>s+(w.duration||0),0);
+  const sessions = list.length;
+  return { calories, minutes, sessions };
 }
 
-/**
- * Setup menu toggle cho mobile
- */
-function setupMenuToggle() {
-    const menuToggleBtn = document.getElementById('profileMenuToggle');
-    const sidebar = document.getElementById('profileSidebar');
-    
-    if (!menuToggleBtn || !sidebar) {
-        console.warn('Menu toggle elements not found');
-        return;
-    }
+// update left stats
+function updateProfileStats(){
+  const t = computeTotals(workouts);
+  document.getElementById('stat-cal').textContent = t.calories;
+  document.getElementById('stat-sessions').textContent = t.sessions;
+  document.getElementById('stat-mins').textContent = t.minutes + 'm';
 
-    // Toggle menu khi click button
-    menuToggleBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Menu toggle clicked');
-        menuToggleBtn.classList.toggle('active');
-        sidebar.classList.toggle('show');
-    });
-
-    // Đóng menu khi click trên item menu
-    const menuItems = document.querySelectorAll('.profile-menu .menu-item');
-    menuItems.forEach(item => {
-        item.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                console.log('Menu item clicked - closing menu');
-                menuToggleBtn.classList.remove('active');
-                sidebar.classList.remove('show');
-            }
-        });
-    });
-
-    // Đóng menu khi resize về desktop
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768 && sidebar.classList.contains('show')) {
-            console.log('Resized to desktop - closing menu');
-            menuToggleBtn.classList.remove('active');
-            sidebar.classList.remove('show');
-        }
-    });
-
-    // Đóng menu khi click bên ngoài
-    document.addEventListener('click', function(e) {
-        if (sidebar.classList.contains('show') && 
-            !sidebar.contains(e.target) && 
-            !menuToggleBtn.contains(e.target)) {
-            console.log('Clicked outside - closing menu');
-            menuToggleBtn.classList.remove('active');
-            sidebar.classList.remove('show');
-        }
-    });
+  // KPI
+  document.getElementById('kpi-cal').textContent = t.calories;
+  document.getElementById('kpi-sessions').textContent = t.sessions;
+  document.getElementById('kpi-mins').textContent = t.minutes + 'm';
 }
 
-/**
- * Setup điều hướng menu
- */
-function setupMenuNavigation() {
-    const menuItems = document.querySelectorAll('.menu-item');
-    const sections = document.querySelectorAll('.profile-section');
-
-    menuItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetSection = this.getAttribute('data-section');
-
-            // Remove active class from all items and sections
-            menuItems.forEach(m => m.classList.remove('active'));
-            sections.forEach(s => s.classList.remove('active'));
-
-            // Add active class to clicked item and target section
-            this.classList.add('active');
-            const target = document.getElementById(targetSection);
-            if (target) {
-                target.classList.add('active');
-                // Scroll to section on mobile
-                if (window.innerWidth < 768) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-        });
-    });
-}
-
-/**
- * Setup chỉnh sửa biểu mẫu
- */
-function setupFormEditing() {
-    // Personal Information Form
-    const editPersonalBtn = document.getElementById('editPersonalBtn');
-    const personalForm = document.getElementById('personalForm');
-    const formActions = document.getElementById('formActions');
-    const cancelEditBtn = document.getElementById('cancelEditBtn');
-
-    if (editPersonalBtn) {
-        editPersonalBtn.addEventListener('click', function() {
-            toggleFormEditing(personalForm, formActions);
-        });
-    }
-
-    if (cancelEditBtn) {
-        cancelEditBtn.addEventListener('click', function() {
-            toggleFormEditing(personalForm, formActions, true);
-        });
-    }
-
-    if (personalForm) {
-        personalForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleFormSubmit(personalForm, 'personal', formActions);
-        });
-    }
-
-    // Health Data Form
-    const editHealthBtn = document.getElementById('editHealthBtn');
-    const healthForm = document.getElementById('healthForm');
-    const healthFormActions = document.getElementById('healthFormActions');
-    const cancelHealthEditBtn = document.getElementById('cancelHealthEditBtn');
-
-    if (editHealthBtn) {
-        editHealthBtn.addEventListener('click', function() {
-            toggleFormEditing(healthForm, healthFormActions);
-        });
-    }
-
-    if (cancelHealthEditBtn) {
-        cancelHealthEditBtn.addEventListener('click', function() {
-            toggleFormEditing(healthForm, healthFormActions, true);
-        });
-    }
-
-    if (healthForm) {
-        healthForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleFormSubmit(healthForm, 'health', healthFormActions);
-        });
-    }
-
-    // Preferences Form
-    const preferencesForm = document.getElementById('preferencesForm');
-    if (preferencesForm) {
-        preferencesForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleFormSubmit(preferencesForm, 'preferences', null);
-        });
-    }
-}
-
-/**
- * Toggle form editing mode
- */
-function toggleFormEditing(form, actionContainer, cancel = false) {
-    const inputs = form.querySelectorAll('input, select, textarea');
-    const isDisabled = inputs[0].disabled;
-
-    inputs.forEach(input => {
-        if (cancel) {
-            input.disabled = true;
-        } else {
-            input.disabled = !isDisabled;
-        }
-    });
-
-    if (actionContainer) {
-        if (!cancel && isDisabled) {
-            actionContainer.style.display = 'flex';
-        } else if (cancel || isDisabled) {
-            actionContainer.style.display = 'none';
-        }
-    }
-}
-
-/**
- * Handle form submission
- */
-async function handleFormSubmit(form, type, actionContainer) {
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-
-    try {
-        // Tampilkan loading state
-        showNotification('Đang lưu...', 'info');
-
-        // Simulasi API call (ganti dengan route thực tế)
-        const response = await fetch('/api/profile/update', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-            },
-            body: JSON.stringify({ type, data })
-        }).catch(() => {
-            // Jika API tidak ada, simulasikan success
-            return {
-                ok: true,
-                json: async () => ({ success: true })
-            };
-        });
-
-        if (response.ok) {
-            showNotification('Lưu thành công! ✓', 'success');
-            if (actionContainer) {
-                actionContainer.style.display = 'none';
-                // Disable form inputs lagi
-                form.querySelectorAll('input, select, textarea').forEach(input => {
-                    input.disabled = true;
-                });
-            }
-        } else {
-            showNotification('Có lỗi xảy ra!', 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Có lỗi xảy ra!', 'error');
-    }
-}
-
-/**
- * Setup delete modal
- */
-function setupDeleteModal() {
-    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-    const deleteModal = document.getElementById('deleteModal');
-    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-    const modalCloseBtn = deleteModal?.querySelector('.modal-close');
-    const modalCloseBtnFooter = deleteModal?.querySelector('.modal-close-btn');
-
-    if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener('click', function() {
-            deleteModal?.classList.add('show');
-        });
-    }
-
-    if (modalCloseBtn) {
-        modalCloseBtn.addEventListener('click', function() {
-            deleteModal?.classList.remove('show');
-        });
-    }
-
-    if (modalCloseBtnFooter) {
-        modalCloseBtnFooter.addEventListener('click', function() {
-            deleteModal?.classList.remove('show');
-        });
-    }
-
-    if (confirmDeleteBtn) {
-        confirmDeleteBtn.addEventListener('click', function() {
-            handleDeleteAccount();
-        });
-    }
-
-    // Close modal when clicking outside
-    if (deleteModal) {
-        deleteModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('show');
-            }
-        });
-    }
-}
-
-/**
- * Handle delete account
- */
-async function handleDeleteAccount() {
-    try {
-        const response = await fetch('/api/profile/delete', {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-            }
-        }).catch(() => {
-            // Jika API tidak ada
-            return {
-                ok: true,
-                json: async () => ({ success: true })
-            };
-        });
-
-        if (response.ok) {
-            showNotification('Tài khoản đã được xóa!', 'success');
-            setTimeout(() => {
-                window.location.href = '/';
-            }, 2000);
-        } else {
-            showNotification('Có lỗi xảy ra!', 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Có lỗi xảy ra!', 'error');
-    }
-}
-
-/**
- * Setup avatar upload
- */
-function setupAvatarUpload() {
-    const editAvatarBtn = document.getElementById('editAvatarBtn');
-    
-    if (editAvatarBtn) {
-        editAvatarBtn.addEventListener('click', function() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    handleAvatarUpload(file);
-                }
-            };
-            input.click();
-        });
-    }
-}
-
-/**
- * Handle avatar upload
- */
-async function handleAvatarUpload(file) {
-    const formData = new FormData();
-    formData.append('avatar', file);
-
-    try {
-        showNotification('Đang tải ảnh...', 'info');
-
-        const response = await fetch('/api/profile/avatar', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-            },
-            body: formData
-        }).catch(() => {
-            // Simulasi success
-            return {
-                ok: true,
-                json: async () => ({ success: true })
-            };
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            showNotification('Cập nhật ảnh thành công! ✓', 'success');
-            // Update avatar image
-            const avatarImg = document.querySelector('.profile-avatar');
-            if (avatarImg && data.avatar_url) {
-                avatarImg.src = data.avatar_url;
-            }
-        } else {
-            showNotification('Có lỗi xảy ra!', 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Có lỗi xảy ra!', 'error');
-    }
-}
-
-/**
- * Show notification
- */
-function showNotification(message, type = 'info') {
-    // Tạo notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            ${message}
+// render workouts list
+function renderWorkouts(){
+  const container = document.getElementById('workouts-list');
+  container.innerHTML = '';
+  workouts.slice(0,20).forEach(w=>{
+    const el = document.createElement('div');
+    el.className = 'workout';
+    el.innerHTML = `
+      <div class="w-left">
+        <div class="type-badge">${(w.type || '?').slice(0,2).toUpperCase()}</div>
+        <div class="w-meta">
+          <div style="font-weight:700">${w.type} · ${w.duration}m</div>
+          <div class="sub">${w.date} · ${w.calories} kcal</div>
         </div>
+      </div>
+      <div class="small muted">Details</div>
     `;
+    container.appendChild(el);
+  });
+}
 
-    // Add notification styles jika belum ada
-    if (!document.getElementById('notification-styles')) {
-        const style = document.createElement('style');
-        style.id = 'notification-styles';
-        style.innerHTML = `
-            .notification {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 16px 24px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                z-index: 9999;
-                animation: slideInRight 0.3s ease;
-                max-width: 400px;
-            }
+// build timeseries for last N days
+function buildSeries(days = 10){
+  // build map date->calories
+  const map = {};
+  workouts.forEach(w=>{
+    const d = w.date;
+    map[d] = (map[d] || 0) + (w.calories || 0);
+  });
 
-            .notification-info {
-                background: #3b82f6;
-                color: white;
-            }
+  const series = [];
+  const now = new Date();
+  for(let i=days-1;i>=0;i--){
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    const iso = d.toISOString().slice(0,10);
+    const label = d.toLocaleDateString('vi-VN', { month:'short', day:'numeric' });
+    series.push({ label, date: iso, calories: map[iso] || 0 });
+  }
+  return series;
+}
 
-            .notification-success {
-                background: #10b981;
-                color: white;
-            }
-
-            .notification-error {
-                background: #ef4444;
-                color: white;
-            }
-
-            .notification-warning {
-                background: #f59e0b;
-                color: white;
-            }
-
-            @keyframes slideInRight {
-                from {
-                    transform: translateX(400px);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-
-            @media (max-width: 600px) {
-                .notification {
-                    right: 10px;
-                    left: 10px;
-                    max-width: none;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+// init chart
+function initChart(){
+  const ctx = document.getElementById('calChart').getContext('2d');
+  const series = buildSeries(10);
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: series.map(s=>s.label),
+      datasets: [{
+        label: 'Calories',
+        data: series.map(s=>s.calories),
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2,
+        pointRadius: 3,
+        backgroundColor: 'rgba(99,102,241,0.12)',
+        borderColor: 'rgba(99,102,241,1)'
+      }]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{mode:'index',intersect:false}
+      },
+      scales:{
+        x:{grid:{display:false}},
+        y:{beginAtZero:true}
+      }
     }
-
-    document.body.appendChild(notification);
-
-    // Remove notification after 3 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideInRight 0.3s ease reverse';
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 3000);
+  });
 }
 
-/**
- * Utility: Format date
- */
-function formatDate(date) {
-    if (!date) return '';
-    const d = new Date(date);
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const year = d.getFullYear();
-    return `${year}-${month}-${day}`;
+// update chart with range
+function updateChart(days){
+  let series;
+  if(days === 'all'){
+    // show all unique dates from earliest to today (bounded at 120 days for performance)
+    const earliest = workouts.reduce((min,w)=> w.date < min ? w.date : min, (new Date()).toISOString().slice(0,10));
+    const start = new Date(earliest);
+    const diffDays = Math.min(120, Math.ceil((new Date() - start)/(1000*60*60*24)));
+    series = buildSeries(diffDays || 10);
+  } else {
+    series = buildSeries(Number(days) || 10);
+  }
+
+  chart.data.labels = series.map(s=>s.label);
+  chart.data.datasets[0].data = series.map(s=>s.calories);
+  chart.update();
 }
 
-/**
- * Utility: Calculate BMI
- */
-function calculateBMI(height, weight) {
-    if (!height || !weight) return null;
-    const heightInMeters = height / 100;
-    const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1);
-    return bmi;
+// add mock workout
+function addMockWorkout(){
+  const types = ['Run','Strength','Yoga','HIIT','Bike','Walk'];
+  const type = types[Math.floor(Math.random()*types.length)];
+  const duration = 20 + Math.floor(Math.random()*60);
+  const calories = Math.max(80, Math.floor(duration * (6 + Math.random()*8))); // rough cal estimate
+  const date = new Date();
+  const iso = date.toISOString().slice(0,10);
+
+  const newW = { id: Date.now(), date: iso, type, duration, calories };
+  workouts.unshift(newW);
+  // keep only recent 200 items
+  workouts = workouts.slice(0,200);
+  // refresh UI
+  updateProfileStats();
+  renderWorkouts();
+  const sel = document.getElementById('range-select').value;
+  updateChart(sel === 'all' ? 'all' : Number(sel));
 }
 
-// Recalculate BMI when height or weight changes
-const heightInput = document.getElementById('height');
-const weightInput = document.getElementById('weight');
-const bmiInput = document.getElementById('bmi');
-
-if (heightInput && weightInput && bmiInput) {
-    [heightInput, weightInput].forEach(input => {
-        input.addEventListener('change', function() {
-            const bmi = calculateBMI(heightInput.value, weightInput.value);
-            if (bmi) {
-                bmiInput.value = bmi;
-            }
-        });
-    });
+// export CSV
+function exportCSV(){
+  const header = ['id','date','type','duration','calories'];
+  const rows = workouts.map(w => [w.id, w.date, w.type, w.duration, w.calories].join(','));
+  const csv = [header.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'workouts.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
-/**
- * Handle smooth scrolling for mobile menu
- */
-window.addEventListener('resize', function() {
-    if (window.innerWidth >= 768) {
-        // Reset menu visibility on desktop
-        const menu = document.getElementById('menu');
-        if (menu) {
-            menu.style.display = '';
-        }
-    }
+// wire up
+document.addEventListener('DOMContentLoaded', ()=>{
+  updateProfileStats();
+  renderWorkouts();
+  initChart();
+
+  document.getElementById('add-workout-btn').addEventListener('click', addMockWorkout);
+  document.getElementById('range-select').addEventListener('change', (e)=>{
+    const val = e.target.value;
+    updateChart(val === 'all' ? 'all' : Number(val));
+  });
+  document.getElementById('export-btn').addEventListener('click', exportCSV);
+
+  // small accessibility: keyboard trigger for add button
+  document.getElementById('add-workout-btn').addEventListener('keyup', (e)=>{
+    if(e.key === 'Enter') addMockWorkout();
+  });
+
 });
+

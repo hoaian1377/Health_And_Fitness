@@ -80,7 +80,7 @@
         <p>© 2025 Health & Fitness App — Giữ sức khỏe, sống hạnh phúc 🌿</p>
     </footer>
 
-    @include('partials.payment')
+    @include('payment')
 
     <!-- Global Scripts -->
     <script defer src="{{ asset('js/app.js') }}"></script>
