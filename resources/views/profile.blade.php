@@ -41,7 +41,7 @@ p.small{color:var(--muted);font-size:14px;margin:0 0 6px;}
       <p class="small">Thông tin cơ bản & BMI</p>
       <div style="display:flex;gap:14px;align-items:center;margin-top:12px;">
         <div style="width:84px;height:84px;border-radius:16px;background:linear-gradient(135deg,#eef2ff,#eef7ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:26px;">
-          {{ substr($account->full_name,0,1) }}
+          {{ substr($account->fullname,0,1) }}
         </div>
         <div>
           <div style="font-weight:700;font-size:16px;">{{ $account->fullname }}</div>
