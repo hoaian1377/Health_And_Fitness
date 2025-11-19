@@ -1,188 +1,217 @@
-const initialWorkouts = [
-  { id: 1, date: '2025-11-16', type: 'Run', duration: 42, calories: 420 },
-  { id: 2, date: '2025-11-15', type: 'Strength', duration: 55, calories: 380 },
-  { id: 3, date: '2025-11-14', type: 'Yoga', duration: 35, calories: 150 },
-  { id: 4, date: '2025-11-12', type: 'HIIT', duration: 30, calories: 360 },
-  { id: 5, date: '2025-11-10', type: 'Bike', duration: 60, calories: 520 },
-];
-
-// state
-let workouts = [...initialWorkouts];
-let chart = null;
-
-function formatDateISO(d){
-  const dt = new Date(d);
-  return dt.toISOString().slice(0,10);
-}
-
-// compute totals
-function computeTotals(list){
-  const calories = list.reduce((s,w)=>s+(w.calories||0),0);
-  const minutes = list.reduce((s,w)=>s+(w.duration||0),0);
-  const sessions = list.length;
-  return { calories, minutes, sessions };
-}
-
-// update left stats
-function updateProfileStats(){
-  const t = computeTotals(workouts);
-  document.getElementById('stat-cal').textContent = t.calories;
-  document.getElementById('stat-sessions').textContent = t.sessions;
-  document.getElementById('stat-mins').textContent = t.minutes + 'm';
-
-  // KPI
-  document.getElementById('kpi-cal').textContent = t.calories;
-  document.getElementById('kpi-sessions').textContent = t.sessions;
-  document.getElementById('kpi-mins').textContent = t.minutes + 'm';
-}
-
-// render workouts list
-function renderWorkouts(){
-  const container = document.getElementById('workouts-list');
-  container.innerHTML = '';
-  workouts.slice(0,20).forEach(w=>{
-    const el = document.createElement('div');
-    el.className = 'workout';
-    el.innerHTML = `
-      <div class="w-left">
-        <div class="type-badge">${(w.type || '?').slice(0,2).toUpperCase()}</div>
-        <div class="w-meta">
-          <div style="font-weight:700">${w.type} · ${w.duration}m</div>
-          <div class="sub">${w.date} · ${w.calories} kcal</div>
-        </div>
-      </div>
-      <div class="small muted">Details</div>
-    `;
-    container.appendChild(el);
-  });
-}
-
-// build timeseries for last N days
-function buildSeries(days = 10){
-  // build map date->calories
-  const map = {};
-  workouts.forEach(w=>{
-    const d = w.date;
-    map[d] = (map[d] || 0) + (w.calories || 0);
-  });
-
-  const series = [];
-  const now = new Date();
-  for(let i=days-1;i>=0;i--){
-    const d = new Date(now);
-    d.setDate(now.getDate() - i);
-    const iso = d.toISOString().slice(0,10);
-    const label = d.toLocaleDateString('vi-VN', { month:'short', day:'numeric' });
-    series.push({ label, date: iso, calories: map[iso] || 0 });
-  }
-  return series;
-}
-
-// init chart
-function initChart(){
-  const ctx = document.getElementById('calChart').getContext('2d');
-  const series = buildSeries(10);
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: series.map(s=>s.label),
-      datasets: [{
-        label: 'Calories',
-        data: series.map(s=>s.calories),
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2,
-        pointRadius: 3,
-        backgroundColor: 'rgba(99,102,241,0.12)',
-        borderColor: 'rgba(99,102,241,1)'
-      }]
-    },
-    options: {
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{mode:'index',intersect:false}
-      },
-      scales:{
-        x:{grid:{display:false}},
-        y:{beginAtZero:true}
-      }
+(function(){
+    function initMenuToggle() {
+        const menuToggle = document.getElementById('menu-toggle');
+        const menu = document.getElementById('menu');
+        if (menuToggle && menu && !menuToggle.dataset.bound) {
+            menuToggle.addEventListener('click', () => {
+                menu.classList.toggle('show');
+            });
+            menuToggle.dataset.bound = 'true';
+        }
     }
-  });
-}
 
-// update chart with range
-function updateChart(days){
-  let series;
-  if(days === 'all'){
-    // show all unique dates from earliest to today (bounded at 120 days for performance)
-    const earliest = workouts.reduce((min,w)=> w.date < min ? w.date : min, (new Date()).toISOString().slice(0,10));
-    const start = new Date(earliest);
-    const diffDays = Math.min(120, Math.ceil((new Date() - start)/(1000*60*60*24)));
-    series = buildSeries(diffDays || 10);
-  } else {
-    series = buildSeries(Number(days) || 10);
-  }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMenuToggle);
+    } else {
+        initMenuToggle();
+    }
 
-  chart.data.labels = series.map(s=>s.label);
-  chart.data.datasets[0].data = series.map(s=>s.calories);
-  chart.update();
-}
+    let totalCal = 0;
+    let exercisesToday = [];
 
-// add mock workout
-function addMockWorkout(){
-  const types = ['Run','Strength','Yoga','HIIT','Bike','Walk'];
-  const type = types[Math.floor(Math.random()*types.length)];
-  const duration = 20 + Math.floor(Math.random()*60);
-  const calories = Math.max(80, Math.floor(duration * (6 + Math.random()*8))); // rough cal estimate
-  const date = new Date();
-  const iso = date.toISOString().slice(0,10);
+    // Initialize Pie Chart
+    const pieCtx = document.getElementById('pieChart');
+    let pieChart = null;
+    if (pieCtx && typeof Chart !== 'undefined') {
+        pieChart = new Chart(pieCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: ['#9FCD3B', '#0EA5E9', '#F59E0B', '#EF4444', '#10B981', '#8B5CF6'],
+                    borderColor: '#1A1F2E',
+                    borderWidth: 2,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            color: '#A0AEC0',
+                            font: { size: 12, weight: '600' },
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    }
 
-  const newW = { id: Date.now(), date: iso, type, duration, calories };
-  workouts.unshift(newW);
-  // keep only recent 200 items
-  workouts = workouts.slice(0,200);
-  // refresh UI
-  updateProfileStats();
-  renderWorkouts();
-  const sel = document.getElementById('range-select').value;
-  updateChart(sel === 'all' ? 'all' : Number(sel));
-}
+    // Initialize Week Chart
+    const weekCtx = document.getElementById('weekChart');
+    if (weekCtx && typeof Chart !== 'undefined') {
+        new Chart(weekCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Calo (kcal)',
+                    data: [350, 420, 380, 450, 390, 410, 0],
+                    borderColor: '#9FCD3B',
+                    backgroundColor: 'rgba(159, 205, 59, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#9FCD3B',
+                    pointBorderColor: '#1A1F2E',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: '#A0AEC0',
+                            font: { size: 12, weight: '600' }
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(159, 205, 59, 0.1)',
+                        drawBorder: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(159, 205, 59, 0.1)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#718096',
+                            font: { size: 12 }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#718096',
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+    }
 
-// export CSV
-function exportCSV(){
-  const header = ['id','date','type','duration','calories'];
-  const rows = workouts.map(w => [w.id, w.date, w.type, w.duration, w.calories].join(','));
-  const csv = [header.join(','), ...rows].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'workouts.csv';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
+    function updateUI() {
+        const totalCalEl = document.getElementById('total-cal');
+        if (totalCalEl) totalCalEl.innerText = totalCal;
 
-// wire up
-document.addEventListener('DOMContentLoaded', ()=>{
-  updateProfileStats();
-  renderWorkouts();
-  initChart();
+        // Update progress bar
+        const goal = window.profileData && window.profileData.goalCalories ? window.profileData.goalCalories : 1;
+        const progress = Math.min(100, (totalCal / goal) * 100);
+        const progressBar = document.getElementById('progress-bar');
+        if (progressBar) progressBar.style.width = progress + '%';
+        const progressPercent = document.getElementById('progress-percent');
+        if (progressPercent) progressPercent.innerText = Math.round(progress) + '%';
 
-  document.getElementById('add-workout-btn').addEventListener('click', addMockWorkout);
-  document.getElementById('range-select').addEventListener('change', (e)=>{
-    const val = e.target.value;
-    updateChart(val === 'all' ? 'all' : Number(val));
-  });
-  document.getElementById('export-btn').addEventListener('click', exportCSV);
+        // Update pie chart
+        if (pieChart) {
+            pieChart.data.labels = exercisesToday.map(e => e.name);
+            pieChart.data.datasets[0].data = exercisesToday.map(e => e.cal);
+            pieChart.update();
+        }
 
-  // small accessibility: keyboard trigger for add button
-  document.getElementById('add-workout-btn').addEventListener('keyup', (e)=>{
-    if(e.key === 'Enter') addMockWorkout();
-  });
+        // Update exercise list
+        const list = document.getElementById('exercise-list');
+        if (!list) return;
+        list.innerHTML = '';
 
-});
+        if (exercisesToday.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'exercise-list-empty';
+            empty.innerText = 'Chưa có bài tập nào';
+            list.appendChild(empty);
+            return;
+        }
 
+        exercisesToday.forEach((e, index) => {
+            const card = document.createElement('div');
+            card.className = 'exercise-list-item';
+            card.innerHTML = `
+                <span class="exercise-name">${e.name}</span>
+                <div class="exercise-meta">
+                    <span class="exercise-cal">${e.cal} kcal</span>
+                    <button class="exercise-remove" data-index="${index}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+
+        // attach remove handlers
+        list.querySelectorAll('.exercise-remove').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = Number(btn.getAttribute('data-index'));
+                removeExercise(idx);
+            });
+        });
+    }
+
+    function removeExercise(index) {
+        if (exercisesToday[index]) {
+            totalCal -= exercisesToday[index].cal;
+            exercisesToday.splice(index, 1);
+            updateUI();
+        }
+    }
+
+    function addExerciseFromSelect() {
+        const select = document.getElementById('exercise-select');
+        if (!select) return;
+        const name = select.options[select.selectedIndex].text;
+        const cal = Number(select.value);
+        if (!cal) {
+            alert('Vui lòng chọn một bài tập hợp lệ');
+            return;
+        }
+        exercisesToday.push({ name, cal });
+        totalCal += cal;
+        select.value = '';
+        updateUI();
+    }
+
+    function resetExercises() {
+        if (!confirm('Bạn có chắc chắn muốn xóa tất cả bài tập hôm nay?')) return;
+        exercisesToday = [];
+        totalCal = 0;
+        updateUI();
+    }
+
+    window.addEventListener('load', () => {
+        const addBtn = document.getElementById('add-ex');
+        const resetBtn = document.getElementById('reset-ex');
+        if (addBtn) addBtn.addEventListener('click', addExerciseFromSelect);
+        if (resetBtn) resetBtn.addEventListener('click', resetExercises);
+        updateUI();
+    });
+
+})();

@@ -1,166 +1,387 @@
 @extends('base')
 @section('content')
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dashboard Fitness</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-:root{
-  --bg:#f4f6f8; --card:#ffffff; --accent:#4f46e5; --muted:#6b7280; --radius:16px; --shadow:0 6px 18px rgba(15,23,42,0.08);
-  font-family: Inter, sans-serif;
-}
-body{margin:0; background:#f3f5f9;}
-.wrap{max-width:1200px;margin:28px auto;padding:22px;display:grid;grid-template-columns:420px 1fr;gap:22px;}
-.left-col{display:flex;flex-direction:column;gap:22px;}
-.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;overflow:hidden;}
-h2{margin:0 0 10px 0;font-size:18px;}
-p.small{color:var(--muted);font-size:14px;margin:0 0 6px;}
-.right-col{display:flex;flex-direction:column;gap:22px;}
-.tall-card{display:flex;flex-direction:column;gap:18px;min-height:520px;}
-.split{background:#fff;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 6px 18px rgba(15,23,42,0.04);}
-.exercise-top{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;}
-.exercise-form{flex:1 1 320px;min-width:240px;}
-.exercise-form input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(15,23,42,0.06);margin-bottom:10px;font-size:14px;}
-.btn{display:inline-block;background:var(--accent);color:white;padding:10px 14px;border-radius:10px;cursor:pointer;border:none;font-weight:600;}
-.btn.red{background:#ef4444;}
-.list{margin-top:10px;display:flex;flex-direction:column;gap:8px;max-height:160px;overflow:auto;}
-.item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg, rgba(99,102,241,0.04), rgba(99,102,241,0.01));font-size:14px;}
-.chart-wrap{width:100%;height:260px;}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <!-- LEFT column -->
-  <div class="left-col">
-    <!-- 1. Thông tin cá nhân -->
-    <div class="card">
-      <h2>Thông tin cá nhân</h2>
-      <p class="small">Thông tin cơ bản & BMI</p>
-      <div style="display:flex;gap:14px;align-items:center;margin-top:12px;">
-        <div style="width:84px;height:84px;border-radius:16px;background:linear-gradient(135deg,#eef2ff,#eef7ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:26px;">
-          {{ substr($account->fullname,0,1) }}
-        </div>
-        <div>
-          <div style="font-weight:700;font-size:16px;">{{ $account->fullname }}</div>
-          <div class="small">{{ $age }} tuổi · {{ $account->weight }} kg · {{ $account->height }} cm</div>
-          <div style="margin-top:8px;">
-            <div style="font-size:13px;color:var(--muted)">BMI</div>
-            <div style="font-weight:700">{{ $account->bmi }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. Tiến độ mục tiêu -->
-    <div class="card">
-      <h2>Tiến độ mục tiêu</h2>
-      <p class="small">{{ $goal_type }} - Mục tiêu {{ $target_weight }} kg</p>
-      <div style="margin-top:12px;">
-        <div style="height:12px;background:#eef2ff;border-radius:999px;overflow:hidden;">
-          <div id="goal-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#6366f1,#06b6d4);transition:width .6s;"></div>
-        </div>
-        <p style="margin-top:6px;">Hiện tại: {{ $account->weight }} kg</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- RIGHT column -->
-  <div class="right-col">
-    <div class="tall-card card">
-      <!-- Nhập bài tập -->
-      <div class="split">
-        <h2>Bài tập hôm nay</h2>
-        <div class="exercise-top">
-          <div class="exercise-form">
-            <select id="exercise-select">
-              <option value="">-- Chọn bài tập --</option>
-              @foreach($exercises as $ex)
-                <option value="{{ $ex->calories_burned }}">{{ $ex->name_workout }} ({{ $ex->calories_burned }} kcal)</option>
-              @endforeach
-            </select>
-            <div style="margin-top:10px;">
-              <button class="btn" id="add-ex">Thêm</button>
-              <button class="btn red" id="reset-ex">Xóa tất cả</button>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+@endpush
+<div class="container">
+    <!-- Header Section -->
+    <div class="profile-header">
+        <div class="profile-avatar-section">
+            <div class="profile-avatar">
+                {{ substr($account->fullname, 0, 1) }}
             </div>
-            <div style="margin-top:12px;color:var(--muted);font-size:14px;">
-              <div>Tổng calo hôm nay: <strong id="total-cal">0</strong> kcal</div>
-              <div style="margin-top:6px">Mục tiêu calo: <strong id="goal-cal">{{ $goal_calories }}</strong> kcal</div>
+        </div>
+        
+        <div class="profile-basic-info">
+            <div class="profile-name">{{ $account->fullname }}</div>
+            <div class="profile-meta">
+                <div class="meta-item">
+                    <i class="fas fa-star"></i>
+                    <strong>Advanced</strong>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-fire"></i>
+                    <strong>14,750</strong> points
+                </div>
             </div>
-            <div class="list" id="exercise-list"></div>
-          </div>
-          <div class="chart-wrap" style="flex:0 0 300px;">
-            <canvas id="pieChart"></canvas>
-          </div>
+            <div class="profile-badges">
+                <span class="badge">Advanced Member</span>
+                <span class="badge secondary">Verified</span>
+            </div>
         </div>
-      </div>
-
-      <!-- Biểu đồ tuần -->
-      <div class="split" style="flex:1;">
-        <h2>Calo tuần</h2>
-        <div class="chart-wrap">
-          <canvas id="weekChart"></canvas>
+        
+        <div class="profile-actions">
+            <button class="action-btn" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button class="action-btn" title="More Options">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
         </div>
-      </div>
     </div>
-  </div>
+
+    <!-- Main Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Left Section - Progress -->
+        <div class="dashboard-section section-left">
+            <!-- Progress Card -->
+            <div class="card card-progress">
+                <div class="progress-header">
+                    <div class="progress-info">
+                        <div class="progress-label">Progress</div>
+                        <div class="progress-value">75%</div>
+                        <div class="progress-note">Goal Completion</div>
+                    </div>
+                    <div class="badge-filter">This Week</div>
+                </div>
+                <div class="circle-progress-container">
+                    <div class="circle-progress">
+                        <div class="circle-bg">
+                            <div class="circle-inner">
+                                <div class="circle-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Cardio Training</span>
+                        <span class="detail-percent">85%</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Strength Training</span>
+                        <span class="detail-percent">75%</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Flexibility Training</span>
+                        <span class="detail-percent">65%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meal Card -->
+            <div class="card card-meal">
+                <div class="badge-primary">Dinner</div>
+                <div class="meal-image">
+                    <img src="{{ asset('images/meal1.avif') }}" alt="Lean & Green">
+                </div>
+                <div class="meal-content">
+                    <h3 class="meal-title">Lean & Green</h3>
+                    <p class="meal-description">Baked Salmon with Steamed Broccoli and Brown Rice</p>
+                    <div class="meal-score">
+                        <span class="score-label">Health Score:</span>
+                        <span class="score-value">85/100</span>
+                    </div>
+                    <div class="nutrition-bars">
+                        <div class="nutrition-bar" style="width: 100%;"></div>
+                    </div>
+                    <div class="meal-nutrition">
+                        <span>450 Cal</span>
+                        <span>40g Carbs</span>
+                        <span>35g Protein</span>
+                        <span>15g Fats</span>
+                    </div>
+                    <button class="btn btn-primary btn-add-meal">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Middle Content -->
+                    </div>
+
+        <!-- Middle Section - Cards Container -->
+        <div class="dashboard-section section-middle">
+            <!-- Top Cards Row -->
+            <div class="cards-grid-top">
+                <!-- Heart Beat Card -->
+                <div class="card card-compact card-gradient-green">
+                    <div class="card-header-compact">
+                        <i class="fas fa-heart card-icon-large"></i>
+                        <h3 class="card-title-compact">Heart Beat</h3>
+                        <div class="card-menu">
+                            <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                    </div>
+                    <div class="heartbeat-content">
+                        <div class="bpm-value">110 <span class="bpm-unit">bpm</span></div>
+                        <div class="bpm-status">Normal</div>
+                        <div class="heartbeat-text">You are calm and ready for exercises!</div>
+                        <div class="heartbeat-animation">
+                            <svg viewBox="0 0 100 30" class="heartbeat-line">
+                                <polyline points="0,15 15,15 20,10 25,20 30,15 40,15 45,8 50,22 55,15 65,15" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Score Card -->
+                <div class="card card-compact card-gradient-blue">
+                    <div class="card-header-compact">
+                        <i class="fas fa-heart-pulse card-icon-large"></i>
+                        <h3 class="card-title-compact">Health Score</h3>
+                        <div class="card-menu">
+                            <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                    </div>
+                    <div class="health-score-content">
+                        <div class="health-score-value">82%</div>
+                        <div class="health-score-label">Very Healthy</div>
+                        <div class="health-score-bar">
+                            <div class="score-fill" style="width: 82%;"></div>
+                        </div>
+                        <div class="health-score-text">Keep up your good work, Kalendra!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile & Activity Cards Row -->
+            <div class="cards-grid-middle">
+                <!-- My Profile Card -->
+                <div class="card card-profile">
+                    <div class="card-header">
+                        <h3 class="card-title">My Profile</h3>
+                        <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="profile-info-grid">
+                        <div class="info-item">
+                            <div class="avatar-large">{{ substr($account->fullname, 0, 1) }}</div>
+                            <div class="info-content">
+                                <h4 class="info-name">{{ $account->fullname }}</h4>
+                                <div class="info-badges">
+                                    <span class="badge-small"><i class="fas fa-shield-alt"></i> Advanced</span>
+                                    <span class="badge-small points"><i class="fas fa-fire"></i> 14,750</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stats-info">
+                        <div class="stat-info-item">
+                            <span class="stat-info-label">Weight</span>
+                            <span class="stat-info-value">{{ $account->weight }} kg</span>
+                        </div>
+                        <div class="stat-info-item">
+                            <span class="stat-info-label">Height</span>
+                            <span class="stat-info-value">{{ $account->height }} cm</span>
+                        </div>
+                        <div class="stat-info-item">
+                            <span class="stat-info-label">Age</span>
+                            <span class="stat-info-value">{{ $age }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Activity Card -->
+                <div class="card card-activity-detail">
+                    <div class="card-header">
+                        <h3 class="card-title">Today's Activity</h3>
+                        <button class="btn-badge">Today</button>
+                    </div>
+                    <div class="activity-detail-card">
+                        <div class="activity-map">
+                            <div class="map-placeholder">
+                                <i class="fas fa-map"></i>
+                            </div>
+                        </div>
+                        <div class="activity-info-detail">
+                            <h4 class="activity-route">Park Loop Trail</h4>
+                            <div class="activity-time">
+                                <i class="fas fa-clock"></i> 6:30 AM - 7:20 AM
+                            </div>
+                            <div class="activity-stats-grid">
+                                <div class="activity-stat">
+                                    <span class="stat-title">Distance</span>
+                                    <span class="stat-val">5 miles (8 km)</span>
+                                </div>
+                                <div class="activity-stat">
+                                    <span class="stat-title">Time</span>
+                                    <span class="stat-val">50 minutes</span>
+                                </div>
+                                <div class="activity-stat">
+                                    <span class="stat-title">Total Steps</span>
+                                    <span class="stat-val">10,500 steps</span>
+                                </div>
+                                <div class="activity-stat">
+                                    <span class="stat-title">Total Calories</span>
+                                    <span class="stat-val">450 Cal</span>
+                                </div>
+                                <div class="activity-stat">
+                                    <span class="stat-title">Average Pace</span>
+                                    <span class="stat-val">10 minutes/mile</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section - Activity Stats -->
+        <div class="dashboard-section section-right">
+            <!-- Running Activity Card -->
+            <div class="card card-activity card-activity-large">
+                <div class="activity-header">
+                    <div class="activity-icon-box">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <h3>Running Activity</h3>
+                </div>
+                <div class="activity-badge-row">
+                    <span class="badge-label">Running</span>
+                </div>
+                <div class="activity-details-list">
+                    <div class="activity-detail">
+                        <span class="detail-key">Central Park Entrance</span>
+                        <span class="detail-val">9.8km</span>
+                    </div>
+                    <div class="activity-detail">
+                        <span class="detail-key">Time</span>
+                        <span class="detail-val">50 mins</span>
+                    </div>
+                    <div class="activity-detail">
+                        <span class="detail-key">Distance</span>
+                        <span class="detail-val">10,500</span>
+                    </div>
+                    <div class="activity-detail">
+                        <span class="detail-key">Total Calories</span>
+                        <span class="detail-val">450 Cal</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More Activity Cards -->
+            <div class="activity-compact-section">
+                <div class="card card-activity card-compact-activity">
+                    <div class="activity-header-compact">
+                        <div class="activity-info-line">
+                            <span class="label">Central Park North Gate</span>
+                            <span class="badge-tag">Average</span>
+                        </div>
+                        <span class="val">140 bpm</span>
+                    </div>
+                    <div class="activity-sub">
+                        <span class="sub-label">Range: 50</span>
+                        <span class="sub-val">160 bpm</span>
+                    </div>
+                    <div class="activity-sub">
+                        <span class="sub-label">+115 % of day</span>
+                        <span class="sub-val-highlight"></span>
+                    </div>
+                </div>
+
+                <!-- Heart Beat Stats -->
+                <div class="card card-activity card-compact-activity">
+                    <div class="activity-header-compact">
+                        <div class="activity-info-line">
+                            <span class="label">Heart Rate Stats</span>
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <span class="val">120</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extended Dashboard Section - Bottom Row -->
+    <div class="dashboard-extended">
+        <!-- Workout Section (Left) -->
+        <div class="card card-workout">
+            <div class="card-title mb-20">Bài tập hôm nay</div>
+            
+            <div class="workout-content">
+                <!-- Exercise Input Left -->
+                <div class="workout-input-section">
+                    <div class="form-group">
+                        <label>Chọn bài tập</label>
+                        <select id="exercise-select">
+                            <option value="">-- Chọn bài tập --</option>
+                            @foreach($exercises as $ex)
+                                <option value="{{ $ex->calories_burned }}">{{ $ex->name_workout }} ({{ $ex->calories_burned }} kcal)</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="hstack">
+                        <button class="btn btn-primary btn-flex" id="add-ex">
+                            <i class="fas fa-plus"></i> Thêm
+                        </button>
+                        <button class="btn btn-danger" id="reset-ex">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+
+                    <div class="summary-box">
+                        <div class="mb-12">
+                            <span class="text-secondary small">Tổng calo hôm nay</span>
+                            <div class="big-primary">
+                                <span id="total-cal">0</span> <span class="small">kcal</span>
+                            </div>
+                        </div>
+                        <div class="top-divider">
+                            <span class="text-secondary small">Mục tiêu calo</span>
+                            <div class="goal-value">
+                                <span id="goal-cal">{{ $goal_calories }}</span> kcal
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exercise List -->
+                    <div style="margin-top: 20px;">
+                        <div class="exercise-list-title">Danh sách bài tập</div>
+                        <div id="exercise-list" class="exercise-list"></div>
+                    </div>
+                </div>
+
+                <!-- Exercise Chart Right -->
+                <div class="workout-chart-section">
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Stats Section (Right) -->
+        <div class="card card-weekly-stats">
+            <div class="card-title mb-20">Calo tuần này</div>
+            <div class="chart-container">
+                <canvas id="weekChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
-<script>
-let totalCal = 0;
-let exercisesToday = [];
+@push('scripts')
+    <script>
+        window.profileData = {
+            goalCalories: {{ $goal_calories }}
+        };
+    </script>
+    <script src="{{ asset('js/profile.js') }}"></script>
+@endpush
 
-const pieChart = new Chart(document.getElementById('pieChart').getContext('2d'), {
-  type:'doughnut',
-  data:{labels:[],datasets:[{data:[],backgroundColor:['#6366f1','#06b6d4','#f97316','#ef4444','#a78bfa','#60a5fa']}]},
-  options:{cutout:'70%',plugins:{legend:{display:false}}}
-});
-
-const weekChart = new Chart(document.getElementById('weekChart').getContext('2d'),{
-  type:'line',
-  data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Calo (kcal)',data:[0,0,0,0,0,0,0],borderColor:'#6366f1',fill:true,backgroundColor:'rgba(99,102,241,0.2)',tension:0.4} ] },
-  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
-});
-
-function updateUI(){
-  document.getElementById('total-cal').innerText = totalCal;
-  document.getElementById('goal-bar').style.width = Math.min(100,(totalCal/{{ $goal_calories }})*100)+'%';
-
-  // update pie
-  pieChart.data.labels = exercisesToday.map(e=>e.name);
-  pieChart.data.datasets[0].data = exercisesToday.map(e=>e.cal);
-  pieChart.update();
-
-  // update list
-  const list = document.getElementById('exercise-list');
-  list.innerHTML = '';
-  exercisesToday.forEach(e=>{
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.innerHTML = `<div>${e.name}</div><div>${e.cal} kcal</div>`;
-    list.appendChild(div);
-  });
-}
-
-document.getElementById('add-ex').addEventListener('click',()=>{
-  const select = document.getElementById('exercise-select');
-  const name = select.options[select.selectedIndex].text;
-  const cal = Number(select.value);
-  if(!cal) return alert('Chọn bài tập hợp lệ');
-  exercisesToday.push({name,cal});
-  totalCal += cal;
-  updateUI();
-});
-
-document.getElementById('reset-ex').addEventListener('click',()=>{
-  if(!confirm('Xóa tất cả bài tập hôm nay?')) return;
-  exercisesToday = [];
-  totalCal = 0;
-  updateUI();
-});
-</script>
 </body>
 </html>
 @endsection
