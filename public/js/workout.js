@@ -392,3 +392,65 @@ document.addEventListener('click', function (e) {
 
 })();
 
+
+
+// Tab Navigation
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Remove active class
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        
+        // Add active class
+        this.classList.add('active');
+        const tabId = this.getAttribute('data-tab') + '-panel';
+        document.getElementById(tabId).classList.add('active');
+    });
+});
+
+// Modal Functions
+function openModal(title, description) {
+    const modal = document.getElementById('mealModal');
+    document.getElementById('mealTitle').textContent = title;
+    document.getElementById('mealDesc').textContent = description;
+    modal.classList.add('show');
+}
+
+function closeModal() {
+    document.getElementById('mealModal').classList.remove('show');
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('mealModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+
+// Start Workout Button
+document.getElementById('startWorkout')?.addEventListener('click', function() {
+    const video = document.getElementById('workoutVideo');
+    video.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    video.play();
+});
+
+// Save Workout Button
+document.getElementById('saveWorkout')?.addEventListener('click', function() {
+    alert('Đã lưu bài tập vào danh sách yêu thích!');
+    this.innerHTML = '<i class="icon">✅</i> Đã lưu';
+    this.disabled = true;
+});
+
+// Share Workout Button
+document.getElementById('shareWorkout')?.addEventListener('click', function() {
+    if (navigator.share) {
+        navigator.share({
+            title: document.querySelector('.workout-header h1').textContent,
+            url: window.location.href
+        });
+    } else {
+        alert('Link đã được copy: ' + window.location.href);
+    }
+});
+
