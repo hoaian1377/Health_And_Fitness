@@ -3,288 +3,174 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/workout-detail.css') }}">
 
-
-
 <div class="workout-detail-page">
 
- 
-   
-        <!-- Video Section -->
-        <div class="video-section">
-            <div class="video-container">
-                <div class="video-frame">
-                    <video 
-                        id="workoutVideo"
-                        controls 
-                        poster="{{ $exercise->thumbnail ?? asset('images/thumbnail.jpg') }}"
-                        preload="metadata">
-                        <source src="{{ $exercise->video_urls ?? asset('videos/workout1.mp4') }}" type="video/mp4">
-                        Trình duyệt của bạn không hỗ trợ phát video.
-                    </video>
-                </div>
+    <!-- Tên bài tập -->
+    <h1>{{ $exercise->name_workout }}</h1>
+
+    <!-- Video Placeholder -->
+    <div class="video-container">
+        @if($exercise->video_url)
+            <video class="video-frame" controls>
+                <source src="{{ $exercise->video_url }}" type="video/mp4">
+                Trình duyệt không hỗ trợ video.
+            </video>
+        @else
+            <div class="video-frame" style="background: #e2e8f0; height: 200px; display:flex; align-items:center; justify-content:center; border-radius:15px;">
+                Video bài tập chưa có
             </div>
+        @endif
+    </div>
 
-            <!-- Video Controls -->
-            <div class="video-stats">
-                <div class="stat-item">
-                    <i class="icon">👁️</i>
-                    <span>{{ number_format($exercise->views ?? 12458) }} lượt xem</span>
-                </div>
-                <div class="stat-item">
-                    <i class="icon">👍</i>
-                    <span>{{ number_format($exercise->likes ?? 1254) }} lượt thích</span>
-                </div>
-                <div class="stat-item">
-                    <i class="icon">📅</i>
-                    <span>{{ $exercise->created_at ? $exercise->created_at->diffForHumans() : 'Hôm qua' }}</span>
-                </div>
-            </div>
+    <!-- Stats -->
+    <div class="video-stats">
+        <div class="stat-item">
+            <span class="icon">⏱</span>
+            <span>
+                @php
+                    $duration = $exercise->duration ?? '00:00:00';
+                    $parts = explode(':', $duration);
+                    $h = (int)$parts[0]; $m = (int)$parts[1]; $s = (int)$parts[2];
+                    if($h>0) echo "{$h} giờ {$m} phút";
+                    elseif($m>0) echo "{$m} phút";
+                    else echo "{$s} giây";
+                @endphp
+            </span>
         </div>
-
-        <!-- Tab Navigation -->
-        <div class="tab-navigation">
-            <button class="tab-btn active" data-tab="details">Chi tiết</button>
-            <button class="tab-btn" data-tab="nutrition">Dinh dưỡng</button>
-            <button class="tab-btn" data-tab="equipment">Dụng cụ</button>
-            <button class="tab-btn" data-tab="reviews">Đánh giá</button>
+        <div class="stat-item">
+            <span class="icon">🔥</span>
+            <span>{{ $exercise->calories_burned ?? 0 }} kcal</span>
         </div>
+        <div class="stat-item">
+            <span class="icon">🔄</span>
+            <span>{{ $exercise->practice_round ?? 0 }} vòng</span>
+        </div>
+        <div class="stat-item">
+            <span class="icon">💪</span>
+            <span>{{ $exercise->muscle_group ?? 'Full body' }}</span>
+        </div>
+    </div>
 
-        <!-- Tab Content -->
-        <div class="tab-content">
-            <!-- Details Tab -->
-            <div class="tab-panel active" id="details-panel">
-                <section class="workout-info">
-                    <h2>🏋️ Chi tiết bài tập</h2>
-                    
-                    @if($exercise->description)
-                    <div class="workout-description">
-                        <p>{{ $exercise->description }}</p>
-                    </div>
-                    @endif
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="info">Thông tin</button>
+        <button class="tab-btn" data-tab="goals">Mục tiêu</button>
+    </div>
 
-                    <h3>📋 Các bước thực hiện</h3>
+    <!-- Tab Content -->
+    <div class="tab-content">
+
+        <!-- Thông tin chi tiết -->
+        <div class="tab-panel active" id="info">
+            <div class="workout-info">
+
+                <!-- Tổng quan -->
+                <div class="info-card">
+                    <h3>Tổng quan</h3>
+                    <p>
+                        Bài tập <strong>{{ $exercise->name_workout }}</strong> tập trung vào nhóm cơ 
+                        <strong>{{ $exercise->muscle_group ?? 'toàn thân' }}</strong>, đốt cháy 
+                        <strong>{{ $exercise->calories_burned ?? 0 }} calories</strong> trong 
+                        <strong>
+                        @php
+                            if($h>0) echo "{$h} giờ {$m} phút";
+                            else echo "{$m} phút";
+                        @endphp
+                        </strong> với <strong>{{ $exercise->practice_round ?? 0 }} vòng</strong>.
+                    </p>
+                </div>
+
+                <!-- Thông số chi tiết -->
+                <div class="info-card">
+                    <h3>Chi tiết thông số</h3>
                     <ul class="workout-steps">
                         <li>
                             <div class="step-number">1</div>
                             <div class="step-content">
-                                <strong>Khởi động</strong>
-                                <p>5 phút (xoay khớp, chạy tại chỗ, jumping jacks)</p>
+                                <strong>Nhóm cơ</strong>
+                                <p>{{ $exercise->muscle_group ?? 'Chưa phân loại' }}</p>
                             </div>
                         </li>
                         <li>
                             <div class="step-number">2</div>
                             <div class="step-content">
-                                <strong>Burpees</strong>
-                                <p>3 hiệp × 12 lần · Nghỉ 60s giữa các hiệp</p>
+                                <strong>Thời lượng</strong>
+                                <p>{{ $h }} giờ {{ $m }} phút {{ $s }} giây</p>
                             </div>
                         </li>
                         <li>
                             <div class="step-number">3</div>
                             <div class="step-content">
-                                <strong>Mountain Climbers</strong>
-                                <p>3 hiệp × 40 giây · Tập trung vào tốc độ</p>
+                                <strong>Số vòng tập</strong>
+                                <p>{{ $exercise->practice_round ?? 0 }} vòng</p>
                             </div>
                         </li>
                         <li>
                             <div class="step-number">4</div>
                             <div class="step-content">
-                                <strong>Jump Squats</strong>
-                                <p>3 hiệp × 15 lần · Bật cao nhất có thể</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="step-number">5</div>
-                            <div class="step-content">
-                                <strong>Push-ups</strong>
-                                <p>3 hiệp × 10–15 lần · Giữ lưng thẳng</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="step-number">6</div>
-                            <div class="step-content">
-                                <strong>Plank</strong>
-                                <p>3 hiệp × 45–60 giây · Thắt chặt cơ bụng</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="step-number">7</div>
-                            <div class="step-content">
-                                <strong>Thư giãn & giãn cơ</strong>
-                                <p>5 phút (kéo giãn nhẹ nhàng toàn thân)</p>
+                                <strong>Calorie tiêu thụ</strong>
+                                <p>{{ $exercise->calories_burned ?? 0 }} kcal</p>
                             </div>
                         </li>
                     </ul>
+                </div>
 
-                    <div class="workout-tips">
-                        <h3>💡 Lưu ý quan trọng</h3>
-                        <ul>
-                            <li>Khởi động kỹ trước khi tập để tránh chấn thương</li>
-                            <li>Uống nước đều đặn trong suốt quá trình tập</li>
-                            <li>Điều chỉnh số lần/thời gian phù hợp với thể lực</li>
-                            <li>Dừng lại nếu cảm thấy đau hoặc khó chịu</li>
-                            <li>Kết hợp với chế độ ăn uống khoa học để đạt hiệu quả tốt nhất</li>
+                <!-- Tips -->
+                <div class="info-card workout-tips">
+                    <h3>💡 Lưu ý quan trọng</h3>
+                    <ul>
+                        <li>Khởi động kỹ trước khi tập để tránh chấn thương</li>
+                        <li>Giữ nhịp thở đều đặn trong quá trình tập luyện</li>
+                        <li>Nghỉ ngơi hợp lý giữa các vòng tập</li>
+                        <li>Uống đủ nước trước, trong và sau khi tập</li>
+                        <li>Dừng ngay nếu cảm thấy đau hoặc khó chịu bất thường</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mục tiêu tập luyện -->
+        <div class="tab-panel" id="goals">
+            <div class="workout-info">
+                <div class="info-card">
+                    <h3>Mục tiêu tập luyện</h3>
+                    @php
+                        $goals = $exercise->fitness_goals ?? (isset($exercise->fitness_goal) ? collect([$exercise->fitness_goal]) : null);
+                    @endphp
+
+                    @if($goals && $goals->count()>0)
+                        <ul class="workout-steps">
+                            @foreach($goals as $index => $goal)
+                                <li>
+                                    <div class="step-number">{{ $index + 1 }}</div>
+                                    <div class="step-content">
+                                        <strong>{{ $goal->goal_name }}</strong>
+                                        <p>{{ $goal->description ?? 'Bài tập này giúp bạn đạt được mục tiêu.' }}</p>
+                                    </div>
+                                </li>
+                            @endforeach
                         </ul>
-                    </div>
-                </section>
-            </div>
-
-   
-
-            <!-- Equipment Tab -->
-            <div class="tab-panel" id="equipment-panel">
-                <section class="equipment-section">
-                    <h2>🏋️ Dụng cụ cần thiết</h2>
-                     <div class="equipment-grid">
-                        <div class="equipment-item">
-                            <div class="equipment-icon">🧘</div>
-                            <h4>Thảm tập Yoga</h4>
-                            <p>Bảo vệ khớp và tạo độ ma sát</p>
-                            <span class="equipment-badge">Bắt buộc</span>
+                        <div class="workout-tips">
+                            <h3>🎯 Để đạt hiệu quả tốt nhất</h3>
+                            <ul>
+                                <li>Thực hiện đúng kỹ thuật động tác</li>
+                                <li>Tập luyện đều đặn 3-4 lần/tuần</li>
+                                <li>Kết hợp chế độ dinh dưỡng phù hợp</li>
+                                <li>Theo dõi tiến độ và điều chỉnh cường độ tập</li>
+                                <li>Tham khảo huấn luyện viên nếu cần</li>
+                            </ul>
                         </div>
-                        <div class="equipment-item">
-                            <div class="equipment-icon">👟</div>
-                            <h4>Giày thể thao</h4>
-                            <p>Hỗ trợ chuyển động</p>
-                            <span class="equipment-badge">Bắt buộc</span>
-                        </div>
-                        <div class="equipment-item">
-                            <div class="equipment-icon">🏋️</div>
-                            <h4>Tạ tay (tùy chọn)</h4>
-                            <p>Tăng cường độ bài tập</p>
-                            <span class="equipment-badge optional">Tùy chọn</span>
-                        </div>
-                        <div class="equipment-item">
-                            <div class="equipment-icon">💧</div>
-                            <h4>Bình nước</h4>
-                            <p>Bổ sung nước trong khi tập</p>
-                            <span class="equipment-badge">Khuyến nghị</span>
-                        </div>
-                        <div class="equipment-item">
-                            <div class="equipment-icon">🎧</div>
-                            <h4>Tai nghe</h4>
-                            <p>Nghe nhạc tạo động lực</p>
-                            <span class="equipment-badge optional">Tùy chọn</span>
-                        </div>
-                        <div class="equipment-item">
-                            <div class="equipment-icon">🧤</div>
-                            <h4>Găng tay tập gym</h4>
-                            <p>Bảo vệ bàn tay khi tập</p>
-                            <span class="equipment-badge optional">Tùy chọn</span>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Reviews Tab -->
-            <div class="tab-panel" id="reviews-panel">
-                <section class="reviews-section">
-                    <h2>⭐ Đánh giá từ học viên</h2>
-                    
-                    <div class="rating-summary">
-                        <div class="rating-score">
-                            <span class="score-number">4.8</span>
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                            <p>128 đánh giá</p>
-                        </div>
-                        
-                        <div class="rating-bars">
-                            <div class="rating-bar-item">
-                                <span>5 ⭐</span>
-                                <div class="bar"><div class="fill" style="width: 75%"></div></div>
-                                <span>96</span>
-                            </div>
-                            <div class="rating-bar-item">
-                                <span>4 ⭐</span>
-                                <div class="bar"><div class="fill" style="width: 15%"></div></div>
-                                <span>19</span>
-                            </div>
-                            <div class="rating-bar-item">
-                                <span>3 ⭐</span>
-                                <div class="bar"><div class="fill" style="width: 7%"></div></div>
-                                <span>9</span>
-                            </div>
-                            <div class="rating-bar-item">
-                                <span>2 ⭐</span>
-                                <div class="bar"><div class="fill" style="width: 2%"></div></div>
-                                <span>3</span>
-                            </div>
-                            <div class="rating-bar-item">
-                                <span>1 ⭐</span>
-                                <div class="bar"><div class="fill" style="width: 1%"></div></div>
-                                <span>1</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="reviews-list">
-                        <div class="review-item">
-                            <div class="review-header">
-                                <img src="{{ asset('images/avatar1.jpg') }}" alt="User" class="review-avatar">
-                                <div class="review-info">
-                                    <strong>Nguyễn Văn A</strong>
-                                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
-                                    <span class="review-date">2 ngày trước</span>
-                                </div>
-                            </div>
-                            <div class="review-content">
-                                <p>Bài tập rất hiệu quả! Tôi đã tập được 2 tuần và cảm thấy cơ thể săn chắc hơn nhiều. Huấn luyện viên hướng dẫn rất chi tiết và dễ hiểu. Rất recommend! 💪</p>
-                            </div>
-                            <div class="review-actions">
-                                <button class="btn-like">👍 Hữu ích (12)</button>
-                            </div>
-                        </div>
-
-                        <div class="review-item">
-                            <div class="review-header">
-                                <img src="{{ asset('images/avatar2.jpg') }}" alt="User" class="review-avatar">
-                                <div class="review-info">
-                                    <strong>Trần Thị B</strong>
-                                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
-                                    <span class="review-date">1 tuần trước</span>
-                                </div>
-                            </div>
-                            <div class="review-content">
-                                <p>Mình là người mới tập nên ban đầu hơi khó khăn, nhưng sau vài buổi đã quen và thấy hiệu quả rõ rệt. Video hướng dẫn rất chất lượng!</p>
-                            </div>
-                            <div class="review-actions">
-                                <button class="btn-like">👍 Hữu ích (8)</button>
-                            </div>
-                        </div>
-
-                        <div class="review-item">
-                            <div class="review-header">
-                                <img src="{{ asset('images/avatar3.jpg') }}" alt="User" class="review-avatar">
-                                <div class="review-info">
-                                    <strong>Lê Minh C</strong>
-                                    <div class="review-stars">⭐⭐⭐⭐</div>
-                                    <span class="review-date">2 tuần trước</span>
-                                </div>
-                            </div>
-                            <div class="review-content">
-                                <p>Bài tập tốt nhưng hơi nặng đối với người mới. Mình phải điều chỉnh lại một chút cho phù hợp. Nhìn chung vẫn ok! 👌</p>
-                            </div>
-                            <div class="review-actions">
-                                <button class="btn-like">👍 Hữu ích (5)</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn-load-more">Xem thêm đánh giá</button>
-                </section>
+                    @else
+                        <p style="text-align:center;">ℹ️ Bài tập chưa có mục tiêu cụ thể.</p>
+                    @endif
+                </div>
             </div>
         </div>
 
-   
-
-    <!-- Modal -->
-    <div id="mealModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3 id="mealTitle"></h3>
-            <p id="mealDesc"></p>
-        </div>
     </div>
+
 </div>
 
-<script src="{{ asset('js/workout.js') }}"></script>
+<script defer src="{{ asset('js/workout.js') }}"></script>
 @endsection
