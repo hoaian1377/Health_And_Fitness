@@ -707,7 +707,7 @@ body {
 /* NEW Unified Dashboard Layout */
  .dashboard-container {
      display: grid;
-     grid-template-columns: 320px 1fr 340px;
+     grid-template-columns: 320px 1fr;
      gap: 28px;
      margin-bottom: 0;
  }
@@ -754,7 +754,7 @@ body {
 /* Grid layouts for middle section */
 .cards-grid-top {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 22px;
 }
 

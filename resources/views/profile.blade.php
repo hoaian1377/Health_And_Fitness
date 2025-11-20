@@ -17,24 +17,24 @@
             <div class="profile-meta">
                 <div class="meta-item">
                     <i class="fas fa-star"></i>
-                    <strong>Advanced</strong>
+                    <strong>Nâng cao</strong>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-fire"></i>
-                    <strong>14,750</strong> points
+                    <strong>14,750</strong> điểm
                 </div>
             </div>
             <div class="profile-badges">
-                <span class="badge">Advanced Member</span>
-                <span class="badge secondary">Verified</span>
+                <span class="badge">Thành viên nâng cao</span>
+                <span class="badge secondary">Đã xác thực</span>
             </div>
         </div>
         
         <div class="profile-actions">
-            <button class="action-btn" title="Settings">
+            <button class="action-btn" title="Cài đặt">
                 <i class="fas fa-cog"></i>
             </button>
-            <button class="action-btn" title="More Options">
+            <button class="action-btn" title="Tùy chọn khác">
                 <i class="fas fa-ellipsis-v"></i>
             </button>
         </div>
@@ -48,11 +48,11 @@
             <div class="card card-progress">
                 <div class="progress-header">
                     <div class="progress-info">
-                        <div class="progress-label">Progress</div>
+                        <div class="progress-label">Tiến độ</div>
                         <div class="progress-value">75%</div>
-                        <div class="progress-note">Goal Completion</div>
+                        <div class="progress-note">Hoàn thành mục tiêu</div>
                     </div>
-                    <div class="badge-filter">This Week</div>
+                    <div class="badge-filter">Tuần này</div>
                 </div>
                 <div class="circle-progress-container">
                     <div class="circle-progress">
@@ -65,15 +65,15 @@
                 </div>
                 <div class="progress-details">
                     <div class="detail-item">
-                        <span class="detail-label">Cardio Training</span>
+                        <span class="detail-label">Tập cardio</span>
                         <span class="detail-percent">85%</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Strength Training</span>
+                        <span class="detail-label">Tập sức mạnh</span>
                         <span class="detail-percent">75%</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Flexibility Training</span>
+                        <span class="detail-label">Tăng linh hoạt</span>
                         <span class="detail-percent">65%</span>
                     </div>
                 </div>
@@ -81,15 +81,15 @@
 
             <!-- Meal Card -->
             <div class="card card-meal">
-                <div class="badge-primary">Dinner</div>
+                <div class="badge-primary">Bữa tối</div>
                 <div class="meal-image">
                     <img src="{{ asset('images/meal1.avif') }}" alt="Lean & Green">
                 </div>
                 <div class="meal-content">
-                    <h3 class="meal-title">Lean & Green</h3>
-                    <p class="meal-description">Baked Salmon with Steamed Broccoli and Brown Rice</p>
+                    <h3 class="meal-title">Lean &amp; Green</h3>
+                    <p class="meal-description">Cá hồi nướng cùng bông cải hấp và cơm gạo lứt</p>
                     <div class="meal-score">
-                        <span class="score-label">Health Score:</span>
+                        <span class="score-label">Điểm sức khỏe:</span>
                         <span class="score-value">85/100</span>
                     </div>
                     <div class="nutrition-bars">
@@ -102,7 +102,7 @@
                         <span>15g Fats</span>
                     </div>
                     <button class="btn btn-primary btn-add-meal">
-                        <i class="fas fa-plus"></i> Add
+                        <i class="fas fa-plus"></i> Thêm
                     </button>
                 </div>
             </div>
@@ -119,15 +119,15 @@
                 <div class="card card-compact card-gradient-green">
                     <div class="card-header-compact">
                         <i class="fas fa-heart card-icon-large"></i>
-                        <h3 class="card-title-compact">Heart Beat</h3>
+                        <h3 class="card-title-compact">Nhịp tim</h3>
                         <div class="card-menu">
                             <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
                         </div>
                     </div>
                     <div class="heartbeat-content">
-                        <div class="bpm-value">110 <span class="bpm-unit">bpm</span></div>
-                        <div class="bpm-status">Normal</div>
-                        <div class="heartbeat-text">You are calm and ready for exercises!</div>
+                        <div class="bpm-value">110 <span class="bpm-unit">nhịp/phút</span></div>
+                        <div class="bpm-status">Bình thường</div>
+                        <div class="heartbeat-text">Cơ thể sẵn sàng cho buổi tập tiếp theo!</div>
                         <div class="heartbeat-animation">
                             <svg viewBox="0 0 100 30" class="heartbeat-line">
                                 <polyline points="0,15 15,15 20,10 25,20 30,15 40,15 45,8 50,22 55,15 65,15" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -140,18 +140,18 @@
                 <div class="card card-compact card-gradient-blue">
                     <div class="card-header-compact">
                         <i class="fas fa-heart-pulse card-icon-large"></i>
-                        <h3 class="card-title-compact">Health Score</h3>
+                        <h3 class="card-title-compact">Điểm sức khỏe</h3>
                         <div class="card-menu">
                             <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
                         </div>
                     </div>
                     <div class="health-score-content">
                         <div class="health-score-value">82%</div>
-                        <div class="health-score-label">Very Healthy</div>
+                        <div class="health-score-label">Rất khỏe mạnh</div>
                         <div class="health-score-bar">
                             <div class="score-fill" style="width: 82%;"></div>
                         </div>
-                        <div class="health-score-text">Keep up your good work, Kalendra!</div>
+                        <div class="health-score-text">Tiếp tục duy trì phong độ nhé!</div>
                     </div>
                 </div>
             </div>
@@ -161,7 +161,7 @@
                 <!-- My Profile Card -->
                 <div class="card card-profile">
                     <div class="card-header">
-                        <h3 class="card-title">My Profile</h3>
+                        <h3 class="card-title">Hồ sơ của tôi</h3>
                         <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
                     </div>
                     <div class="profile-info-grid">
@@ -170,23 +170,23 @@
                             <div class="info-content">
                                 <h4 class="info-name">{{ $account->fullname }}</h4>
                                 <div class="info-badges">
-                                    <span class="badge-small"><i class="fas fa-shield-alt"></i> Advanced</span>
-                                    <span class="badge-small points"><i class="fas fa-fire"></i> 14,750</span>
+                                    <span class="badge-small"><i class="fas fa-shield-alt"></i> Nâng cao</span>
+                                    <span class="badge-small points"><i class="fas fa-fire"></i> 14,750 điểm</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="stats-info">
                         <div class="stat-info-item">
-                            <span class="stat-info-label">Weight</span>
+                            <span class="stat-info-label">Cân nặng</span>
                             <span class="stat-info-value">{{ $account->weight }} kg</span>
                         </div>
                         <div class="stat-info-item">
-                            <span class="stat-info-label">Height</span>
+                            <span class="stat-info-label">Chiều cao</span>
                             <span class="stat-info-value">{{ $account->height }} cm</span>
                         </div>
                         <div class="stat-info-item">
-                            <span class="stat-info-label">Age</span>
+                            <span class="stat-info-label">Tuổi</span>
                             <span class="stat-info-value">{{ $age }}</span>
                         </div>
                     </div>
@@ -195,8 +195,8 @@
                 <!-- Today's Activity Card -->
                 <div class="card card-activity-detail">
                     <div class="card-header">
-                        <h3 class="card-title">Today's Activity</h3>
-                        <button class="btn-badge">Today</button>
+                        <h3 class="card-title">Hoạt động hôm nay</h3>
+                        <button class="btn-badge">Hôm nay</button>
                     </div>
                     <div class="activity-detail-card">
                         <div class="activity-map">
@@ -205,99 +205,33 @@
                             </div>
                         </div>
                         <div class="activity-info-detail">
-                            <h4 class="activity-route">Park Loop Trail</h4>
+                            <h4 class="activity-route">Chạy vòng quanh công viên</h4>
                             <div class="activity-time">
-                                <i class="fas fa-clock"></i> 6:30 AM - 7:20 AM
+                                <i class="fas fa-clock"></i> 6:30 - 7:20
                             </div>
                             <div class="activity-stats-grid">
                                 <div class="activity-stat">
-                                    <span class="stat-title">Distance</span>
-                                    <span class="stat-val">5 miles (8 km)</span>
+                                    <span class="stat-title">Quãng đường</span>
+                                    <span class="stat-val">5 dặm (8 km)</span>
                                 </div>
                                 <div class="activity-stat">
-                                    <span class="stat-title">Time</span>
-                                    <span class="stat-val">50 minutes</span>
+                                    <span class="stat-title">Thời gian</span>
+                                    <span class="stat-val">50 phút</span>
                                 </div>
                                 <div class="activity-stat">
-                                    <span class="stat-title">Total Steps</span>
-                                    <span class="stat-val">10,500 steps</span>
+                                    <span class="stat-title">Tổng bước chân</span>
+                                    <span class="stat-val">10.500 bước</span>
                                 </div>
                                 <div class="activity-stat">
-                                    <span class="stat-title">Total Calories</span>
+                                    <span class="stat-title">Tổng calo</span>
                                     <span class="stat-val">450 Cal</span>
                                 </div>
                                 <div class="activity-stat">
-                                    <span class="stat-title">Average Pace</span>
-                                    <span class="stat-val">10 minutes/mile</span>
+                                    <span class="stat-title">Tốc độ trung bình</span>
+                                    <span class="stat-val">10 phút/dặm</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Section - Activity Stats -->
-        <div class="dashboard-section section-right">
-            <!-- Running Activity Card -->
-            <div class="card card-activity card-activity-large">
-                <div class="activity-header">
-                    <div class="activity-icon-box">
-                        <i class="fas fa-running"></i>
-                    </div>
-                    <h3>Running Activity</h3>
-                </div>
-                <div class="activity-badge-row">
-                    <span class="badge-label">Running</span>
-                </div>
-                <div class="activity-details-list">
-                    <div class="activity-detail">
-                        <span class="detail-key">Central Park Entrance</span>
-                        <span class="detail-val">9.8km</span>
-                    </div>
-                    <div class="activity-detail">
-                        <span class="detail-key">Time</span>
-                        <span class="detail-val">50 mins</span>
-                    </div>
-                    <div class="activity-detail">
-                        <span class="detail-key">Distance</span>
-                        <span class="detail-val">10,500</span>
-                    </div>
-                    <div class="activity-detail">
-                        <span class="detail-key">Total Calories</span>
-                        <span class="detail-val">450 Cal</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- More Activity Cards -->
-            <div class="activity-compact-section">
-                <div class="card card-activity card-compact-activity">
-                    <div class="activity-header-compact">
-                        <div class="activity-info-line">
-                            <span class="label">Central Park North Gate</span>
-                            <span class="badge-tag">Average</span>
-                        </div>
-                        <span class="val">140 bpm</span>
-                    </div>
-                    <div class="activity-sub">
-                        <span class="sub-label">Range: 50</span>
-                        <span class="sub-val">160 bpm</span>
-                    </div>
-                    <div class="activity-sub">
-                        <span class="sub-label">+115 % of day</span>
-                        <span class="sub-val-highlight"></span>
-                    </div>
-                </div>
-
-                <!-- Heart Beat Stats -->
-                <div class="card card-activity card-compact-activity">
-                    <div class="activity-header-compact">
-                        <div class="activity-info-line">
-                            <span class="label">Heart Rate Stats</span>
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <span class="val">120</span>
                     </div>
                 </div>
             </div>
