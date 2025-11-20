@@ -454,3 +454,23 @@ document.getElementById('shareWorkout')?.addEventListener('click', function() {
     }
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".tab-btn");
+    const panels = document.querySelectorAll(".tab-panel");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            
+            // remove active from buttons
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            // hide all panels
+            panels.forEach(panel => panel.classList.remove("active"));
+
+            // show selected
+            const target = btn.getAttribute("data-tab");
+            document.getElementById(target).classList.add("active");
+        });
+    });
+});

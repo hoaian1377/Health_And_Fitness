@@ -8,21 +8,23 @@
     <!-- Tên bài tập -->
     <h1>{{ $exercise->name_workout }}</h1>
 
-    <!-- Video Placeholder -->
-    <div class="video-container">
-        @if($exercise->video_url)
-            <video class="video-frame" controls>
-                <source src="{{ $exercise->video_url }}" type="video/mp4">
-                Trình duyệt không hỗ trợ video.
-            </video>
-        @else
-            <div class="video-frame" style="background: #e2e8f0; height: 200px; display:flex; align-items:center; justify-content:center; border-radius:15px;">
-                Video bài tập chưa có
-            </div>
-        @endif
-    </div>
-
-    <!-- Stats -->
+<!--video bai tap -->
+<div class="video-container">
+    @if($exercise->video_urls)
+        <video class="video-frame" controls poster="{{ asset($exercise->urls) }}">
+            <source src="{{ asset($exercise->video_urls) }}" type="video/mp4">
+            Trình duyệt không hỗ trợ video.
+        </video>
+    @elseif($exercise->urls)
+        <img class="video-frame" src="{{ asset($exercise->urls) }}" alt="{{ $exercise->name_workout }}">
+    @else
+        <div class="video-frame no-media">
+            Video / ảnh chưa có
+        </div>
+    @endif
+</div>
+ </div>
+<!-- Stats -->
     <div class="video-stats">
         <div class="stat-item">
             <span class="icon">⏱</span>
@@ -54,7 +56,6 @@
     <!-- Tab Navigation -->
     <div class="tab-navigation">
         <button class="tab-btn active" data-tab="info">Thông tin</button>
-        <button class="tab-btn" data-tab="goals">Mục tiêu</button>
     </div>
 
     <!-- Tab Content -->
@@ -130,45 +131,11 @@
             </div>
         </div>
 
-        <!-- Mục tiêu tập luyện -->
-        <div class="tab-panel" id="goals">
-            <div class="workout-info">
-                <div class="info-card">
-                    <h3>Mục tiêu tập luyện</h3>
-                    @php
-                        $goals = $exercise->fitness_goals ?? (isset($exercise->fitness_goal) ? collect([$exercise->fitness_goal]) : null);
-                    @endphp
-
-                    @if($goals && $goals->count()>0)
-                        <ul class="workout-steps">
-                            @foreach($goals as $index => $goal)
-                                <li>
-                                    <div class="step-number">{{ $index + 1 }}</div>
-                                    <div class="step-content">
-                                        <strong>{{ $goal->goal_name }}</strong>
-                                        <p>{{ $goal->description ?? 'Bài tập này giúp bạn đạt được mục tiêu.' }}</p>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                        <div class="workout-tips">
-                            <h3>🎯 Để đạt hiệu quả tốt nhất</h3>
-                            <ul>
-                                <li>Thực hiện đúng kỹ thuật động tác</li>
-                                <li>Tập luyện đều đặn 3-4 lần/tuần</li>
-                                <li>Kết hợp chế độ dinh dưỡng phù hợp</li>
-                                <li>Theo dõi tiến độ và điều chỉnh cường độ tập</li>
-                                <li>Tham khảo huấn luyện viên nếu cần</li>
-                            </ul>
-                        </div>
-                    @else
-                        <p style="text-align:center;">ℹ️ Bài tập chưa có mục tiêu cụ thể.</p>
-                    @endif
-                </div>
-            </div>
-        </div>
 
     </div>
+</div>
+
+  
 
 </div>
 

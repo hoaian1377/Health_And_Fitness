@@ -1,5 +1,6 @@
 /* Reset và Base Styles */
 /* Body có gradient toàn màn hình */
+
 body {
     margin: 0;
     padding: 0;
@@ -344,35 +345,207 @@ body {
 .difficulty-indicator {
     display: none !important;
 }
+
+
+/* Khung chứa video */
+.video-container {
+    width: 100%;
+    max-width: 700px;       /* Giới hạn tối đa video → không quá to */
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+}
+
+/* Video */
+.video-frame {
+    width: 100%;
+    height: auto;
+    max-height: 380px;      /* Giới hạn chiều cao để không chiếm màn hình */
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: #000;
+    object-fit: contain;    /* Quan trọng → hiển thị đủ video, không bị crop */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .video-frame {
+        max-height: 260px;  /* Giảm chiều cao trên điện thoại */
+    }
+}
+.media-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.media-frame {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+.no-media {
+    background: #e2e8f0;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-weight: bold;
+}
+.video-container {
+    width: 100%;
+    max-width: 700px;       /* Giới hạn chiều ngang */
+    margin: 0 auto 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.video-frame {
+    width: 100%;
+    height: 400px;          /* Chiều cao cố định */
+    object-fit: cover;      /* Giữ tỷ lệ, crop nếu cần */
+    border-radius: 10px;
+    display: block;
+}
+.no-media {
+    background: #e2e8f0;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-weight: bold;
+}
+.video-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.video-frame {
+    width: 100%;
+    height: 400px;        /* Chiều cao cố định */
+    object-fit: contain;   /* Hiển thị toàn bộ video trong khung, không cắt */
+    border-radius: 10px;
+    display: block;
+}
+
+/* Nếu không có media */
+.no-media {
+    background: #e2e8f0;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-weight: bold;
+}
+/* ===== VIDEO FIXED LAYOUT (KHÔNG LỆCH MOBILE) ===== */
+
+.video-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;             /* Căn giữa */
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;           /* Nền đen giữ video không lệch */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Video cố định đúng khung */
+.video-frame {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;        /* Không bị crop, không lệch */
+    display: block;
+}
+
+/* Mobile fix */
+@media (max-width: 768px) {
+    .workout-detail-page {
+        padding: 0.5rem !important; /* Giảm padding để video không bị đẩy */
+    }
+
+    .video-container {
+        margin: 10px auto;        /* Căn giữa lại */
+        max-width: 100%;          /* Bắt buộc full mobile */
+    }
+
+    .video-frame {
+        height: 250px;            /* Giảm chiều cao để không tràn */
+    }
+}
+@media (max-width: 768px) {
+
+    /* Nền tím phủ sát màn hình, không bị lệch */
+    .workout-detail-page {
+        max-width: 100%;
+        padding: 1rem 0.8rem;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    /* Căn video không vượt ra ngoài */
+    .video-container {
+        max-width: 100% !important;
+        margin: 0 auto 15px;
+        padding: 0;
+    }
+
+    .video-frame {
+        width: 100% !important;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+}
 @media (max-width: 992px) {
+
   .navbar {
-    padding: 12px 25px;
+    padding: 12px 15px; /* thu padding để menu không bị đẩy lệch */
   }
 
   .menu {
     display: none;
     flex-direction: column;
+
     position: absolute;
     top: 75px;
-    right: 15px;
-    width: 220px;
+
+    /* căn SÁT LỀ TRÁI để không bị tràn bên phải */
+    right: 10px;
+
+    /* Giảm chiều rộng menu trên điện thoại */
+    width: 180px;
+
     background: #111;
-    padding: 15px 0;
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 0;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
   }
 
   .menu.show {
     display: flex;
-    animation: slideIn 0.3s ease forwards;
+    animation: slideIn 0.28s ease forwards;
   }
 
   @keyframes slideIn {
     from {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translateY(-15px);
     }
     to {
       opacity: 1;
@@ -380,7 +553,14 @@ body {
     }
   }
 
-  
+  .menu a {
+    padding: 10px 18px;
+    width: 100%;
+    text-align: left;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: background 0.25s;
+  }
 
   .menu a:hover {
     background: #222;
@@ -390,16 +570,31 @@ body {
     display: block;
   }
 
+  .user-menu,
   .auth-buttons {
     flex-direction: column;
     align-items: flex-start;
-    padding: 10px 20px;
+    padding: 10px 18px;
     gap: 10px;
   }
 }
 .menu a {
-    max-width: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
+    padding: 8px 14px;         /* thu nhỏ vùng chạm */
+    width: auto;               /* không chiếm 100% chiều rộng */
+    display: inline-block;     /* chỉ chiếm đúng nội dung */
+    text-align: left;
+    border-radius: 10px;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+button {
+    padding: 8px 14px;      /* vùng chạm */
+    width: auto;            /* không chiếm toàn bộ chiều rộng */
+    display: inline-block;  /* chỉ chiếm đúng nội dung */
+    text-align: left;       /* chữ lệch trái */
+    border-radius: 10px;
+    transition: background 0.2s;
+    font-size: 14px;
+    /* tùy chọn giảm padding bên trái nếu vẫn lệch */
+    padding-left: 6px;      /* giảm khoảng cách trái */
 }
