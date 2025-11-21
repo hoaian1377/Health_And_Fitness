@@ -32,14 +32,13 @@
 
             <div class="section-header">
                 <h2 class="section-title">Thực đơn phổ biến</h2>
-            </div>
-
-            <div class="tabs-container">
+                        </div>
+             <div class="tabs-container">
                 <button class="tab active" data-category="all">Tất cả</button>
-                <button class="tab" data-category="weight-loss">Giảm cân</button>
-                <button class="tab" data-category="muscle-gain">Tăng cơ</button>
-                <button class="tab" data-category="balanced">Cân bằng</button>
-                <button class="tab" data-category="vegetarian">Chay</button>
+                <button class="tab" data-category="giam-can">Giảm cân</button>
+                <button class="tab" data-category="tang-co">Tăng cơ</button>
+                <button class="tab" data-category="can-bang">Cân bằng</button>
+                <button class="tab" data-category="suc-khoe">Sức khỏe</button>
             </div>
 
             <div class="workout-grid">

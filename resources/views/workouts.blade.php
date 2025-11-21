@@ -30,18 +30,20 @@
         </div>
 
         <!-- Workout Section Header -->
-        <div class="section-header">
-            <h2 class="section-title">Bài tập phổ biến</h2>
-        </div>
 
-        <!-- Tabs -->
-        <div class="tabs-container">
-            <button class="tab active" data-category="all">Tất cả</button>
-            <button class="tab" data-category="muscle">Xây dựng cơ bắp</button>
-            <button class="tab" data-category="fat-burn">Đốt cháy mỡ</button>
-            <button class="tab" data-category="maintain">Giữ dáng</button>
-            <button class="tab" data-category="yoga">Yoga & Giãn cơ</button>
-        </div>
+                    <div class="section-header">
+                        <h2 class="section-title">Bài tập phổ biến</h2>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="tabs">
+                        <a href="?filter=" class="tab {{ !request('filter') ? 'active' : '' }}">Tất cả</a>
+                        <a href="?filter=Mông" class="tab {{ request('filter')=='Mông' ? 'active' : '' }}">Xây dựng cơ bắp</a>
+                        <a href="?filter=Cardio" class="tab {{ request('filter')=='Cardio' ? 'active' : '' }}">Đốt cháy mỡ</a>
+                        <a href="?filter=Dẻo dai" class="tab {{ request('filter')=='Dẻo dai' ? 'active' : '' }}">Yoga & Giãn cơ</a>
+                    </div>
+
+
 
         <!-- Workout Grid -->
         <div class="workout-grid">
@@ -49,7 +51,8 @@
                 <p>Chưa có bài tập nào trong cơ sở dữ liệu.</p>
             @else
                 @foreach($exercises as $ex)
-                <div class="workout-card" data-category="{{ \Illuminate\Support\Str::slug($ex->muscle_group ?: 'other') }}">
+                <div class="workout-card" data-category="{{ \Illuminate\Support\Str::slug($ex->fitness_goal->name ?? 'other') }}">
+
                     
                     <div class="workout-card-image">
                         <img src="{{ $ex->urls }}" alt="{{ $ex->name_workout }}">

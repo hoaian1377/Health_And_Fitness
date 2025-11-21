@@ -8,16 +8,25 @@ use App\Models\WorkoutExercise;
 class WorkoutExerciseController extends Controller
 {
     // danh sách bài tập
-    public function index()
+    public function index(Request $request)
     {
-        // Lấy tất cả (có thể paginate nếu nhiều)
-        $exercises = WorkoutExercise::orderBy('workout_exerciseID', 'asc')->get();
+        $query = WorkoutExercise::query();
 
-        // Trả về view và truyền biến $exercises
+       
+        if ($request->has('filter') && $request->filter != '') {
+            $filter = $request->filter;
+
+           
+            $query->where('muscle_group', 'LIKE', "%$filter%");
+        }
+
+        $exercises = $query->orderBy('workout_exerciseID', 'asc')->get();
+
+    
         return view('workouts', compact('exercises'));
     }
 
-    // chi tiết 1 bài tập
+  
     public function show($id)
     {
         $exercise = WorkoutExercise::with('fitness_goal')->find($id);
