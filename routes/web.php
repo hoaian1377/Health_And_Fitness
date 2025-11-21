@@ -50,6 +50,7 @@ Route::middleware('auth')->put('/profile/update', [ProfileController::class, 'up
 
 // Profile API (JSON endpoints)
 Route::middleware('auth')->group(function () {
+    Route::get('/api/profile', [ProfileController::class, 'getProfile']);
     Route::post('/api/profile/update', [ProfileController::class, 'updateApi']);
     Route::post('/api/profile/avatar', [ProfileController::class, 'updateAvatar']);
     Route::delete('/api/profile', [ProfileController::class, 'deleteAccount']);

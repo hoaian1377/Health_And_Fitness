@@ -55,3 +55,20 @@ document.addEventListener("DOMContentLoaded", () => {
       menu.classList.toggle("show");
     });
   }
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.goal-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const goal = this.dataset.goal;
+
+            if (goal === "gain") {
+                window.location.href = goalRoutes.nutrition;
+            }
+            else if (goal === "muscle") {
+                window.location.href = goalRoutes.workouts;
+            }
+            else if (goal === "lose") {
+                window.location.href = goalRoutes.community;
+            }
+        });
+    });
+});

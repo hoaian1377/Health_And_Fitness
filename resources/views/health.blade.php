@@ -94,4 +94,12 @@
   </div>
 </body>
 </html>
+<script>
+    const goalRoutes = {
+        nutrition: "{{ route('nutrition.page') }}",
+        workouts: "{{ route('workouts.page') }}",
+        community: "{{ route('community.page') }}"
+    };
+</script>
+<script src="/js/goalRedirect.js"></script>
 @endsection
