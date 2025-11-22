@@ -39,8 +39,12 @@
             @auth
             <div class="user-dropdown">
     <div class="user-trigger" id="userMenuToggle">
-        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="user-avatar">
-        <span>{{ Auth::user()->name }}</span>
+        @if(Auth::user()->account && Auth::user()->account->avatar)
+            <img src="{{ asset('storage/' . Auth::user()->account->avatar) }}" class="user-avatar">
+        @else
+            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="user-avatar">
+        @endif
+        <span>{{ Auth::user()->account->fullname ?? Auth::user()->name }}</span>
         <i class="fa-solid fa-chevron-down arrow"></i>
     </div>
 

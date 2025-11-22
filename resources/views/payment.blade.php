@@ -162,6 +162,20 @@
                         <div class="confirm-row"><span>Gói</span><strong id="confirmPlan">Pro</strong></div>
                         <div class="confirm-row"><span>Chu kỳ</span><span>1 tháng</span></div>
                         <div class="confirm-row"><span>Phương thức</span><span id="confirmMethod">Thẻ</span></div>
+                        
+                        <!-- Voucher Input -->
+                        <div class="confirm-row voucher-row">
+                            <span>Mã giảm giá</span>
+                            <div class="voucher-input-group">
+                                <input type="text" id="voucherCode" placeholder="Nhập mã" class="input-small">
+                                <button class="btn-small" id="applyVoucherBtn">Áp dụng</button>
+                            </div>
+                        </div>
+                        <div class="confirm-row" id="discountRow" style="display: none;">
+                            <span>Giảm giá</span>
+                            <span id="discountValue" class="text-success">-0đ</span>
+                        </div>
+
                         <div class="confirm-row"><span>Tạm tính</span><span id="confirmPrice">599.000đ</span></div>
                         <div class="confirm-row"><span>VAT (10%)</span><span id="confirmVat">19.900đ</span></div>
                         <div class="confirm-row total"><span>Tổng thanh toán</span><strong id="confirmTotal">218.900đ</strong></div>

@@ -18,10 +18,12 @@ class MealPlan extends Model
         'food_weight',
         'urls',
         'description',
-        'fitness_goalID'
+        'fitness_goalID',
+        'meal_type'
     ];
     public function fitness_goal()
     {
         return $this->belongsTo(FitnessGoal::class,'fitness_goalID');
     }
+    public $timestamps = false;
 }

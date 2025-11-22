@@ -91,5 +91,16 @@ Route::get('/nutrition', [MealPlanController::class, 'index'])->name('nutrition.
 Route::get('/nutrition/{id}', [MealPlanController::class, 'show'])->name('meal-detail');
 
 
-Route::get('/profile', [FitnessDashboardController::class,'index'])->name('profile.page');
-Route::put('/profile/update', [AccountController::class, 'update'])->name('profile.update');
+Route::get('/profile', [FitnessDashboardController::class,'index'])->name('profile.page')->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::post('/api/account/update', [AccountController::class, 'update'])->name('account.update');
+    Route::post('/api/account/avatar', [AccountController::class, 'updateAvatar'])->name('account.avatar');
+    Route::post('/api/account/plan', [AccountController::class, 'updatePlan'])->name('account.plan');
+    Route::post('/api/voucher/validate', [\App\Http\Controllers\VoucherController::class, 'validateVoucher'])->name('voucher.validate');
+    
+    // Workout routes
+    Route::get('/api/workout/today', [\App\Http\Controllers\WorkoutController::class, 'getTodayWorkouts'])->name('workout.today');
+    Route::post('/api/workout/add', [\App\Http\Controllers\WorkoutController::class, 'addWorkout'])->name('workout.add');
+    Route::delete('/api/workout/{id}', [\App\Http\Controllers\WorkoutController::class, 'removeWorkout'])->name('workout.remove');
+    Route::delete('/api/workout/reset', [\App\Http\Controllers\WorkoutController::class, 'resetWorkouts'])->name('workout.reset');
+});

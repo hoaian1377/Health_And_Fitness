@@ -26,6 +26,8 @@ class Account extends Authenticatable
         'height',
         'weight',
         'bmi',
+        'avatar',
+        'plan',
         'created_at',
         'updated_at',
         'user_id'
@@ -42,9 +44,16 @@ class Account extends Authenticatable
     {
         return $this->hasMany(Post::class, 'accountID', 'accountID');
     }
+    
     public function user() 
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    // Quan hệ với FitnessGoal
+    public function fitnessGoal()
+    {
+        return $this->belongsTo(FitnessGoal::class, 'fitness_goalID', 'fitness_goalID');
     }
 
 }

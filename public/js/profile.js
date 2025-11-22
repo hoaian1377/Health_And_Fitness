@@ -1,4 +1,4 @@
-(function(){
+(function () {
     function initMenuToggle() {
         const menuToggle = document.getElementById('menu-toggle');
         const menu = document.getElementById('menu');
@@ -16,7 +16,7 @@
         initMenuToggle();
     }
 
-    let totalCal = 0;
+    let totalCal = window.profileData.caloriesBurnedToday || 0;
     let exercisesToday = [];
 
     // Initialize Pie Chart
@@ -55,16 +55,30 @@
         });
     }
 
-    // Initialize Week Chart
+    // Initialize Week Chart with data from database
     const weekCtx = document.getElementById('weekChart');
     if (weekCtx && typeof Chart !== 'undefined') {
+        // Get data from window.profileData if available
+        let labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        let calories = [350, 420, 380, 450, 390, 410, 0];
+
+        if (window.profileData && window.profileData.weeklyCalories && window.profileData.weeklyCalories.length > 0) {
+            const weeklyData = window.profileData.weeklyCalories;
+            labels = weeklyData.map(d => {
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const date = new Date(d.date);
+                return days[date.getDay()];
+            });
+            calories = weeklyData.map(d => d.calories);
+        }
+
         new Chart(weekCtx.getContext('2d'), {
             type: 'line',
             data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                labels: labels,
                 datasets: [{
                     label: 'Calo (kcal)',
-                    data: [350, 420, 380, 450, 390, 410, 0],
+                    data: calories,
                     borderColor: '#9FCD3B',
                     backgroundColor: 'rgba(159, 205, 59, 0.1)',
                     borderWidth: 3,
@@ -87,10 +101,6 @@
                             color: '#A0AEC0',
                             font: { size: 12, weight: '600' }
                         }
-                    },
-                    grid: {
-                        color: 'rgba(159, 205, 59, 0.1)',
-                        drawBorder: false
                     }
                 },
                 scales: {
@@ -118,6 +128,32 @@
                 }
             }
         });
+    }
+
+    // Load existing workouts from database
+    async function loadWorkouts() {
+        try {
+            const response = await fetch('/api/workout/today', {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                credentials: 'same-origin'
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                exercisesToday = data.workouts.map(w => ({
+                    id: w.id,
+                    name: w.exercise_name,
+                    cal: w.calories
+                }));
+                totalCal = data.total_calories || 0;
+                updateUI();
+            }
+        } catch (error) {
+            console.error('Error loading workouts:', error);
+        }
     }
 
     function updateUI() {
@@ -159,7 +195,7 @@
                 <span class="exercise-name">${e.name}</span>
                 <div class="exercise-meta">
                     <span class="exercise-cal">${e.cal} kcal</span>
-                    <button class="exercise-remove" data-index="${index}">
+                    <button class="exercise-remove" data-id="${e.id}" data-index="${index}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
@@ -170,21 +206,34 @@
         // attach remove handlers
         list.querySelectorAll('.exercise-remove').forEach(btn => {
             btn.addEventListener('click', () => {
-                const idx = Number(btn.getAttribute('data-index'));
-                removeExercise(idx);
+                const id = btn.getAttribute('data-id');
+                removeExercise(id);
             });
         });
     }
 
-    function removeExercise(index) {
-        if (exercisesToday[index]) {
-            totalCal -= exercisesToday[index].cal;
-            exercisesToday.splice(index, 1);
-            updateUI();
+    async function removeExercise(id) {
+        try {
+            const response = await fetch(`/api/workout/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                credentials: 'same-origin'
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                // Reload workouts from server
+                await loadWorkouts();
+            }
+        } catch (error) {
+            console.error('Error removing workout:', error);
         }
     }
 
-    function addExerciseFromSelect() {
+    async function addExerciseFromSelect() {
         const select = document.getElementById('exercise-select');
         if (!select) return;
         const name = select.options[select.selectedIndex].text;
@@ -193,17 +242,54 @@
             alert('Vui lòng chọn một bài tập hợp lệ');
             return;
         }
-        exercisesToday.push({ name, cal });
-        totalCal += cal;
-        select.value = '';
-        updateUI();
+
+        try {
+            const response = await fetch('/api/workout/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                body: JSON.stringify({
+                    exercise_name: name,
+                    calories: cal
+                }),
+                credentials: 'same-origin'
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                select.value = '';
+                // Reload workouts from server
+                await loadWorkouts();
+            }
+        } catch (error) {
+            console.error('Error adding workout:', error);
+        }
     }
 
-    function resetExercises() {
+    async function resetExercises() {
         if (!confirm('Bạn có chắc chắn muốn xóa tất cả bài tập hôm nay?')) return;
-        exercisesToday = [];
-        totalCal = 0;
-        updateUI();
+
+        try {
+            const response = await fetch('/api/workout/reset', {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                credentials: 'same-origin'
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                // Reload workouts from server
+                await loadWorkouts();
+            }
+        } catch (error) {
+            console.error('Error resetting workouts:', error);
+        }
     }
 
     window.addEventListener('load', () => {
@@ -211,7 +297,9 @@
         const resetBtn = document.getElementById('reset-ex');
         if (addBtn) addBtn.addEventListener('click', addExerciseFromSelect);
         if (resetBtn) resetBtn.addEventListener('click', resetExercises);
-        updateUI();
+
+        // Load existing workouts on page load
+        loadWorkouts();
     });
 
 })();

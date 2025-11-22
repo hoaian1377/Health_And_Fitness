@@ -4,304 +4,309 @@
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 @endpush
 <div class="container">
-    <!-- Header Section -->
-    <div class="profile-header">
-        <div class="profile-avatar-section">
-            <div class="profile-avatar">
-                {{ substr($account->fullname, 0, 1) }}
-            </div>
-        </div>
-        
-        <div class="profile-basic-info">
-            <div class="profile-name">{{ $account->fullname }}</div>
-            <div class="profile-meta">
-                <div class="meta-item">
-                    <i class="fas fa-star"></i>
-                    <strong>Nâng cao</strong>
-                </div>
-                <div class="meta-item">
-                    <i class="fas fa-fire"></i>
-                    <strong>14,750</strong> điểm
-                </div>
-            </div>
-            <div class="profile-badges">
-                <span class="badge">Thành viên nâng cao</span>
-                <span class="badge secondary">Đã xác thực</span>
-            </div>
-        </div>
-        
-        <div class="profile-actions">
-            <button class="action-btn" title="Cài đặt">
-                <i class="fas fa-cog"></i>
-            </button>
-            <button class="action-btn" title="Tùy chọn khác">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-        </div>
-    </div>
+   
 
     <!-- Main Dashboard Container -->
     <div class="dashboard-container">
-        <!-- Left Section - Progress -->
-        <div class="dashboard-section section-left">
-            <!-- Progress Card -->
-            <div class="card card-progress">
-                <div class="progress-header">
-                    <div class="progress-info">
-                        <div class="progress-label">Tiến độ</div>
-                        <div class="progress-value">75%</div>
-                        <div class="progress-note">Hoàn thành mục tiêu</div>
-                    </div>
-                    <div class="badge-filter">Tuần này</div>
-                </div>
-                <div class="circle-progress-container">
-                    <div class="circle-progress">
-                        <div class="circle-bg">
-                            <div class="circle-inner">
-                                <div class="circle-value"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="progress-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Tập cardio</span>
-                        <span class="detail-percent">85%</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Tập sức mạnh</span>
-                        <span class="detail-percent">75%</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Tăng linh hoạt</span>
-                        <span class="detail-percent">65%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Meal Card -->
-            <div class="card card-meal">
-                <div class="badge-primary">Bữa tối</div>
-                <div class="meal-image">
-                    <img src="{{ asset('images/meal1.avif') }}" alt="Lean & Green">
-                </div>
-                <div class="meal-content">
-                    <h3 class="meal-title">Lean &amp; Green</h3>
-                    <p class="meal-description">Cá hồi nướng cùng bông cải hấp và cơm gạo lứt</p>
-                    <div class="meal-score">
-                        <span class="score-label">Điểm sức khỏe:</span>
-                        <span class="score-value">85/100</span>
-                    </div>
-                    <div class="nutrition-bars">
-                        <div class="nutrition-bar" style="width: 100%;"></div>
-                    </div>
-                    <div class="meal-nutrition">
-                        <span>450 Cal</span>
-                        <span>40g Carbs</span>
-                        <span>35g Protein</span>
-                        <span>15g Fats</span>
-                    </div>
-                    <button class="btn btn-primary btn-add-meal">
-                        <i class="fas fa-plus"></i> Thêm
-                    </button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Middle Content -->
-                    </div>
-
-        <!-- Middle Section - Cards Container -->
+        <!-- Middle Section - Profile Table and Cards Below -->
         <div class="dashboard-section section-middle">
-            <!-- Top Cards Row -->
-            <div class="cards-grid-top">
-                <!-- Heart Beat Card -->
-                <div class="card card-compact card-gradient-green">
-                    <div class="card-header-compact">
-                        <i class="fas fa-heart card-icon-large"></i>
-                        <h3 class="card-title-compact">Nhịp tim</h3>
-                        <div class="card-menu">
-                            <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
-                        </div>
-                    </div>
-                    <div class="heartbeat-content">
-                        <div class="bpm-value">110 <span class="bpm-unit">nhịp/phút</span></div>
-                        <div class="bpm-status">Bình thường</div>
-                        <div class="heartbeat-text">Cơ thể sẵn sàng cho buổi tập tiếp theo!</div>
-                        <div class="heartbeat-animation">
-                            <svg viewBox="0 0 100 30" class="heartbeat-line">
-                                <polyline points="0,15 15,15 20,10 25,20 30,15 40,15 45,8 50,22 55,15 65,15" stroke="currentColor" stroke-width="2" fill="none"/>
-                            </svg>
+            <!-- My Profile Card with Unified Table -->
+            <div class="card card-profile">
+                <div class="card-header">
+                    <h3 class="card-title">Hồ sơ của tôi</h3>
+                    <div class="header-menu-container">
+                        <button class="btn-menu" id="profile-menu-btn"><i class="fas fa-ellipsis-h"></i></button>
+                        <div class="profile-menu-dropdown" id="profile-menu-dropdown">
+                            <button class="menu-item" id="change-avatar-btn">
+                                <i class="fas fa-camera"></i>
+                                <span>Thay đổi ảnh đại diện</span>
+                            </button>
+                            <button class="menu-item" id="edit-profile-btn">
+                                <i class="fas fa-edit"></i>
+                                <span>Chỉnh sửa hồ sơ</span>
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Health Score Card -->
-                <div class="card card-compact card-gradient-blue">
-                    <div class="card-header-compact">
-                        <i class="fas fa-heart-pulse card-icon-large"></i>
-                        <h3 class="card-title-compact">Điểm sức khỏe</h3>
-                        <div class="card-menu">
-                            <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
+                <div class="profile-header-section">
+                    <div class="profile-avatar-wrapper">
+                        <div class="avatar-upload-container">
+                            <div class="avatar-large" id="avatar-display">
+                                @if(isset($account->avatar) && $account->avatar)
+                                    <img src="{{ asset('storage/' . $account->avatar) }}" alt="Avatar" id="avatar-img" style="display: block;">
+                                    <span id="avatar-initial" style="display: none;">{{ substr($account->fullname, 0, 1) }}</span>
+                                @else
+                                    <img src="" alt="Avatar" id="avatar-img" style="display: none;">
+                                    <span id="avatar-initial">{{ substr($account->fullname, 0, 1) }}</span>
+                                @endif
+                            </div>
+                            <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="profile-name-wrapper">
+                            <h4 class="profile-name-in-card" id="profile-name-display">{{ $account->fullname }}</h4>
+                            <div class="info-badges">
+                                <span class="badge-small"><i class="fas fa-shield-alt"></i> {{ $account->plan ?? 'Chưa đăng ký' }}</span>
+                                <span class="badge-small points"><i class="fas fa-fire"></i> 14,750 điểm</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="health-score-content">
-                        <div class="health-score-value">82%</div>
-                        <div class="health-score-label">Rất khỏe mạnh</div>
-                        <div class="health-score-bar">
-                            <div class="score-fill" style="width: 82%;"></div>
-                        </div>
-                        <div class="health-score-text">Tiếp tục duy trì phong độ nhé!</div>
-                    </div>
+                </div>
+                <div class="profile-table-container">
+                    <table class="profile-table">
+                        <tbody>
+                            <tr>
+                                <td class="table-label">
+                                    <i class="fas fa-user"></i>
+                                    <span>Họ và tên</span>
+                                </td>
+                                <td class="table-value">
+                                    <span class="value-display" id="fullname-display">{{ $account->fullname }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">
+                                    <i class="fas fa-weight"></i>
+                                    <span>Cân nặng</span>
+                                </td>
+                                <td class="table-value">
+                                    <span class="value-display" id="weight-display">{{ $account->weight ?? '0' }} kg</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">
+                                    <i class="fas fa-ruler-vertical"></i>
+                                    <span>Chiều cao</span>
+                                </td>
+                                <td class="table-value">
+                                    <span class="value-display" id="height-display">{{ $account->height ?? '0' }} cm</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">
+                                    <i class="fas fa-birthday-cake"></i>
+                                    <span>Tuổi</span>
+                                </td>
+                                <td class="table-value">
+                                    <span class="value-display" id="age-display">{{ $age }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Profile & Activity Cards Row -->
-            <div class="cards-grid-middle">
-                <!-- My Profile Card -->
-                <div class="card card-profile">
-                    <div class="card-header">
-                        <h3 class="card-title">Hồ sơ của tôi</h3>
-                        <button class="btn-menu"><i class="fas fa-ellipsis-h"></i></button>
+            <!-- Edit Profile Modal -->
+            <div class="edit-profile-modal" id="edit-profile-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Chỉnh sửa hồ sơ</h3>
+                        <button class="modal-close" id="close-edit-modal">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
-                    <div class="profile-info-grid">
-                        <div class="info-item">
-                            <div class="avatar-large">{{ substr($account->fullname, 0, 1) }}</div>
-                            <div class="info-content">
-                                <h4 class="info-name">{{ $account->fullname }}</h4>
-                                <div class="info-badges">
-                                    <span class="badge-small"><i class="fas fa-shield-alt"></i> Nâng cao</span>
-                                    <span class="badge-small points"><i class="fas fa-fire"></i> 14,750 điểm</span>
+                    <form id="edit-profile-form" class="edit-profile-form">
+                        <div class="form-group">
+                            <label for="edit-fullname">
+                                <i class="fas fa-user"></i>
+                                Họ và tên
+                            </label>
+                            <input type="text" id="edit-fullname" name="fullname" value="{{ $account->fullname }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-weight">
+                                <i class="fas fa-weight"></i>
+                                Cân nặng (kg)
+                            </label>
+                            <input type="number" id="edit-weight" name="weight" value="{{ $account->weight ?? '' }}" step="0.01" min="10" max="500" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-height">
+                                <i class="fas fa-ruler-vertical"></i>
+                                Chiều cao (cm)
+                            </label>
+                            <input type="number" id="edit-height" name="height" value="{{ $account->height ?? '' }}" step="0.01" min="50" max="250" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-birthday">
+                                <i class="fas fa-birthday-cake"></i>
+                                Ngày sinh
+                            </label>
+                            <input type="date" id="edit-birthday" name="birthday" value="{{ $account->birthday ? date('Y-m-d', strtotime($account->birthday)) : '' }}" required>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-cancel" id="cancel-edit-btn">Hủy</button>
+                            <button type="submit" class="btn btn-save">
+                                <i class="fas fa-save"></i>
+                                Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Cards Below Profile -->
+            <div class="cards-below-profile">
+                <!-- Progress Card -->
+                <div class="card card-progress">
+                    <div class="progress-header">
+                        <div class="progress-info">
+                            <div class="progress-label">Tiến độ</div>
+                            <div class="progress-value" id="progress-percentage">{{ $progressPercentage ?? 0 }}%</div>
+                            <div class="progress-note">Hoàn thành mục tiêu</div>
+                        </div>
+                        <div class="badge-filter">Tuần này</div>
+                    </div>
+                    <div class="circle-progress-container">
+                        <div class="circle-progress">
+                            <div class="circle-bg" id="circle-progress-bg" style="background: conic-gradient(
+                                var(--primary) 0deg,
+                                var(--primary) {{ ($progressPercentage ?? 0) * 3.6 }}deg,
+                                rgba(159, 205, 59, 0.1) {{ ($progressPercentage ?? 0) * 3.6 }}deg,
+                                rgba(159, 205, 59, 0.1) 360deg
+                            );">
+                                <div class="circle-inner">
+                                    <div class="circle-value" id="circle-progress-value">{{ $progressPercentage ?? 0 }}%</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="stats-info">
-                        <div class="stat-info-item">
-                            <span class="stat-info-label">Cân nặng</span>
-                            <span class="stat-info-value">{{ $account->weight }} kg</span>
+                    <div class="progress-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Tập cardio</span>
+                            <span class="detail-percent">{{ $cardioProgress ?? 0 }}%</span>
                         </div>
-                        <div class="stat-info-item">
-                            <span class="stat-info-label">Chiều cao</span>
-                            <span class="stat-info-value">{{ $account->height }} cm</span>
+                        <div class="detail-item">
+                            <span class="detail-label">Tập sức mạnh</span>
+                            <span class="detail-percent">{{ $strengthProgress ?? 0 }}%</span>
                         </div>
-                        <div class="stat-info-item">
-                            <span class="stat-info-label">Tuổi</span>
-                            <span class="stat-info-value">{{ $age }}</span>
+                        <div class="detail-item">
+                            <span class="detail-label">Tăng linh hoạt</span>
+                            <span class="detail-percent">{{ $flexibilityProgress ?? 0 }}%</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Today's Activity Card -->
-                <div class="card card-activity-detail">
-                    <div class="card-header">
-                        <h3 class="card-title">Hoạt động hôm nay</h3>
-                        <button class="btn-badge">Hôm nay</button>
-                    </div>
-                    <div class="activity-detail-card">
-                        <div class="activity-map">
-                            <div class="map-placeholder">
-                                <i class="fas fa-map"></i>
+                <!-- Meal Card -->
+                <div class="card card-meal">
+                    @if($mealPlan)
+                        <div class="badge-primary">Bữa tối</div>
+                        <div class="meal-image">
+                            @if($mealPlan->urls)
+                                <img src="{{ asset($mealPlan->urls) }}" alt="{{ $mealPlan->meal_name }}" onerror="this.src='{{ asset('images/meal1.avif') }}'">
+                            @else
+                                <img src="{{ asset('images/meal1.avif') }}" alt="{{ $mealPlan->meal_name }}">
+                            @endif
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">{{ $mealPlan->meal_name }}</h3>
+                            <p class="meal-description">{{ $mealPlan->description ?? 'Bữa ăn dinh dưỡng và lành mạnh' }}</p>
+                            <div class="meal-score">
+                                <span class="score-label">Điểm sức khỏe:</span>
+                                <span class="score-value">{{ $mealPlan->calories ? min(100, round(($mealPlan->calories / 500) * 100)) : 85 }}/100</span>
+                            </div>
+                            <div class="nutrition-bars">
+                                <div class="nutrition-bar" style="width: {{ $mealPlan->calories ? min(100, round(($mealPlan->calories / 500) * 100)) : 100 }}%;"></div>
+                            </div>
+                            <div class="meal-nutrition">
+                                <span>{{ $mealPlan->calories ?? 450 }} Cal</span>
+                                <span>{{ $mealPlan->carbs ?? 40 }}g Carbs</span>
+                                <span>{{ $mealPlan->protein ?? 35 }}g Protein</span>
+                                <span>{{ $mealPlan->fat ?? 15 }}g Fats</span>
                             </div>
                         </div>
-                        <div class="activity-info-detail">
-                            <h4 class="activity-route">Chạy vòng quanh công viên</h4>
-                            <div class="activity-time">
-                                <i class="fas fa-clock"></i> 6:30 - 7:20
+                    @else
+                        <div class="badge-primary">Bữa tối</div>
+                        <div class="meal-image">
+                            <img src="{{ asset('images/meal1.avif') }}" alt="Lean & Green">
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Lean &amp; Green</h3>
+                            <p class="meal-description">Cá hồi nướng cùng bông cải hấp và cơm gạo lứt</p>
+                            <div class="meal-score">
+                                <span class="score-label">Điểm sức khỏe:</span>
+                                <span class="score-value">85/100</span>
                             </div>
-                            <div class="activity-stats-grid">
-                                <div class="activity-stat">
-                                    <span class="stat-title">Quãng đường</span>
-                                    <span class="stat-val">5 dặm (8 km)</span>
-                                </div>
-                                <div class="activity-stat">
-                                    <span class="stat-title">Thời gian</span>
-                                    <span class="stat-val">50 phút</span>
-                                </div>
-                                <div class="activity-stat">
-                                    <span class="stat-title">Tổng bước chân</span>
-                                    <span class="stat-val">10.500 bước</span>
-                                </div>
-                                <div class="activity-stat">
-                                    <span class="stat-title">Tổng calo</span>
-                                    <span class="stat-val">450 Cal</span>
-                                </div>
-                                <div class="activity-stat">
-                                    <span class="stat-title">Tốc độ trung bình</span>
-                                    <span class="stat-val">10 phút/dặm</span>
-                                </div>
+                            <div class="nutrition-bars">
+                                <div class="nutrition-bar" style="width: 100%;"></div>
+                            </div>
+                            <div class="meal-nutrition">
+                                <span>450 Cal</span>
+                                <span>40g Carbs</span>
+                                <span>35g Protein</span>
+                                <span>15g Fats</span>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Extended Dashboard Section - Bottom Row -->
-    <div class="dashboard-extended">
-        <!-- Workout Section (Left) -->
-        <div class="card card-workout">
-            <div class="card-title mb-20">Bài tập hôm nay</div>
-            
-            <div class="workout-content">
-                <!-- Exercise Input Left -->
-                <div class="workout-input-section">
-                    <div class="form-group">
-                        <label>Chọn bài tập</label>
-                        <select id="exercise-select">
-                            <option value="">-- Chọn bài tập --</option>
-                            @foreach($exercises as $ex)
-                                <option value="{{ $ex->calories_burned }}">{{ $ex->name_workout }} ({{ $ex->calories_burned }} kcal)</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <div class="hstack">
-                        <button class="btn btn-primary btn-flex" id="add-ex">
-                            <i class="fas fa-plus"></i> Thêm
-                        </button>
-                        <button class="btn btn-danger" id="reset-ex">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
+        <!-- Right Section - Top Right Cards -->
+        <div class="dashboard-section section-right">
+            <!-- Workout Section -->
+            <div class="card card-workout">
+                <div class="card-title mb-20">Bài tập hôm nay</div>
+                
+                <div class="workout-content">
+                    <!-- Exercise Input Left -->
+                    <div class="workout-input-section">
+                        <div class="form-group">
+                            <label>Chọn bài tập</label>
+                            <select id="exercise-select">
+                                <option value="">-- Chọn bài tập --</option>
+                                @foreach($exercises as $ex)
+                                    <option value="{{ $ex->calories_burned }}">{{ $ex->name_workout }} ({{ $ex->calories_burned }} kcal)</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <div class="hstack">
+                            <button class="btn btn-primary btn-flex" id="add-ex">
+                                <i class="fas fa-plus"></i> Thêm
+                            </button>
+                            <button class="btn btn-danger" id="reset-ex">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
 
-                    <div class="summary-box">
-                        <div class="mb-12">
-                            <span class="text-secondary small">Tổng calo hôm nay</span>
-                            <div class="big-primary">
-                                <span id="total-cal">0</span> <span class="small">kcal</span>
+                        <div class="summary-box">
+                            <div class="mb-12">
+                                <span class="text-secondary small">Tổng calo hôm nay</span>
+                                <div class="big-primary">
+                                    <span id="total-cal">0</span> <span class="small">kcal</span>
+                                </div>
+                            </div>
+                            <div class="top-divider">
+                                <span class="text-secondary small">Mục tiêu calo</span>
+                                <div class="goal-value">
+                                    <span id="goal-cal">{{ $goal_calories }}</span> kcal
+                                </div>
                             </div>
                         </div>
-                        <div class="top-divider">
-                            <span class="text-secondary small">Mục tiêu calo</span>
-                            <div class="goal-value">
-                                <span id="goal-cal">{{ $goal_calories }}</span> kcal
-                            </div>
+
+                        <!-- Exercise List -->
+                        <div style="margin-top: 20px;">
+                            <div class="exercise-list-title">Danh sách bài tập</div>
+                            <div id="exercise-list" class="exercise-list"></div>
                         </div>
                     </div>
 
-                    <!-- Exercise List -->
-                    <div style="margin-top: 20px;">
-                        <div class="exercise-list-title">Danh sách bài tập</div>
-                        <div id="exercise-list" class="exercise-list"></div>
-                    </div>
-                </div>
-
-                <!-- Exercise Chart Right -->
-                <div class="workout-chart-section">
-                    <div class="chart-container">
-                        <canvas id="pieChart"></canvas>
+                    <!-- Exercise Chart Right -->
+                    <div class="workout-chart-section">
+                        <div class="chart-container">
+                            <canvas id="pieChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Weekly Stats Section (Right) -->
-        <div class="card card-weekly-stats">
-            <div class="card-title mb-20">Calo tuần này</div>
-            <div class="chart-container">
-                <canvas id="weekChart"></canvas>
+            <!-- Weekly Stats Section -->
+            <div class="card card-weekly-stats">
+                <div class="card-title mb-20">Calo tuần này</div>
+                <div class="chart-container">
+                    <canvas id="weekChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -310,10 +315,310 @@
 @push('scripts')
     <script>
         window.profileData = {
-            goalCalories: {{ $goal_calories }}
+            goalCalories: {{ $goal_calories }},
+            caloriesBurnedToday: {{ $caloriesBurnedToday ?? 0 }},
+            weeklyCalories: @json($weeklyCalories ?? [])
         };
     </script>
     <script src="{{ asset('js/profile.js') }}"></script>
+    <script>
+        // Profile Edit Functionality
+        (function() {
+            // Avatar Upload
+            const avatarInput = document.getElementById('avatar-input');
+            const avatarDisplay = document.getElementById('avatar-display');
+            const avatarImg = document.getElementById('avatar-img');
+            const avatarInitial = document.getElementById('avatar-initial');
+            const avatarOverlay = avatarDisplay.querySelector('.avatar-overlay');
+
+            const changeAvatarBtn = document.getElementById('change-avatar-btn');
+
+            if (changeAvatarBtn && avatarInput) {
+                changeAvatarBtn.addEventListener('click', () => {
+                    avatarInput.click();
+                    // Close dropdown
+                    if (menuDropdown) menuDropdown.classList.remove('show');
+                });
+
+                avatarInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    // Validate file
+                    if (!file.type.match('image.*')) {
+                        alert('Vui lòng chọn file ảnh hợp lệ!');
+                        return;
+                    }
+
+                    if (file.size > 2048 * 1024) {
+                        alert('Kích thước ảnh không được vượt quá 2MB!');
+                        return;
+                    }
+
+                    // Preview image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (avatarImg) {
+                            avatarImg.src = e.target.result;
+                            avatarImg.style.display = 'block';
+                            if (avatarInitial) avatarInitial.style.display = 'none';
+                        } else {
+                            const img = document.createElement('img');
+                            img.id = 'avatar-img';
+                            img.src = e.target.result;
+                            img.alt = 'Avatar';
+                            avatarDisplay.appendChild(img);
+                            if (avatarInitial) avatarInitial.style.display = 'none';
+                        }
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Upload to server
+                    const formData = new FormData();
+                    formData.append('avatar', file);
+
+                    fetch('/api/account/avatar', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                        },
+                        body: formData,
+                        credentials: 'same-origin'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (avatarImg) {
+                                avatarImg.src = data.avatar_url;
+                                avatarImg.style.display = 'block';
+                                if (avatarInitial) avatarInitial.style.display = 'none';
+                            } else {
+                                const img = document.createElement('img');
+                                img.id = 'avatar-img';
+                                img.src = data.avatar_url;
+                                img.alt = 'Avatar';
+                                img.style.display = 'block';
+                                avatarDisplay.appendChild(img);
+                                if (avatarInitial) avatarInitial.style.display = 'none';
+                            }
+                            showNotification('Cập nhật avatar thành công!', 'success');
+                            
+                            // Update navbar avatar immediately
+                            const navAvatar = document.querySelector('.user-trigger .user-avatar');
+                            if (navAvatar) {
+                                navAvatar.src = data.avatar_url;
+                            }
+                        } else {
+                            showNotification(data.message || 'Có lỗi xảy ra!', 'error');
+                            // Revert preview on error
+                            if (avatarImg) {
+                                avatarImg.style.display = 'none';
+                                if (avatarInitial) avatarInitial.style.display = '';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('Có lỗi xảy ra khi upload ảnh!', 'error');
+                    });
+                });
+            }
+
+            // Profile Menu Dropdown
+            const menuBtn = document.getElementById('profile-menu-btn');
+            const menuDropdown = document.getElementById('profile-menu-dropdown');
+            const editProfileBtn = document.getElementById('edit-profile-btn');
+            const editModal = document.getElementById('edit-profile-modal');
+            const closeModalBtn = document.getElementById('close-edit-modal');
+            const cancelEditBtn = document.getElementById('cancel-edit-btn');
+            const editForm = document.getElementById('edit-profile-form');
+
+            // Toggle dropdown menu
+            if (menuBtn && menuDropdown) {
+                menuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    menuDropdown.classList.toggle('show');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+                        menuDropdown.classList.remove('show');
+                    }
+                });
+            }
+
+            // Open edit modal
+            if (editProfileBtn && editModal) {
+                editProfileBtn.addEventListener('click', function() {
+                    menuDropdown.classList.remove('show');
+                    editModal.classList.add('show');
+                });
+            }
+
+            // Close modal
+            function closeModal() {
+                if (editModal) {
+                    editModal.classList.remove('show');
+                }
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeModal);
+            }
+
+            if (cancelEditBtn) {
+                cancelEditBtn.addEventListener('click', closeModal);
+            }
+
+            // Close modal when clicking overlay
+            const modalOverlay = document.querySelector('.modal-overlay');
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', closeModal);
+            }
+
+            // Handle form submit
+            if (editForm) {
+                editForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const formData = {
+                        fullname: document.getElementById('edit-fullname').value.trim(),
+                        weight: parseFloat(document.getElementById('edit-weight').value),
+                        height: parseFloat(document.getElementById('edit-height').value),
+                        birthday: document.getElementById('edit-birthday').value
+                    };
+
+                    // Validation
+                    if (!formData.fullname) {
+                        showNotification('Vui lòng nhập họ và tên!', 'error');
+                        return;
+                    }
+
+                    if (formData.weight < 10 || formData.weight > 500) {
+                        showNotification('Cân nặng phải từ 10 đến 500 kg!', 'error');
+                        return;
+                    }
+
+                    if (formData.height < 50 || formData.height > 250) {
+                        showNotification('Chiều cao phải từ 50 đến 250 cm!', 'error');
+                        return;
+                    }
+
+                    if (!formData.birthday) {
+                        showNotification('Vui lòng chọn ngày sinh!', 'error');
+                        return;
+                    }
+
+                    // Disable submit button
+                    const submitBtn = editForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+
+                    // Send request
+                    fetch('/api/account/update', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                        },
+                        body: JSON.stringify(formData),
+                        credentials: 'same-origin'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => {
+                                throw new Error(err.message || 'Server error');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+
+                        if (result.success) {
+                            // Update display values
+                            document.getElementById('profile-name-display').textContent = formData.fullname;
+                            document.getElementById('fullname-display').textContent = formData.fullname;
+                            document.getElementById('weight-display').textContent = formData.weight + ' kg';
+                            document.getElementById('height-display').textContent = formData.height + ' cm';
+                            
+                            // Calculate and update age
+                            const age = calculateAge(formData.birthday);
+                            document.getElementById('age-display').textContent = age;
+
+                            // Update avatar initial if needed
+                            const avatarInitial = document.getElementById('avatar-initial');
+                            const avatarImg = document.getElementById('avatar-img');
+                            if (avatarInitial && (!avatarImg || avatarImg.style.display === 'none')) {
+                                avatarInitial.textContent = formData.fullname.charAt(0).toUpperCase();
+                            }
+
+                            showNotification('Cập nhật hồ sơ thành công!', 'success');
+                            
+                            // Update navbar name immediately
+                            const navName = document.querySelector('.user-trigger span');
+                            if (navName) {
+                                navName.textContent = formData.fullname;
+                            }
+                            closeModal();
+                            
+                            // Reload page after 1 second to ensure all data is synced
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            const errorMsg = result.message || (result.errors ? Object.values(result.errors).flat().join(', ') : 'Có lỗi xảy ra!');
+                            showNotification(errorMsg, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                        showNotification(error.message || 'Có lỗi xảy ra khi cập nhật!', 'error');
+                    });
+                });
+            }
+
+            function calculateAge(birthday) {
+                const today = new Date();
+                const birthDate = new Date(birthday);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+
+            function showNotification(message, type) {
+                // Simple notification - you can enhance this
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 16px 24px;
+                    background: ${type === 'success' ? '#10B981' : '#EF4444'};
+                    color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                `;
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        })();
+    </script>
 @endpush
 
 </body>

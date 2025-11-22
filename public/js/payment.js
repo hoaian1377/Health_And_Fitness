@@ -102,7 +102,7 @@
         planBadge.textContent = stored;
         planBadge.classList.add('show');
       }
-    } catch (_) {}
+    } catch (_) { }
   }
 
   // Open/Close
@@ -136,18 +136,46 @@
     if (action === 'pay') {
       // Mock payment success -> go to step 4 (success screen)
       btn.setAttribute('disabled', 'true');
-      setTimeout(() => {
-        btn.removeAttribute('disabled');
-        goToStep(4);
-        successEl && successEl.classList.add('show');
-        // Save current plan for navbar badge
-        try { localStorage.setItem('hf_current_plan', selectedPlan.label); } catch (_) {}
-        updatePlanBadgeFromStorage();
-        // Auto-close modal after showing success (e.g., 3 seconds)
-        setTimeout(() => {
-          close();
-        }, 3000);
-      }, 800);
+
+      // Save plan to server
+      fetch('/api/account/plan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+        },
+        body: JSON.stringify({ plan: selectedPlan.label })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            setTimeout(() => {
+              btn.removeAttribute('disabled');
+              goToStep(4);
+              successEl && successEl.classList.add('show');
+              // Save current plan for navbar badge
+              try { localStorage.setItem('hf_current_plan', selectedPlan.label); } catch (_) { }
+              updatePlanBadgeFromStorage();
+              // Auto-close modal after showing success (e.g., 3 seconds)
+              setTimeout(() => {
+                close();
+                // Reload to update profile badge if on profile page
+                if (window.location.pathname.includes('/profile')) {
+                  window.location.reload();
+                }
+              }, 3000);
+            }, 800);
+          } else {
+            alert('Có lỗi xảy ra khi lưu gói: ' + data.message);
+            btn.removeAttribute('disabled');
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Có lỗi xảy ra khi kết nối server');
+          btn.removeAttribute('disabled');
+        });
     }
   });
 

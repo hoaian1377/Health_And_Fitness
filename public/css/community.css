@@ -18,44 +18,6 @@ html, body {
 }
 
 
-/* ================= USER & AUTH ================= */
-/* Menu người dùng và nút đăng nhập/đăng ký */
-.user-menu,
-.auth-buttons {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.user-menu {
-  margin-left: 20px;
-}
-
-/* Avatar người dùng */
-.user-icon {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ffea00;
-}
-
-/* Nút đăng xuất */
-.logout-btn {
-  background: #ffea00;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-  color: #000;
-}
-
-.logout-btn:hover {
-  background: #ffd700;
-  transform: translateY(-1px);
-}
 
 
 /* ================= AUTH BUTTONS ================= */
@@ -92,46 +54,6 @@ html, body {
     color: #000;
 }
 
-
-/* Hành vi menu di động nhất quán với base.css */
-@media (max-width: 992px) {
-  .navbar .menu { 
-    display: none; /* Ẩn menu mặc định trên mobile */
-    flex-direction: column; /* Chuyển sang cột */
-    position: absolute; /* Vị trí tuyệt đối */
-    top: 70px; /* Cách đỉnh 70px */
-    right: 0; /* Căn phải */
-    width: 230px; /* Chiều rộng menu */
-    background: #111; /* Nền xám đen */
-    padding: 20px 0; /* Khoảng đệm trên dưới */
-    border-radius: 10px 0 0 10px; /* Bo góc */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4); /* Bóng đổ */
-  }
-  .navbar .menu.show { 
-    display: flex; /* Hiển thị khi có class show */
-  }
-  /* Thụt lề text menu một chút sang phải để khoảng cách tốt hơn */
-  .navbar .menu a { 
-    padding: 12px 25px 12px 35px; /* Khoảng đệm, thụt lề trái 35px */
-    width: 100%; /* Chiều rộng đầy đủ */
-    text-align: left; /* Căn trái */
-  }
-      /* Make the global navbar follow the viewport on mobile when visiting the community page */
-    .navbar {
-        position: fixed; /* Giữ navbar cố định trên viewport */
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 9999; /* Đặt lên trên các phần tử khác */
-        transition: transform 0.25s ease, box-shadow 0.25s ease; /* Mượt khi ẩn/hiện (nếu cần) */
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    }
-
-    /* Add top spacing so page content won't be hidden under the fixed navbar */
-    .community-container {
-        padding-top: 86px; /* Adjust based on your navbar height (logo + padding) */
-    }
-}
 
 /* ================= COMMUNITY CONTAINER ================= */
 /* Container chính cho trang cộng đồng */
