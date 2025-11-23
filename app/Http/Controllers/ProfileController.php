@@ -34,7 +34,7 @@ class ProfileController extends Controller
                     ]);
 
                     $user->update([
-                        'name' => $data['fullName'] ?? $user->name,
+                        'name' => $data['fullname'] ?? $user->name,
                         'phone' => $data['phone'] ?? $user->phone,
                         'dob' => $data['dob'] ?? $user->dob,
                         'gender' => $data['gender'] ?? $user->gender,

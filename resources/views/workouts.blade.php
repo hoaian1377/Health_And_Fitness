@@ -1,7 +1,7 @@
 @extends('base')
 
 @section('content')
-<link> rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="{{ asset('css/fitness.css') }}">
 <div class="app-container">
 
@@ -38,9 +38,9 @@
                     <!-- Tabs -->
                     <div class="tabs">
                         <a href="?filter=" class="tab {{ !request('filter') ? 'active' : '' }}">Tất cả</a>
-                        <a href="?filter=Mông" class="tab {{ request('filter')=='Mông' ? 'active' : '' }}">Xây dựng cơ bắp</a>
-                        <a href="?filter=Cardio" class="tab {{ request('filter')=='Cardio' ? 'active' : '' }}">Đốt cháy mỡ</a>
-                        <a href="?filter=Dẻo dai" class="tab {{ request('filter')=='Dẻo dai' ? 'active' : '' }}">Yoga & Giãn cơ</a>
+                        <a href="?filter=Mông" class="tab {{ request('filter')=='Mông' ? 'active' : '' }}">Tăng cân </a>
+                        <a href="?filter=Cardio" class="tab {{ request('filter')=='Cardio' ? 'active' : '' }}">Tăng cơ</a>
+                        <a href="?filter=Dẻo dai" class="tab {{ request('filter')=='Dẻo dai' ? 'active' : '' }}">giảm cân </a>
                     </div>
 
 
