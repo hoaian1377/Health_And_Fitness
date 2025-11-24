@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <div class="section-header">
+             <div class="section-header">
                 <h2 class="section-title">Thực đơn phổ biến</h2>
                         </div>
              <div class="tabs-container">
@@ -38,7 +38,7 @@
                 <button class="tab" data-category="giam-can">Giảm cân</button>
                 <button class="tab" data-category="tang-co">Tăng cơ</button>
                 <button class="tab" data-category="can-bang">Cân bằng</button>
-                <button class="tab" data-category="suc-khoe">Sức khỏe</button>
+                <button class="tab" data-category="giam-mo">Giảm mỡ</button>
             </div>
 
             <div class="workout-grid">
@@ -74,6 +74,7 @@
             </div>
         </div>
     </div>
+    
 
     <script defer src="{{ asset('js/nutrition.js') }}"></script>
 </body>

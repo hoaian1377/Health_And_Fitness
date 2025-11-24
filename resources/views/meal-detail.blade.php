@@ -124,43 +124,108 @@
         </div>
 
         <!-- Main Content -->
-<div class="content-grid">
+        <div class="content-grid">
+            <div class="recipe-box">
+                <h3 class="recipe-title">
+                    <i class="fa-solid fa-utensils"></i> Cách Nấu món ăn {{ $mealplan->meal_name }}
+                </h3>
 
-    <div class="recipe-box">
-        <h3 class="recipe-title">
-            <i class="fa-solid fa-utensils"></i> Cách Nấu món ăn {{ $mealplan->meal_name }}
-        </h3>
+                <div class="recipe-content">
+                    {!! nl2br(e($mealplan->description)) !!}
+                </div>
+            </div>
 
-        <div class="recipe-content">
-            {!! nl2br(e($mealplan->description)) !!}
-        </div>
-    </div>
-
-</div>
-
-
-
-            <!-- Right Column -->
-           
-
-                <div class="tags-card">
-                    <h3><i class="fa-solid fa-tags"></i> Phân Loại</h3>
-                    <div class="tags-list">
-                        <span class="tag">Giảm cân</span>
-                        <span class="tag">Ít calo</span>
-                        <span class="tag">High protein</span>
-                        <span class="tag">Healthy</span>
-                        <span class="tag">Keto</span>
-                        <span class="tag">Bữa trưa</span>
-                    </div>
+            <div class="tags-card">
+                <h3><i class="fa-solid fa-tags"></i> Phân Loại</h3>
+                <div class="tags-list">
+                    <span class="tag">Giảm cân</span>
+                    <span class="tag">Ít calo</span>
+                    <span class="tag">High protein</span>
+                    <span class="tag">Healthy</span>
+                    <span class="tag">Keto</span>
+                    <span class="tag">Bữa trưa</span>
                 </div>
             </div>
         </div>
 
         @endif
-
     </div>
 </div>
+
+<!-- Review Section - Moved Outside -->
+<div class="review-section-wrapper">
+    <div class="review-container">
+        <div class="review-header">
+            <h2>
+                <i class="fa-solid fa-comments"></i>
+                Đánh Giá & Nhận Xét
+            </h2>
+            <div class="review-stats">
+                <span class="total-reviews">0 đánh giá</span>
+            </div>
+        </div>
+
+        @auth
+        <!-- Review Input Form -->
+        <div class="review-form-card">
+            <div class="user-avatar">
+                <i class="fa-solid fa-user-circle"></i>
+            </div>
+            <div class="review-form-content">
+                <!-- Star Rating -->
+                <div class="star-rating-inline">
+                    <span>Đánh giá của bạn:</span>
+                    <div class="stars">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-value">0/5</span>
+                </div>
+
+                <!-- Review Input -->
+                <textarea id="reviewInput" placeholder="Chia sẻ trải nghiệm của bạn về món ăn này..."></textarea>
+                
+                <div class="form-actions">
+                    <button id="submitReview" class="btn-submit">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Gửi đánh giá
+                    </button>
+                </div>
+            </div>
+        </div>
+        @else
+        <!-- Login Required -->
+        <div class="login-required-card">
+            <i class="fa-solid fa-lock"></i>
+            <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá món ăn này</p>
+        </div>
+        @endauth
+
+        <!-- Reviews List -->
+        <div class="reviews-list" id="reviewsList">
+            <div class="empty-reviews">
+                <i class="fa-solid fa-comment-slash"></i>
+                <p>Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pass user data to JavaScript -->
+@auth
+<script>
+    window.currentUser = {
+        name: "{{ Auth::user()->name }}",
+        email: "{{ Auth::user()->email }}",
+        id: "{{ Auth::user()->id }}"
+    };
+</script>
+@endauth
+
+
 
 <script src="{{ asset('js/meal-detail.js') }}"></script>
 @endsection
