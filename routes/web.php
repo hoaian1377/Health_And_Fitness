@@ -44,26 +44,35 @@ Route::post('/community/{post}/like', [CommunityController::class, 'toggleLike']
 
 
 // =================== TRANG CÁ NHÂN ===================
-// Profile
-Route::middleware('auth')->get('/profile', [ProfileController::class, 'index'])->name('profile.page');
-Route::middleware('auth')->put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-// Profile API (JSON endpoints)
+
+// =================== TRANG CÁ NHÂN ===================
 Route::middleware('auth')->group(function () {
-    Route::get('/api/profile', [ProfileController::class, 'getProfile']);
-    Route::post('/api/profile/update', [ProfileController::class, 'updateApi']);
-    Route::post('/api/profile/avatar', [ProfileController::class, 'updateAvatar']);
-    Route::delete('/api/profile', [ProfileController::class, 'deleteAccount']);
-});
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.page');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Đổi mật khẩu
+    Route::get('/profile/change-password', [ProfileController::class, 'changePassword'])->name('password.change');
+    Route::post('/profile/change-password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    
+    // Redirect for backward compatibility
+    Route::get('/change-password', function () {
+        return redirect()->route('password.change');
+    });
 
-// =================== ĐỔI MẬT KHẨU (NEW) ===================
-Route::middleware('auth')->group(function () {
-    Route::get('/change-password', [ProfileController::class, 'changePassword'])
-        ->name('password.change');
+    // Workout API
+    Route::get('/api/workout/today', [ProfileController::class, 'getTodayWorkouts']);
+    Route::post('/api/workout/add', [ProfileController::class, 'addWorkoutLog']);
+    Route::delete('/api/workout/reset', [ProfileController::class, 'resetDailyWorkouts']);
+    Route::delete('/api/workout/{id}', [ProfileController::class, 'deleteWorkoutLog']);
 
-    Route::post('/change-password', [ProfileController::class, 'updatePassword'])
-        ->name('password.update');
+    // Meal API
+    Route::post('/api/meal/add', [ProfileController::class, 'addMealLog']);
+
+    // Payment API
+    Route::post('/api/account/plan', [ProfileController::class, 'updatePlan']);
 });
 
 
@@ -91,16 +100,3 @@ Route::get('/nutrition', [MealPlanController::class, 'index'])->name('nutrition.
 Route::get('/nutrition/{id}', [MealPlanController::class, 'show'])->name('meal-detail');
 
 
-Route::get('/profile', [FitnessDashboardController::class,'index'])->name('profile.page')->middleware('auth');
-Route::middleware('auth')->group(function () {
-    Route::post('/api/account/update', [AccountController::class, 'update'])->name('account.update');
-    Route::post('/api/account/avatar', [AccountController::class, 'updateAvatar'])->name('account.avatar');
-    Route::post('/api/account/plan', [AccountController::class, 'updatePlan'])->name('account.plan');
-    Route::post('/api/voucher/validate', [\App\Http\Controllers\VoucherController::class, 'validateVoucher'])->name('voucher.validate');
-    
-    // Workout routes
-    Route::get('/api/workout/today', [\App\Http\Controllers\WorkoutController::class, 'getTodayWorkouts'])->name('workout.today');
-    Route::post('/api/workout/add', [\App\Http\Controllers\WorkoutController::class, 'addWorkout'])->name('workout.add');
-    Route::delete('/api/workout/{id}', [\App\Http\Controllers\WorkoutController::class, 'removeWorkout'])->name('workout.remove');
-    Route::delete('/api/workout/reset', [\App\Http\Controllers\WorkoutController::class, 'resetWorkouts'])->name('workout.reset');
-});

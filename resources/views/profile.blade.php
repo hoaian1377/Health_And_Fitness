@@ -25,6 +25,10 @@
                                 <i class="fas fa-edit"></i>
                                 <span>Chỉnh sửa hồ sơ</span>
                             </button>
+                            <a href="{{ route('password.change') }}" class="menu-item" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                                <i class="fas fa-key"></i>
+                                <span>Đổi mật khẩu</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -45,7 +49,7 @@
                         <div class="profile-name-wrapper">
                             <h4 class="profile-name-in-card" id="profile-name-display">{{ $account->fullname }}</h4>
                             <div class="info-badges">
-                                <span class="badge-small"><i class="fas fa-shield-alt"></i> {{ $account->plan ?? 'Chưa đăng ký' }}</span>
+                                <span class="badge-small"><i class="fas fa-shield-alt"></i> {{ $userPlan ?? $account->plan ?? 'Chưa đăng ký' }}</span>
                                 <span class="badge-small points"><i class="fas fa-fire"></i> 14,750 điểm</span>
                             </div>
                         </div>
@@ -190,7 +194,7 @@
                 <!-- Meal Card -->
                 <div class="card card-meal">
                     @if($mealPlan)
-                        <div class="badge-primary">Bữa tối</div>
+                        <div class="badge-primary">Bữa ăn</div>
                         <div class="meal-image">
                             @if($mealPlan->urls)
                                 <img src="{{ asset($mealPlan->urls) }}" alt="{{ $mealPlan->meal_name }}" onerror="this.src='{{ asset('images/meal1.avif') }}'">
@@ -214,9 +218,12 @@
                                 <span>{{ $mealPlan->protein ?? 35 }}g Protein</span>
                                 <span>{{ $mealPlan->fat ?? 15 }}g Fats</span>
                             </div>
+                            <button class="btn btn-primary btn-sm mt-3" id="add-meal-btn" data-calories="{{ $mealPlan->calories ?? 450 }}" data-name="{{ $mealPlan->meal_name }}">
+                                <i class="fas fa-plus"></i> Thêm bữa ăn
+                            </button>
                         </div>
                     @else
-                        <div class="badge-primary">Bữa tối</div>
+                        <div class="badge-primary">Bữa ăn</div>
                         <div class="meal-image">
                             <img src="{{ asset('images/meal1.avif') }}" alt="Lean & Green">
                         </div>
@@ -236,6 +243,9 @@
                                 <span>35g Protein</span>
                                 <span>15g Fats</span>
                             </div>
+                            <button class="btn btn-primary btn-sm mt-3" id="add-meal-btn-default" data-calories="450" data-name="Lean & Green">
+                                <i class="fas fa-plus"></i> Thêm bữa ăn
+                            </button>
                         </div>
                     @endif
                 </div>
@@ -377,7 +387,7 @@
                     const formData = new FormData();
                     formData.append('avatar', file);
 
-                    fetch('/api/account/avatar', {
+                    fetch('/profile/avatar', {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json',
@@ -518,7 +528,7 @@
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
 
                     // Send request
-                    fetch('/api/account/update', {
+                    fetch('/profile/update', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

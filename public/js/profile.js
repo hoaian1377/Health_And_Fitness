@@ -258,14 +258,23 @@
                 credentials: 'same-origin'
             });
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Server error');
+            }
+
             const data = await response.json();
             if (data.success) {
                 select.value = '';
                 // Reload workouts from server
                 await loadWorkouts();
+                alert('Đã thêm bài tập thành công!');
+            } else {
+                alert(data.message || 'Có lỗi xảy ra');
             }
         } catch (error) {
             console.error('Error adding workout:', error);
+            alert('Lỗi: ' + error.message);
         }
     }
 
@@ -300,6 +309,47 @@
 
         // Load existing workouts on page load
         loadWorkouts();
+
+        // Meal Button Handler
+        const mealBtns = document.querySelectorAll('#add-meal-btn, #add-meal-btn-default');
+        mealBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const cal = btn.getAttribute('data-calories');
+                const name = btn.getAttribute('data-name');
+
+                if (!confirm(`Bạn có muốn thêm "${name}" (${cal} kcal) vào nhật ký ăn uống?`)) return;
+
+                try {
+                    const response = await fetch('/api/meal/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                        },
+                        body: JSON.stringify({
+                            calories: cal
+                        }),
+                        credentials: 'same-origin'
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Server error');
+                    }
+
+                    const data = await response.json();
+                    if (data.success) {
+                        alert(`Đã thêm thành công! Tổng calo nạp vào: ${data.total_consumed} kcal`);
+                    } else {
+                        alert(data.message || 'Có lỗi xảy ra');
+                    }
+                } catch (error) {
+                    console.error('Error adding meal:', error);
+                    alert('Lỗi: ' + error.message);
+                }
+            });
+        });
     });
 
 })();
