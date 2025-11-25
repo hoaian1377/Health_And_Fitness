@@ -44,14 +44,12 @@ Route::post('/community/{post}/like', [CommunityController::class, 'toggleLike']
 
 
 // =================== TRANG CÁ NHÂN ===================
-
-
-// =================== TRANG CÁ NHÂN ===================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.page');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 
     // Đổi mật khẩu
     Route::get('/profile/change-password', [ProfileController::class, 'changePassword'])->name('password.change');
