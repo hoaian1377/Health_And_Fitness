@@ -99,6 +99,9 @@
     <!-- Payment Modal -->
     @include('payment')
 
+    <!-- Chatbot Widget -->
+    @include('partials.chatbot_widget')
+
     <!-- Scroll to top button -->
     <button id="scrollTopBtn" class="scroll-top">
         <i class="fa-solid fa-arrow-up"></i>

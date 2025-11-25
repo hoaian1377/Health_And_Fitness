@@ -13,6 +13,7 @@ use App\Http\Controllers\MealController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FitnessDashboardController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ChatbotController;
 
 // =================== TRANG CHỦ ===================
 Route::get('/', [HomeController::class, 'index'])->name('home.page');
@@ -129,3 +130,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/plans/{id}', [AdminController::class, 'destroyPlan'])->name('plans.destroy');
 });
 
+
+// =================== CHATBOT ===================
+Route::get('/chatbot', function () {
+    return view('chatbot');
+})->name('chatbot.page');
+
+Route::post('/chatbot/ask', [ChatbotController::class, 'ask'])->name('chatbot.ask');
