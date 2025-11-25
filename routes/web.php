@@ -99,7 +99,33 @@ Route::get('/nutrition/{id}', [MealPlanController::class, 'show'])->name('meal-d
 
 
 
-Route::middleware(['role:admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index']);
+use App\Http\Controllers\AdminController;
+
+// ... existing imports ...
+
+// =================== ADMIN ===================
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+
+    // Exercises
+    Route::get('/exercises', [AdminController::class, 'exercises'])->name('exercises');
+    Route::post('/exercises', [AdminController::class, 'storeExercise'])->name('exercises.store');
+    Route::get('/exercises/{id}/edit', [AdminController::class, 'editExercise'])->name('exercises.edit');
+    Route::put('/exercises/{id}', [AdminController::class, 'updateExercise'])->name('exercises.update');
+    Route::delete('/exercises/{id}', [AdminController::class, 'destroyExercise'])->name('exercises.destroy');
+
+    // Nutrition
+    Route::get('/nutrition', [AdminController::class, 'nutrition'])->name('nutrition');
+    Route::post('/nutrition', [AdminController::class, 'storeMeal'])->name('nutrition.store');
+    Route::get('/nutrition/{id}/edit', [AdminController::class, 'editMeal'])->name('nutrition.edit');
+    Route::put('/nutrition/{id}', [AdminController::class, 'updateMeal'])->name('nutrition.update');
+    Route::delete('/nutrition/{id}', [AdminController::class, 'destroyMeal'])->name('nutrition.destroy');
+
+    // Plans
+    Route::get('/plans', [AdminController::class, 'plans'])->name('plans');
+    Route::post('/plans', [AdminController::class, 'storePlan'])->name('plans.store');
+    Route::get('/plans/{id}/edit', [AdminController::class, 'editPlan'])->name('plans.edit');
+    Route::put('/plans/{id}', [AdminController::class, 'updatePlan'])->name('plans.update');
+    Route::delete('/plans/{id}', [AdminController::class, 'destroyPlan'])->name('plans.destroy');
 });
 

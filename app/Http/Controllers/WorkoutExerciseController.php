@@ -4,36 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\WorkoutExercise;
+use App\Models\FitnessGoal;
 
 class WorkoutExerciseController extends Controller
 {
     public function index(Request $request)
     {
-        $filter = $request->filter; // Lấy tab hiện tại
-
-        // Quy định số cuối ID cho từng mục tiêu
-        $goalDigits = [
-            'Tăng cân' => ['0','1','2'],
-            'Tăng cơ'  => ['3','4'],
-            'Giảm cân' => ['5','6'],
-            'Giảm mỡ' => ['7','8','9']
-        ];
+        $filter = $request->filter; // Lấy ID mục tiêu từ URL
 
         $query = WorkoutExercise::query();
 
-        if(!empty($filter) && isset($goalDigits[$filter])) {
-            $digits = $goalDigits[$filter];
-            $query->where(function($q) use ($digits) {
-                foreach($digits as $d) {
-                    $q->orWhere('workout_exerciseID', 'LIKE', "%$d");
-                }
-            });
+        if(!empty($filter)) {
+            $query->where('fitness_goalID', $filter);
         }
 
         $exercises = $query->orderBy('workout_exerciseID', 'asc')->get();
 
-        // Các tabs
-        $goals = array_keys($goalDigits);
+        // Lấy danh sách mục tiêu từ DB
+        $goals = \App\Models\FitnessGoal::all();
 
         return view('workouts', compact('exercises','goals','filter'));
     }

@@ -56,6 +56,11 @@
                 </div>
 
                 <div class="dropdown-menu" id="userDropdown">
+                    @if(Auth::user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}">
+                        <i class="fa-solid fa-gauge"></i> Trang quản trị
+                    </a>
+                    @endif
                     <a href="{{ route('profile.page') }}">
                         <i class="fa-solid fa-user"></i> Thông tin cá nhân
                     </a>

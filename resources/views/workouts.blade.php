@@ -37,8 +37,8 @@
 
     <!-- Các tab tự động từ $goals -->
     @foreach($goals as $goal)
-        <a href="?filter={{ $goal }}" class="tab {{ $filter == $goal ? 'active' : '' }}">
-            {{ $goal }}
+        <a href="?filter={{ $goal->fitness_goalID }}" class="tab {{ $filter == $goal->fitness_goalID ? 'active' : '' }}">
+            {{ $goal->goal_name }}
         </a>
     @endforeach
 </div>

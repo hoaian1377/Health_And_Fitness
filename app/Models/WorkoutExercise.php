@@ -16,7 +16,8 @@ class WorkoutExercise extends Model
         'practice_round',
         'calories_burned',
         'urls',
-        'video_urls'
+        'video_urls',
+        'fitness_goalID',
     ];
 
     public function fitness_goal()
@@ -25,3 +26,4 @@ class WorkoutExercise extends Model
     }
     public $timestamps = false; 
 }
+
