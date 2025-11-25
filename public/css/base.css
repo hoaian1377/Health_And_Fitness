@@ -245,7 +245,7 @@ footer {
     padding: 8px 18px;
     border-radius: 10px;
     font-weight: 700;
-    color: #fff !important;
+    color: #000000 !important;
     transition: 0.3s ease;
 }
 
@@ -257,8 +257,8 @@ footer {
 /* ================= AUTH BUTTONS ================= */
 .btn-auth,
 .auth-buttons a {
-    background: #333;
-    color: #fff !important;
+    background: #f1d30d;
+    color: #000000 !important;
     padding: 8px 16px;
     border-radius: 10px;
     font-weight: 600;
@@ -270,7 +270,7 @@ footer {
 
 .btn-auth:hover,
 .auth-buttons a:hover {
-    background: #444;
+    background: #d63027;
     transform: translateY(-2px);
 }
 
