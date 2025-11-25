@@ -96,3 +96,10 @@ Route::get('/workouts/{id}', [WorkoutExerciseController::class, 'show'])->name('
 // =================== DINH DƯỠNG ===================
 Route::get('/nutrition', [MealPlanController::class, 'index'])->name('nutrition.page');
 Route::get('/nutrition/{id}', [MealPlanController::class, 'show'])->name('meal-detail');
+
+
+
+Route::middleware(['role:admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index']);
+});
+
