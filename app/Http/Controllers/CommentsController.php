@@ -6,6 +6,8 @@ use App\Models\Comments; // ✅ đúng namespace
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+
+
 class CommentsController extends Controller
 {
     use AuthorizesRequests;

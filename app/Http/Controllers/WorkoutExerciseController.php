@@ -7,30 +7,42 @@ use App\Models\WorkoutExercise;
 
 class WorkoutExerciseController extends Controller
 {
-    // danh sách bài tập
     public function index(Request $request)
     {
+        $filter = $request->filter; // Lấy tab hiện tại
+
+        // Quy định số cuối ID cho từng mục tiêu
+        $goalDigits = [
+            'Tăng cân' => ['0','1','2'],
+            'Tăng cơ'  => ['3','4'],
+            'Giảm cân' => ['5','6'],
+            'Giảm mỡ' => ['7','8','9']
+        ];
+
         $query = WorkoutExercise::query();
 
-       
-        if ($request->has('filter') && $request->filter != '') {
-            $filter = $request->filter;
-
-           
-            $query->where('muscle_group', 'LIKE', "%$filter%");
+        if(!empty($filter) && isset($goalDigits[$filter])) {
+            $digits = $goalDigits[$filter];
+            $query->where(function($q) use ($digits) {
+                foreach($digits as $d) {
+                    $q->orWhere('workout_exerciseID', 'LIKE', "%$d");
+                }
+            });
         }
 
         $exercises = $query->orderBy('workout_exerciseID', 'asc')->get();
 
-    
-        return view('workouts', compact('exercises'));
+        // Các tabs
+        $goals = array_keys($goalDigits);
+
+        return view('workouts', compact('exercises','goals','filter'));
     }
 
-  
+    // Chi tiết bài tập
     public function show($id)
     {
-        $exercise = WorkoutExercise::with('fitness_goal')->find($id);
-
+        $exercise = WorkoutExercise::find($id);
         return view('workouts-detail', compact('exercise'));
     }
+    
 }

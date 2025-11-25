@@ -706,4 +706,430 @@ document.addEventListener('click', function (e) {
 });
 
 })();
+// Meal Detail JavaScript with Review System and Delete Functionality
+
+let selectedRating = 0;
+let reviews = [];
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeStarRating();
+    initializeReviewSubmit();
+    loadReviews();
+});
+
+// Star Rating System
+function initializeStarRating() {
+    const stars = document.querySelectorAll('.star');
+    const ratingValue = document.querySelector('.rating-value');
+    
+    if (!stars.length) return;
+    
+    stars.forEach((star, index) => {
+        // Hover effect
+        star.addEventListener('mouseenter', function() {
+            highlightStars(index + 1);
+        });
+        
+        // Click to select
+        star.addEventListener('click', function() {
+            selectedRating = index + 1;
+            ratingValue.textContent = `${selectedRating}/5`;
+            highlightStars(selectedRating);
+        });
+    });
+    
+    // Reset on mouse leave
+    const starsContainer = document.querySelector('.stars');
+    if (starsContainer) {
+        starsContainer.addEventListener('mouseleave', function() {
+            highlightStars(selectedRating);
+        });
+    }
+}
+
+// Highlight stars up to a certain number
+function highlightStars(count) {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        if (index < count) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+}
+
+// Initialize Review Submit
+function initializeReviewSubmit() {
+    const submitBtn = document.getElementById('submitReview');
+    const reviewInput = document.getElementById('reviewInput');
+    
+    if (!submitBtn || !reviewInput) return;
+    
+    submitBtn.addEventListener('click', function() {
+        const reviewText = reviewInput.value.trim();
+        
+        // Validation
+        if (selectedRating === 0) {
+            showNotification('Vui lòng chọn số sao đánh giá!', 'warning');
+            return;
+        }
+        
+        if (reviewText === '') {
+            showNotification('Vui lòng nhập nội dung đánh giá!', 'warning');
+            return;
+        }
+        
+        if (reviewText.length <1) {
+            showNotification('Đánh giá phải có ít nhất 10 ký tự!', 'warning');
+            return;
+        }
+        
+        // Submit review
+        submitReview(reviewText, selectedRating);
+    });
+}
+
+// Submit Review Function
+function submitReview(text, rating) {
+    // Check if user is logged in
+    if (!window.currentUser) {
+        showNotification('Vui lòng đăng nhập để đánh giá!', 'error');
+        return;
+    }
+    
+    // Create new review object
+    const newReview = {
+        id: Date.now(), // Unique ID
+        userId: window.currentUser.id,
+        userName: window.currentUser.name,
+        userEmail: window.currentUser.email,
+        rating: rating,
+        text: text,
+        date: new Date().toISOString(),
+        likes: 0
+    };
+    
+    // Add to reviews array
+    reviews.unshift(newReview);
+    
+    // Save to localStorage (or send to server via AJAX)
+    saveReviews();
+    
+    // Clear form
+    document.getElementById('reviewInput').value = '';
+    selectedRating = 0;
+    highlightStars(0);
+    document.querySelector('.rating-value').textContent = '0/5';
+    
+    // Reload reviews display
+    displayReviews();
+    
+    // Show success message
+    showNotification('Đánh giá của bạn đã được gửi thành công!', 'success');
+}
+
+// Load Reviews from localStorage or server
+function loadReviews() {
+    // Try to load from localStorage first
+    const savedReviews = localStorage.getItem('mealReviews');
+    if (savedReviews) {
+        reviews = JSON.parse(savedReviews);
+    }
+    
+    // Display reviews
+    displayReviews();
+}
+
+// Save Reviews to localStorage
+function saveReviews() {
+    localStorage.setItem('mealReviews', JSON.stringify(reviews));
+    updateReviewStats();
+}
+
+// Display Reviews
+function displayReviews() {
+    const reviewsList = document.getElementById('reviewsList');
+    
+    if (!reviewsList) return;
+    
+    // Clear existing content
+    reviewsList.innerHTML = '';
+    
+    // If no reviews
+    if (reviews.length === 0) {
+        reviewsList.innerHTML = `
+            <div class="empty-reviews">
+                <i class="fa-solid fa-comment-slash"></i>
+                <p>Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Display each review
+    reviews.forEach(review => {
+        const reviewElement = createReviewElement(review);
+        reviewsList.appendChild(reviewElement);
+    });
+    
+    updateReviewStats();
+}
+
+// Create Review Element
+function createReviewElement(review) {
+    const reviewDiv = document.createElement('div');
+    reviewDiv.className = 'review-item';
+    reviewDiv.dataset.reviewId = review.id;
+    
+    const formattedDate = formatDate(review.date);
+    const stars = generateStars(review.rating);
+    
+    // Check if current user is the author
+    const isAuthor = window.currentUser && window.currentUser.id === review.userId;
+    
+    reviewDiv.innerHTML = `
+        <div class="review-item-header">
+            <div class="review-user-info">
+                <div class="review-user-avatar">
+                    <i class="fa-solid fa-user-circle"></i>
+                </div>
+                <div class="review-user-details">
+                    <h4>${escapeHtml(review.userName)}</h4>
+                    <span class="review-date">${formattedDate}</span>
+                </div>
+            </div>
+            <div class="review-rating">
+                ${stars}
+            </div>
+        </div>
+        <div class="review-content">
+            ${escapeHtml(review.text)}
+        </div>
+        <div class="review-actions">
+            <button class="review-action-btn like-btn" onclick="likeReview(${review.id})">
+                <i class="fa-solid fa-thumbs-up"></i>
+                <span>${review.likes || 0}</span>
+            </button>
+            ${isAuthor ? `
+                <button class="review-action-btn delete-btn" onclick="deleteReview(${review.id})">
+                    <i class="fa-solid fa-trash"></i>
+                    Xóa
+                </button>
+            ` : ''}
+        </div>
+    `;
+    
+    return reviewDiv;
+}
+
+// Delete Review Function
+function deleteReview(reviewId) {
+    // Confirm deletion
+    if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) {
+        return;
+    }
+    
+    // Find review index
+    const reviewIndex = reviews.findIndex(r => r.id === reviewId);
+    
+    if (reviewIndex === -1) {
+        showNotification('Không tìm thấy đánh giá!', 'error');
+        return;
+    }
+    
+    // Check if user is the author
+    const review = reviews[reviewIndex];
+    if (window.currentUser && window.currentUser.id !== review.userId) {
+        showNotification('Bạn không có quyền xóa đánh giá này!', 'error');
+        return;
+    }
+    
+    // Remove from array
+    reviews.splice(reviewIndex, 1);
+    
+    // Save changes
+    saveReviews();
+    
+    // Reload display
+    displayReviews();
+    
+    // Show success message
+    showNotification('Đánh giá đã được xóa thành công!', 'success');
+}
+
+// Like Review Function
+function likeReview(reviewId) {
+    const review = reviews.find(r => r.id === reviewId);
+    
+    if (!review) return;
+    
+    // Toggle like
+    review.likes = (review.likes || 0) + 1;
+    
+    // Save changes
+    saveReviews();
+    
+    // Update display
+    displayReviews();
+}
+
+// Generate Stars HTML
+function generateStars(rating) {
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+        starsHtml += `<span class="star ${i <= rating ? 'active' : ''}">&#9733;</span>`;
+    }
+    return starsHtml;
+}
+
+// Format Date
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+        return 'Hôm nay';
+    } else if (diffDays === 1) {
+        return 'Hôm qua';
+    } else if (diffDays < 7) {
+        return `${diffDays} ngày trước`;
+    } else if (diffDays < 30) {
+        const weeks = Math.floor(diffDays / 7);
+        return `${weeks} tuần trước`;
+    } else if (diffDays < 365) {
+        const months = Math.floor(diffDays / 30);
+        return `${months} tháng trước`;
+    } else {
+        return date.toLocaleDateString('vi-VN');
+    }
+}
+
+// Update Review Stats
+function updateReviewStats() {
+    const totalReviews = document.querySelector('.total-reviews');
+    if (totalReviews) {
+        totalReviews.textContent = `${reviews.length} đánh giá`;
+    }
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Show Notification
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotif = document.querySelector('.notification');
+    if (existingNotif) {
+        existingNotif.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <i class="fa-solid ${getNotificationIcon(type)}"></i>
+        <span>${message}</span>
+    `;
+    
+    // Add to body
+    document.body.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Get Notification Icon
+function getNotificationIcon(type) {
+    const icons = {
+        'success': 'fa-check-circle',
+        'error': 'fa-times-circle',
+        'warning': 'fa-exclamation-circle',
+        'info': 'fa-info-circle'
+    };
+    return icons[type] || icons.info;
+}
+
+// CSS for Notifications
+const notificationStyles = document.createElement('style');
+notificationStyles.textContent = `
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification i {
+    font-size: 20px;
+}
+
+.notification-success {
+    border-left: 4px solid #27ae60;
+}
+
+.notification-success i {
+    color: #27ae60;
+}
+
+.notification-error {
+    border-left: 4px solid #e74c3c;
+}
+
+.notification-error i {
+    color: #e74c3c;
+}
+
+.notification-warning {
+    border-left: 4px solid #f39c12;
+}
+
+.notification-warning i {
+    color: #f39c12;
+}
+
+.notification-info {
+    border-left: 4px solid #3498db;
+}
+
+.notification-info i {
+    color: #3498db;
+}
+`;
+document.head.appendChild(notificationStyles);
 

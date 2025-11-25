@@ -30,18 +30,20 @@
         </div>
 
         <!-- Workout Section Header -->
+            <!-- Tab Tất cả -->
+ <div class="tabs mb-4">
+    <!-- Tab Tất cả -->
+    <a href="?filter=" class="tab {{ empty($filter) ? 'active' : '' }}">Tất cả</a>
 
-                    <div class="section-header">
-                        <h2 class="section-title">Bài tập phổ biến</h2>
-                    </div>
+    <!-- Các tab tự động từ $goals -->
+    @foreach($goals as $goal)
+        <a href="?filter={{ $goal }}" class="tab {{ $filter == $goal ? 'active' : '' }}">
+            {{ $goal }}
+        </a>
+    @endforeach
+</div>
 
-                    <!-- Tabs -->
-                    <div class="tabs">
-                        <a href="?filter=" class="tab {{ !request('filter') ? 'active' : '' }}">Tất cả</a>
-                        <a href="?filter=Mông" class="tab {{ request('filter')=='Mông' ? 'active' : '' }}">Tăng cân </a>
-                        <a href="?filter=Cardio" class="tab {{ request('filter')=='Cardio' ? 'active' : '' }}">Tăng cơ</a>
-                        <a href="?filter=Dẻo dai" class="tab {{ request('filter')=='Dẻo dai' ? 'active' : '' }}">giảm cân </a>
-                    </div>
+
 
 
 
