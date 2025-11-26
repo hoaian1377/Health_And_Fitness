@@ -23,10 +23,6 @@
   const confirmMethod = document.getElementById('confirmMethod');
   const confirmPrice = document.getElementById('confirmPrice');
   const confirmVat = document.getElementById('confirmVat');
-  const sumPlan = document.getElementById('sumPlan');
-  const sumPrice = document.getElementById('sumPrice');
-  const sumVat = document.getElementById('sumVat');
-  const sumTotal = document.getElementById('sumTotal');
   const successEl = document.getElementById('paySuccess');
   // QR elements (optional)
   const qrWalletType = document.getElementById('qrWalletType');
@@ -34,7 +30,6 @@
   const qrImage = document.getElementById('qrImage');
   // Plan badge
   const planBadge = document.getElementById('planBadge');
-  const orderSummary = document.getElementById('orderSummary');
   const paymentBody = document.querySelector('.payment-body');
   const paymentStepper = document.getElementById('paymentStepper');
 
@@ -64,14 +59,7 @@
       const isTarget = Number(p.dataset.panel) === step;
       p.hidden = !isTarget;
     });
-    // Hide sidebar summary at confirmation step and switch to single column
-    if (orderSummary) {
-      orderSummary.style.display = step >= 3 ? 'none' : '';
-    }
-    if (paymentBody) {
-      if (step >= 3) paymentBody.classList.add('single');
-      else paymentBody.classList.remove('single');
-    }
+
     // Hide stepper on step 4
     if (paymentStepper) {
       paymentStepper.style.display = step === 4 ? 'none' : '';
@@ -79,13 +67,80 @@
     successEl && successEl.classList.remove('show');
   }
 
+  // Voucher Logic
+  const voucherCodeInput = document.getElementById('voucherCode');
+  const applyVoucherBtn = document.getElementById('applyVoucherBtn');
+  const discountRow = document.getElementById('discountRow');
+  const discountValueEl = document.getElementById('discountValue');
+
+  let currentDiscount = { type: null, value: 0 };
+
+  if (applyVoucherBtn) {
+    applyVoucherBtn.addEventListener('click', () => {
+      const code = voucherCodeInput.value.trim();
+      if (!code) return;
+
+      applyVoucherBtn.disabled = true;
+      applyVoucherBtn.textContent = 'Đang kiểm tra...';
+
+      fetch('/api/voucher/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+        },
+        body: JSON.stringify({ code })
+      })
+        .then(res => res.json())
+        .then(data => {
+          applyVoucherBtn.disabled = false;
+          applyVoucherBtn.textContent = 'Áp dụng';
+
+          if (data.success) {
+            currentDiscount = {
+              type: data.discount_type,
+              value: Number(data.discount_value)
+            };
+            discountRow.style.display = 'flex';
+            alert(data.message);
+            updateSummary();
+          } else {
+            currentDiscount = { type: null, value: 0 };
+            discountRow.style.display = 'none';
+            alert(data.message);
+            updateSummary();
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          applyVoucherBtn.disabled = false;
+          applyVoucherBtn.textContent = 'Áp dụng';
+          alert('Có lỗi xảy ra khi kiểm tra mã');
+        });
+    });
+  }
+
   function updateSummary() {
     const vat = Math.round(selectedPlan.price * 0.1);
-    const total = selectedPlan.price + vat;
-    sumPlan.textContent = selectedPlan.label;
-    sumPrice.textContent = formatCurrency(selectedPlan.price);
-    sumVat.textContent = formatCurrency(vat);
-    sumTotal.textContent = formatCurrency(total);
+    let total = selectedPlan.price + vat;
+
+    // Apply discount
+    let discountAmount = 0;
+    if (currentDiscount.type === 'fixed') {
+      discountAmount = currentDiscount.value;
+    } else if (currentDiscount.type === 'percent') {
+      discountAmount = Math.round(selectedPlan.price * (currentDiscount.value / 100));
+    }
+
+    // Ensure discount doesn't exceed total
+    if (discountAmount > total) discountAmount = total;
+
+    total = total - discountAmount;
+
+    if (discountValueEl) {
+      discountValueEl.textContent = '-' + formatCurrency(discountAmount);
+    }
+
     confirmPlan.textContent = selectedPlan.label;
     confirmTotal.textContent = formatCurrency(total);
     if (confirmPrice) confirmPrice.textContent = formatCurrency(selectedPlan.price);
@@ -111,19 +166,50 @@
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 
+  // Goal Tabs
+  const goalTabs = document.getElementById('goalTabs');
+  const plansGroups = document.querySelectorAll('.plans-group');
+
+  if (goalTabs) {
+    goalTabs.addEventListener('click', (e) => {
+      const tab = e.target.closest('.goal-tab');
+      if (!tab) return;
+
+      // Switch tabs
+      goalTabs.querySelectorAll('.goal-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      // Switch content
+      const goalId = tab.dataset.goal;
+      plansGroups.forEach(g => {
+        if (g.dataset.goalGroup === goalId) {
+          g.classList.add('active');
+        } else {
+          g.classList.remove('active');
+        }
+      });
+    });
+  }
+
   // Plan selection
-  planList.addEventListener('click', (e) => {
-    const card = e.target.closest('.plan-card');
-    if (!card) return;
-    planList.querySelectorAll('.plan-card').forEach((c) => c.classList.remove('active'));
-    card.classList.add('active');
-    selectedPlan = {
-      key: String(card.dataset.plan || 'pro'),
-      price: Number(card.dataset.price || '199000'),
-      label: card.querySelector('.plan-title')?.textContent?.trim() || 'Pro',
-    };
-    updateSummary();
-  });
+  const plansContainer = document.querySelector('.plans-container');
+  if (plansContainer) {
+    plansContainer.addEventListener('click', (e) => {
+      const card = e.target.closest('.plan-card');
+      if (!card) return;
+
+      // Remove active class from all cards in all groups
+      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+
+      selectedPlan = {
+        key: String(card.dataset.plan || 'pro'),
+        price: Number(card.dataset.price || '199000'),
+        label: card.querySelector('.plan-title')?.textContent?.trim() || 'Pro',
+      };
+      updateSummary();
+    });
+  }
 
   // Actions (next/back/close)
   overlay.addEventListener('click', (e) => {

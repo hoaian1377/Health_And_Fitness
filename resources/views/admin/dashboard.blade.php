@@ -26,4 +26,22 @@
             <a href="{{ route('admin.plans') }}" class="btn-primary" style="display: inline-block; margin-top: 10px;">Truy cập</a>
         </div>
     </div>
+
+    <div style="display: flex; gap: 20px; margin-top: 20px;">
+        <div class="card" style="flex: 1; text-align: center;">
+            <i class="fa-solid fa-ticket" style="font-size: 40px; color: #9b59b6; margin-bottom: 10px;"></i>
+            <h3>Quản lý Voucher</h3>
+            <p>Tạo và quản lý mã giảm giá.</p>
+            <a href="{{ route('admin.vouchers') }}" class="btn-primary" style="display: inline-block; margin-top: 10px;">Truy cập</a>
+        </div>
+        <div class="card" style="flex: 1; text-align: center;">
+            <i class="fa-solid fa-robot" style="font-size: 40px; color: #34495e; margin-bottom: 10px;"></i>
+            <h3>Chatbot Manager</h3>
+            <p>Huấn luyện câu hỏi cho Chatbot.</p>
+            <a href="{{ route('admin.chatbot') }}" class="btn-primary" style="display: inline-block; margin-top: 10px;">Truy cập</a>
+        </div>
+        <div class="card" style="flex: 1; text-align: center; visibility: hidden;">
+            <!-- Spacer for alignment -->
+        </div>
+    </div>
 @endsection

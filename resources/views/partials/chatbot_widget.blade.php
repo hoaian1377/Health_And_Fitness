@@ -8,7 +8,7 @@
     <div id="chatbot-window" class="chatbot-window hidden">
         <div class="chatbot-header">
             <div class="chatbot-title">
-                <i class="fa-solid fa-robot"></i> Assistant
+                <i class="fa-solid fa-robot"></i> HealthFit
             </div>
             <button id="chatbot-close" class="chatbot-close-btn">
                 <i class="fa-solid fa-xmark"></i>

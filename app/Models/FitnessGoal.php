@@ -13,4 +13,8 @@ class FitnessGoal extends Model
         'goal_name',
         'description'
     ];
+    public function packages()
+    {
+        return $this->hasMany(Package::class, 'fitness_goalID', 'fitness_goalID');
+    }
 }

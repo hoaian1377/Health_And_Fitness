@@ -10,7 +10,7 @@
             </button>
         </div>
 
-        <div class="payment-body">
+        <div class="payment-body single">
             <div class="payment-content">
 
                 <!-- Stepper -->
@@ -32,40 +32,50 @@
 
                 <!-- Step 1: Plans -->
                 <section class="step-panel" data-panel="1">
-                    <div class="plans" id="planList">
+                    <!-- Goal Tabs -->
+                    <div class="goal-tabs" id="goalTabs">
+                        @foreach($fitnessGoals as $goal)
+                        <button class="goal-tab {{ $loop->first ? 'active' : '' }}" data-goal="{{ $goal->fitness_goalID }}">
+                            {{ $goal->goal_name }}
+                        </button>
+                        @endforeach
+                    </div>
 
-                        <div class="plan-card" data-plan="basic" data-price="99000">
-                            <div class="plan-title">Basic</div>
-                            <div class="plan-price">99.000đ <span>/tháng</span></div>
-                            <ul>
-                                <li>• Bài tập cơ bản</li>
-                                <li>• Kế hoạch dinh dưỡng mẫu</li>
-                            </ul>
-                            <p class="plan-desc">Phù hợp cho người mới bắt đầu hành trình sức khỏe.</p>
+                    <!-- Plans Container -->
+                    <div class="plans-container">
+                        @foreach($fitnessGoals as $goal)
+                        <div class="plans-group {{ $loop->first ? 'active' : '' }}" data-goal-group="{{ $goal->fitness_goalID }}">
+                            <div class="plans">
+                                @foreach($goal->packages as $package)
+                                <div class="plan-card" 
+                                     data-plan="{{ $package->name_package }}" 
+                                     data-price="{{ $package->price }}">
+                                    <div class="plan-header">
+                                        <div class="plan-title">{{ $package->name_package }}</div>
+                                        @if($package->price > 500000)
+                                            <span class="badge-popular">Phổ biến</span>
+                                        @endif
+                                    </div>
+                                    <div class="plan-price">
+                                        {{ number_format($package->price, 0, ',', '.') }}đ 
+                                        <span>/{{ $package->duration ?? 'tháng' }}</span>
+                                    </div>
+                                    <div class="plan-divider"></div>
+                                    <ul class="plan-features">
+                                        @if($package->description)
+                                            @foreach(explode("\n", $package->description) as $line)
+                                                <li><i class="fa-solid fa-check"></i> {{ $line }}</li>
+                                            @endforeach
+                                        @else
+                                            <li><i class="fa-solid fa-check"></i> Truy cập đầy đủ tính năng</li>
+                                        @endif
+                                    </ul>
+                                    <button class="btn-select-plan">Chọn gói này</button>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
-
-                        <div class="plan-card active" data-plan="pro" data-price="599000">
-                            <div class="plan-title">Pro</div>
-                            <div class="plan-price">599.000đ <span>/tháng</span></div>
-                            <ul>
-                                <li>• Toàn bộ nội dung nâng cao</li>
-                                <li>• Theo dõi sức khỏe thông minh</li>
-                                <li>• Cộng đồng riêng tư</li>
-                            </ul>
-                            <p class="plan-desc">Lựa chọn phổ biến nhất cho người tập nghiêm túc.</p>
-                        </div>
-
-                        <div class="plan-card" data-plan="premium" data-price="2999000">
-                            <div class="plan-title">Premium</div>
-                            <div class="plan-price">2.999.000đ <span>/tháng</span></div>
-                            <ul>
-                                <li>• Huấn luyện viên 1-1</li>
-                                <li>• Thực đơn cá nhân hoá</li>
-                                <li>• Ưu tiên hỗ trợ</li>
-                            </ul>
-                            <p class="plan-desc">Trải nghiệm đầy đủ và cao cấp nhất.</p>
-                        </div>
-
+                        @endforeach
                     </div>
 
                     <div class="payment-actions">
@@ -197,18 +207,6 @@
                 </section>
 
             </div>
-
-            <!-- Sidebar Summary -->
-            <aside class="payment-summary" id="orderSummary">
-                <h4 class="summary-title">Tóm tắt đơn hàng</h4>
-
-                <div class="summary-box">
-                    <div class="summary-item"><span>Gói đã chọn</span><strong id="sumPlan">Pro</strong></div>
-                    <div class="summary-item"><span>Giá</span><span id="sumPrice">599.000đ</span></div>
-                    <div class="summary-item"><span>VAT (10%)</span><span id="sumVat">19.900đ</span></div>
-                    <div class="summary-total"><span>Tổng cộng</span><span id="sumTotal">218.900đ</span></div>
-                </div>
-            </aside>
 
         </div>
     </div>

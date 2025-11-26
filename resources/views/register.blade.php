@@ -33,8 +33,11 @@
 
       <div class="input-group">
         <span class="icon">🔒</span>
-        <input type="password" name="password" placeholder="Mật khẩu" required>
+        <input type="password" name="password" placeholder="Mật khẩu" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}" title="Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.">
       </div>
+      <small style="display: block; margin-bottom: 15px; color: #666; font-size: 12px; padding-left: 10px;">
+        * Mật khẩu tối thiểu 8 ký tự, 1 chữ in hoa, 1 ký tự đặc biệt.
+      </small>
 
       <div class="input-group">
         <span class="icon">🔁</span>

@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Share fitness goals with packages with the payment view
+        \Illuminate\Support\Facades\View::composer('payment', function ($view) {
+            $view->with('fitnessGoals', \App\Models\FitnessGoal::with('packages')->get());
+        });
     }
 }

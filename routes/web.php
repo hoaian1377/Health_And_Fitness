@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
 
     // Payment API
     Route::post('/api/account/plan', [ProfileController::class, 'updatePlan']);
+    Route::post('/api/voucher/check', [\App\Http\Controllers\VoucherController::class, 'validateVoucher']);
 });
 
 
@@ -128,12 +129,31 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/plans/{id}/edit', [AdminController::class, 'editPlan'])->name('plans.edit');
     Route::put('/plans/{id}', [AdminController::class, 'updatePlan'])->name('plans.update');
     Route::delete('/plans/{id}', [AdminController::class, 'destroyPlan'])->name('plans.destroy');
+
+    // Vouchers
+    Route::get('/vouchers', [AdminController::class, 'vouchers'])->name('vouchers');
+    Route::post('/vouchers', [AdminController::class, 'storeVoucher'])->name('vouchers.store');
+    Route::get('/vouchers/{id}/edit', [AdminController::class, 'editVoucher'])->name('vouchers.edit');
+    Route::put('/vouchers/{id}', [AdminController::class, 'updateVoucher'])->name('vouchers.update');
+    Route::delete('/vouchers/{id}', [AdminController::class, 'destroyVoucher'])->name('vouchers.destroy');
+
+    // Chatbot Manager
+    Route::get('/chatbot-manager', [AdminController::class, 'chatbot'])->name('chatbot');
+    Route::post('/chatbot-manager', [AdminController::class, 'storeChatbot'])->name('chatbot.store');
+    Route::get('/chatbot-manager/{id}/edit', [AdminController::class, 'editChatbot'])->name('chatbot.edit');
+    Route::put('/chatbot-manager/{id}', [AdminController::class, 'updateChatbot'])->name('chatbot.update');
+    Route::delete('/chatbot-manager/{id}', [AdminController::class, 'destroyChatbot'])->name('chatbot.destroy');
+
+    // Admin Chat Support
+    Route::get('/chat-support', [AdminController::class, 'chatList'])->name('chat.list');
+    Route::get('/chat-support/{userId}', [AdminController::class, 'chatDetail'])->name('chat.detail');
+    Route::post('/chat-support/{userId}/reply', [AdminController::class, 'reply'])->name('chat.reply');
 });
 
 
-// =================== CHATBOT ===================
-Route::get('/chatbot', function () {
-    return view('chatbot');
-})->name('chatbot.page');
-
-Route::post('/chatbot/ask', [ChatbotController::class, 'ask'])->name('chatbot.ask');
+// =================== CHATBOT (User Side) ===================
+Route::middleware('auth')->group(function () {
+    Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot.page');
+    Route::post('/chatbot/ask', [ChatbotController::class, 'ask'])->name('chatbot.ask');
+    Route::get('/chatbot/messages', [ChatbotController::class, 'fetchMessages'])->name('chatbot.messages');
+});

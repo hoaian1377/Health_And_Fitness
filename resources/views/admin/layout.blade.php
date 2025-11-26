@@ -121,6 +121,12 @@
         <a href="{{ route('admin.plans') }}" class="{{ request()->routeIs('admin.plans') ? 'active' : '' }}">
             <i class="fa-solid fa-tags"></i> Gói tập
         </a>
+        <a href="{{ route('admin.vouchers') }}" class="{{ request()->routeIs('admin.vouchers') ? 'active' : '' }}">
+            <i class="fa-solid fa-ticket"></i> Mã giảm giá
+        </a>
+        <a href="{{ route('admin.chatbot') }}" class="{{ request()->routeIs('admin.chatbot') ? 'active' : '' }}">
+            <i class="fa-solid fa-robot"></i> Chatbot
+        </a>
         <a href="{{ route('home.page') }}">
             <i class="fa-solid fa-arrow-left"></i> Về trang chủ
         </a>
