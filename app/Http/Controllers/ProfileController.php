@@ -155,6 +155,28 @@ class ProfileController extends Controller
         // Get user plan from Session
         $userPlan = session('user_plan', null);
 
+        // 4. Calories Consumed Today
+        $caloriesConsumedToday = 0;
+        try {
+            if (Schema::hasTable('daily_stats')) {
+                $stat = DB::table('daily_stats')
+                    ->where('user_id', $user->id)
+                    ->where('date', $today->format('Y-m-d'))
+                    ->first();
+                if ($stat) {
+                    $caloriesConsumedToday = $stat->calories_consumed;
+                }
+            }
+        } catch (\Exception $e) {}
+
+        // Add session consumed
+        $sessionMealLogs = collect(session('meal_logs', []));
+        $sessionConsumed = $sessionMealLogs->filter(function($log) use ($today) {
+            return Carbon::parse($log['date'])->isSameDay($today);
+        })->sum('calories');
+        
+        $caloriesConsumedToday += $sessionConsumed;
+
         return view('profile', compact(
             'account', 
             'age', 
@@ -164,6 +186,7 @@ class ProfileController extends Controller
             'flexibilityProgress',
             'goal_calories',
             'caloriesBurnedToday',
+            'caloriesConsumedToday',
             'weeklyCalories',
             'exercises',
             'mealPlan',
@@ -562,6 +585,75 @@ class ProfileController extends Controller
                 'message' => 'Đã thêm bữa ăn (Lưu tạm)',
                 'total_consumed' => $total
             ]);
+        }
+    }
+
+    public function getFoodList()
+    {
+        try {
+            $foods = MealPlan::all();
+            return response()->json([
+                'success' => true,
+                'foods' => $foods
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function resetDailyCalories(Request $request)
+    {
+        $user = Auth::user();
+        $today = Carbon::today();
+
+        try {
+            if (Schema::hasTable('daily_stats')) {
+                DB::table('daily_stats')
+                    ->where('user_id', $user->id)
+                    ->where('date', $today->format('Y-m-d'))
+                    ->update(['calories_consumed' => 0]);
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đã đặt lại calo về 0',
+                    'total_consumed' => 0
+                ]);
+            }
+            throw new \Exception("Table missing");
+        } catch (\Exception $e) {
+            // Fallback to Session
+            session(['meal_logs' => []]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã đặt lại calo về 0 (Session)',
+                'total_consumed' => 0
+            ]);
+        }
+    }
+
+    public function deleteFood($id)
+    {
+        try {
+            $food = MealPlan::find($id);
+            if ($food) {
+                $food->delete();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đã xóa món ăn thành công'
+                ]);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy món ăn'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi: ' . $e->getMessage()
+            ], 500);
         }
     }
 

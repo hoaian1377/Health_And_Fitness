@@ -149,6 +149,35 @@
                 </div>
             </div>
 
+            <!-- Food List Modal -->
+            <div class="edit-profile-modal" id="food-list-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Chọn món ăn</h3>
+                        <button class="modal-close" id="close-food-modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="padding: 20px; max-height: 400px; overflow-y: auto;">
+                        <div id="food-list-container" class="food-list-grid">
+                            <!-- Items will be loaded here -->
+                            <div class="text-center">
+                                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-weight: 600; color: #2d3748;">
+                            Tổng đã chọn: <span id="selected-total-cal" style="color: #e53e3e;">0</span> kcal
+                        </div>
+                        <button class="btn btn-primary" id="save-selected-food-btn">
+                            <i class="fas fa-save"></i> Lưu đã chọn
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Cards Below Profile -->
             <div class="cards-below-profile">
                 <!-- Progress Card -->
@@ -192,7 +221,7 @@
                 </div>
 
                 <!-- Meal Card -->
-                <div class="card card-meal">
+                <div class="card card-meal" style="position: relative;">
                     @if($mealPlan)
                         <div class="badge-primary">Bữa ăn</div>
                         <div class="meal-image">
@@ -205,13 +234,18 @@
                         <div class="meal-content">
                             <h3 class="meal-title">{{ $mealPlan->meal_name }}</h3>
                             <p class="meal-description">{{ $mealPlan->description ?? 'Bữa ăn dinh dưỡng và lành mạnh' }}</p>
-                            <div class="meal-score">
-                                <span class="score-label">Điểm sức khỏe:</span>
-                                <span class="score-value">{{ $mealPlan->calories ? min(100, round(($mealPlan->calories / 500) * 100)) : 85 }}/100</span>
+                            
+                            <!-- Calorie Progress Section -->
+                            <div class="meal-score" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span class="score-label">Tiến độ calo:</span>
+                                <span class="score-value" style="color: #e53e3e;">
+                                    <span id="total-consumed-display">{{ $caloriesConsumedToday ?? 0 }}</span>/{{ $goal_calories }} kcal
+                                </span>
                             </div>
-                            <div class="nutrition-bars">
-                                <div class="nutrition-bar" style="width: {{ $mealPlan->calories ? min(100, round(($mealPlan->calories / 500) * 100)) : 100 }}%;"></div>
+                            <div class="nutrition-bars" style="background: #edf2f7; border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 15px;">
+                                <div id="calorie-progress-bar" class="nutrition-bar" style="width: {{ min(100, round((($caloriesConsumedToday ?? 0) / $goal_calories) * 100)) }}%; background: linear-gradient(90deg, #FF9966, #FF5E62); height: 100%; border-radius: 10px; transition: width 0.5s ease;"></div>
                             </div>
+
                             <div class="meal-nutrition">
                                 <span>{{ $mealPlan->calories ?? 450 }} Cal</span>
                                 <span>{{ $mealPlan->carbs ?? 40 }}g Carbs</span>
@@ -230,13 +264,18 @@
                         <div class="meal-content">
                             <h3 class="meal-title">Lean &amp; Green</h3>
                             <p class="meal-description">Cá hồi nướng cùng bông cải hấp và cơm gạo lứt</p>
-                            <div class="meal-score">
-                                <span class="score-label">Điểm sức khỏe:</span>
-                                <span class="score-value">85/100</span>
+                            
+                            <!-- Calorie Progress Section -->
+                            <div class="meal-score" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span class="score-label">Tiến độ calo:</span>
+                                <span class="score-value" style="color: #e53e3e;">
+                                    <span id="total-consumed-display">{{ $caloriesConsumedToday ?? 0 }}</span>/{{ $goal_calories }} kcal
+                                </span>
                             </div>
-                            <div class="nutrition-bars">
-                                <div class="nutrition-bar" style="width: 100%;"></div>
+                            <div class="nutrition-bars" style="background: #edf2f7; border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 15px;">
+                                <div id="calorie-progress-bar" class="nutrition-bar" style="width: {{ min(100, round((($caloriesConsumedToday ?? 0) / $goal_calories) * 100)) }}%; background: linear-gradient(90deg, #FF9966, #FF5E62); height: 100%; border-radius: 10px; transition: width 0.5s ease;"></div>
                             </div>
+
                             <div class="meal-nutrition">
                                 <span>450 Cal</span>
                                 <span>40g Carbs</span>
@@ -327,6 +366,9 @@
         window.profileData = {
             goalCalories: {{ $goal_calories }},
             caloriesBurnedToday: {{ $caloriesBurnedToday ?? 0 }},
+            caloriesConsumedToday: {{ $caloriesConsumedToday ?? 0 }},
+            userId: {{ Auth::id() }},
+            date: '{{ \Carbon\Carbon::today()->format("Y-m-d") }}',
             weeklyCalories: @json($weeklyCalories ?? [])
         };
     </script>

@@ -21,4 +21,9 @@ class Comments extends Model
         // Một comment thuộc về 1 bài viết
         return $this->belongsTo(Post::class, 'postID', 'postID');
     }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'accountID', 'accountID');
+    }
 }

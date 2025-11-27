@@ -137,23 +137,27 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
+  color: #f6ff00;
   text-align: center;
   text-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
 }
 
 .slide-text h1 {
-  font-size: 3rem;
+  font-size: 5rem;
   font-weight: 800;
-  background: linear-gradient(90deg,  #fff);
+  background: linear-gradient(90deg,  #f6ff00);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  
 }
 
 .slide-text p {
-  font-size: 1.2rem;
+  font-size: 3rem;
   opacity: 0.95;
   margin-top: 8px;
+  background: linear-gradient(90deg,  #f6ff00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* ================= ABOUT SECTION ================= */

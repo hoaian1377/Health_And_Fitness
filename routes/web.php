@@ -69,6 +69,9 @@ Route::middleware('auth')->group(function () {
 
     // Meal API
     Route::post('/api/meal/add', [ProfileController::class, 'addMealLog']);
+    Route::get('/api/meal/list', [ProfileController::class, 'getFoodList']);
+    Route::post('/api/meal/reset', [ProfileController::class, 'resetDailyCalories']);
+    Route::delete('/api/meal/delete/{id}', [ProfileController::class, 'deleteFood']);
 
     // Payment API
     Route::post('/api/account/plan', [ProfileController::class, 'updatePlan']);

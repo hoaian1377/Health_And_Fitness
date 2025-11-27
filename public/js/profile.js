@@ -312,41 +312,315 @@
 
         // Meal Button Handler
         const mealBtns = document.querySelectorAll('#add-meal-btn, #add-meal-btn-default');
-        mealBtns.forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const cal = btn.getAttribute('data-calories');
-                const name = btn.getAttribute('data-name');
+        const foodModal = document.getElementById('food-list-modal');
+        const closeFoodModalBtn = document.getElementById('close-food-modal');
+        const foodListContainer = document.getElementById('food-list-container');
+        const saveSelectedFoodBtn = document.getElementById('save-selected-food-btn');
+        const selectedTotalCalEl = document.getElementById('selected-total-cal');
+        const totalConsumedDisplay = document.getElementById('total-consumed-display');
+        let foodListLoaded = false;
 
-                if (!confirm(`Bạn có muốn thêm "${name}" (${cal} kcal) vào nhật ký ăn uống?`)) return;
+        // Initialize total consumed from server data if available (need to pass this from controller)
+        // For now, we'll default to 0 or try to read from a data attribute if we add one later.
+        // Ideally, window.profileData should include caloriesConsumedToday.
+        if (window.profileData && window.profileData.caloriesConsumedToday) {
+            if (totalConsumedDisplay) totalConsumedDisplay.innerText = window.profileData.caloriesConsumedToday;
+        }
+
+        function closeFoodModal() {
+            if (foodModal) foodModal.classList.remove('show');
+            // Reset selection
+            if (foodListContainer) {
+                foodListContainer.querySelectorAll('.food-checkbox').forEach(cb => cb.checked = false);
+            }
+            if (selectedTotalCalEl) selectedTotalCalEl.innerText = '0';
+        }
+
+        if (closeFoodModalBtn) closeFoodModalBtn.addEventListener('click', closeFoodModal);
+        if (foodModal) {
+            foodModal.querySelector('.modal-overlay').addEventListener('click', closeFoodModal);
+        }
+
+        async function loadFoodList() {
+            try {
+                const response = await fetch('/api/meal/list', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    credentials: 'same-origin'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    renderFoodList(data.foods);
+                    foodListLoaded = true;
+                } else {
+                    foodListContainer.innerHTML = '<div class="text-center text-danger">Không tải được danh sách món ăn</div>';
+                }
+            } catch (error) {
+                console.error('Error loading food list:', error);
+                foodListContainer.innerHTML = '<div class="text-center text-danger">Lỗi kết nối</div>';
+            }
+        }
+
+        function updateTotalSelected() {
+            if (!selectedTotalCalEl) return;
+            const checkboxes = foodListContainer.querySelectorAll('.food-checkbox:checked');
+            let total = 0;
+            checkboxes.forEach(cb => {
+                total += Number(cb.dataset.cal);
+            });
+            selectedTotalCalEl.innerText = total;
+        }
+
+        // LocalStorage Key
+        const storageKey = `meal_selection_${window.profileData.userId}_${window.profileData.date}`;
+
+        function getStoredSelection() {
+            const stored = localStorage.getItem(storageKey);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveSelection(ids) {
+            localStorage.setItem(storageKey, JSON.stringify(ids));
+        }
+
+        function renderFoodList(foods) {
+            foodListContainer.innerHTML = '';
+            if (!foods || foods.length === 0) {
+                foodListContainer.innerHTML = '<div class="text-center">Chưa có món ăn nào</div>';
+                return;
+            }
+
+            const selectedIds = getStoredSelection();
+
+            foods.forEach(food => {
+                const row = document.createElement('tr');
+                const isChecked = selectedIds.includes(String(food.meal_planID));
+
+                row.innerHTML = `
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input food-checkbox" id="food-${food.meal_planID}" data-calories="${food.calories}" data-name="${food.meal_name}" value="${food.meal_planID}" ${isChecked ? 'checked' : ''}>
+                            <label class="custom-control-label" for="food-${food.meal_planID}"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="${food.urls || 'images/meal1.avif'}" class="rounded-circle mr-2" width="40" height="40" alt="${food.meal_name}" onerror="this.src='images/meal1.avif'">
+                            <div>
+                                <div class="font-weight-bold">${food.meal_name}</div>
+                                <div class="text-muted small">${food.calories} kcal</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <button class="btn btn-sm btn-outline-danger delete-food-btn" data-id="${food.meal_planID}" title="Xóa món ăn">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
+
+                // Toggle checkbox on row click (except when clicking delete button)
+                row.addEventListener('click', (e) => {
+                    if (e.target.closest('.delete-food-btn')) return;
+
+                    const checkbox = row.querySelector('.food-checkbox');
+                    if (e.target !== checkbox && e.target !== checkbox.nextElementSibling) {
+                        checkbox.checked = !checkbox.checked;
+                        updateTotalSelected();
+                    }
+                });
+
+                // Delete button handler
+                const deleteBtn = row.querySelector('.delete-food-btn');
+                deleteBtn.addEventListener('click', async (e) => {
+                    e.stopPropagation(); // Prevent row click
+                    if (!confirm(`Bạn có chắc chắn muốn xóa món "${food.meal_name}" khỏi danh sách không?`)) return;
+
+                    try {
+                        const response = await fetch(`/api/meal/delete/${food.meal_planID}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                            },
+                            credentials: 'same-origin'
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            alert('Đã xóa món ăn thành công!');
+
+                            // Remove from storage if deleted
+                            let currentSelection = getStoredSelection();
+                            currentSelection = currentSelection.filter(id => id !== String(food.meal_planID));
+                            saveSelection(currentSelection);
+
+                            loadFoodList(); // Reload list
+                        } else {
+                            alert(data.message || 'Có lỗi xảy ra');
+                        }
+                    } catch (error) {
+                        console.error('Error deleting food:', error);
+                        alert('Lỗi: ' + error.message);
+                    }
+                });
+
+                foodListContainer.appendChild(row);
+            });
+
+            // Add event listeners to new checkboxes
+            document.querySelectorAll('.food-checkbox').forEach(cb => {
+                cb.addEventListener('change', updateTotalSelected);
+            });
+
+            // Initial update of total
+            updateTotalSelected();
+        }
+
+        function updateTotalSelected() {
+            let total = 0;
+            const checkboxes = document.querySelectorAll('.food-checkbox:checked');
+            checkboxes.forEach(cb => {
+                total += parseInt(cb.dataset.calories || 0);
+            });
+            selectedTotalCalEl.innerText = total;
+        }
+
+        if (saveSelectedFoodBtn) {
+            saveSelectedFoodBtn.addEventListener('click', async () => {
+                const checkboxes = document.querySelectorAll('.food-checkbox:checked');
+                let totalCalories = 0;
+                const selectedIds = [];
+
+                checkboxes.forEach(cb => {
+                    totalCalories += parseInt(cb.dataset.calories || 0);
+                    selectedIds.push(cb.value); // Collect IDs
+                });
 
                 try {
-                    const response = await fetch('/api/meal/add', {
+                    // 1. Reset Daily Calories first
+                    await fetch('/api/meal/reset', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                         },
-                        body: JSON.stringify({
-                            calories: cal
-                        }),
                         credentials: 'same-origin'
                     });
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.message || 'Server error');
+                    // 2. Add the new Total
+                    if (totalCalories > 0) {
+                        await addMealLog('Selected Meals', totalCalories);
+                    } else {
+                        // If 0, just update UI manually since addMealLog might not be called or needed for 0
+                        const displays = document.querySelectorAll('#total-consumed-display');
+                        displays.forEach(el => el.innerText = 0);
+                        const progressBar = document.getElementById('calorie-progress-bar');
+                        if (progressBar) progressBar.style.width = '0%';
                     }
+
+                    // 3. Save Selection to LocalStorage
+                    saveSelection(selectedIds);
+
+                    foodModal.classList.remove('show'); // Assuming foodModal is the correct element for the modal
+
+                } catch (error) {
+                    console.error('Error syncing meals:', error);
+                    alert('Lỗi khi lưu bữa ăn: ' + error.message);
+                }
+            });
+        }
+
+        async function addMealLog(name, cal) {
+            try {
+                const response = await fetch('/api/meal/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({
+                        calories: cal
+                    }),
+                    credentials: 'same-origin'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert(`Đã thêm thành công! Tổng calo nạp vào: ${data.total_consumed} kcal`);
+
+                    // Update Text
+                    const displays = document.querySelectorAll('#total-consumed-display');
+                    displays.forEach(el => el.innerText = data.total_consumed);
+
+                    // Update Progress Bar
+                    const progressBar = document.getElementById('calorie-progress-bar');
+                    if (progressBar && window.profileData && window.profileData.goalCalories) {
+                        const percentage = Math.min(100, (data.total_consumed / window.profileData.goalCalories) * 100);
+                        progressBar.style.width = `${percentage}%`;
+                    }
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra');
+                }
+            } catch (error) {
+                console.error('Error adding meal:', error);
+                alert('Lỗi: ' + error.message);
+            }
+        }
+
+        // Reset Calories Handler
+        const resetBtns = document.querySelectorAll('#reset-calories-btn, #reset-calories-btn-default');
+        resetBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!confirm('Bạn có chắc chắn muốn đặt lại số calo hôm nay về 0 không?')) return;
+
+                try {
+                    const response = await fetch('/api/meal/reset', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                        },
+                        credentials: 'same-origin'
+                    });
 
                     const data = await response.json();
                     if (data.success) {
-                        alert(`Đã thêm thành công! Tổng calo nạp vào: ${data.total_consumed} kcal`);
+                        alert('Đã đặt lại calo thành công!');
+
+                        // Update UI
+                        const displays = document.querySelectorAll('#total-consumed-display');
+                        displays.forEach(el => el.innerText = 0);
+
+                        const progressBar = document.getElementById('calorie-progress-bar');
+                        if (progressBar) {
+                            progressBar.style.width = '0%';
+                        }
                     } else {
                         alert(data.message || 'Có lỗi xảy ra');
                     }
                 } catch (error) {
-                    console.error('Error adding meal:', error);
+                    console.error('Error resetting calories:', error);
                     alert('Lỗi: ' + error.message);
+                }
+            });
+        });
+
+        mealBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault(); // Prevent default action
+                if (foodModal) {
+                    foodModal.classList.add('show');
+                    if (!foodListLoaded) {
+                        await loadFoodList();
+                    }
                 }
             });
         });

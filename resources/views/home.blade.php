@@ -38,7 +38,7 @@
       </div>
 
       <div class="slide">
-        <img src="{{ asset('images/dinhduong.webp') }}" alt="Dinh dưỡng lành mạnh">
+        <img src="{{ asset('images/nutrition_plan.jpg') }}" alt="Dinh dưỡng lành mạnh">
         <div class="slide-text">
           <h1>Dinh dưỡng lành mạnh 🍎</h1>
           <p>Ăn uống khoa học để có cơ thể khỏe mạnh.</p>
@@ -99,7 +99,7 @@
           <a href="{{ route('nutrition.page') }}" class="btn-primary">Khám phá ngay</a>
         </div>
         <div class="about-image">
-          <img src="{{ asset('images/nutrition_plan.jpg') }}" alt="Dinh dưỡng">
+          <img src="{{ asset('images/nutrition.jpg') }}" alt="Dinh dưỡng">
         </div>
       </div>
 

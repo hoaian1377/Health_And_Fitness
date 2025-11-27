@@ -30,4 +30,9 @@ class Post extends Model
     {
         return $this->hasMany(Comments::class, 'postID', 'postID');
     }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'accountID', 'accountID');
+    }
 }

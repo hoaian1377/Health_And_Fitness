@@ -57,74 +57,7 @@
         <!-- Nội dung chính -->
         <div class="community-main">
             <aside class="community-sidebar">
-                <!-- Widget tìm kiếm -->
-                <div class="sidebar-widget search-widget">
-                    <h3 class="widget-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
-                    <div class="search-input-wrapper">
-                        <input type="text" id="searchInput" placeholder="Tìm bài viết, người dùng...">
-                        <i class="fas fa-search search-icon"></i>
-                    </div>
-                </div>
-
-                <!-- Widget danh mục -->
-                <div class="sidebar-widget categories-widget">
-                    <h3 class="widget-title"><i class="fas fa-tags"></i> Danh mục</h3>
-                    <div class="categories-list">
-                        <button class="category-btn active" data-category="all">
-                            <i class="fas fa-fire"></i> Tất cả <span class="category-count">124</span>
-                        </button>
-                        <button class="category-btn" data-category="workout">
-                            <i class="fas fa-dumbbell"></i> Tập luyện <span class="category-count">45</span>
-                        </button>
-                        <button class="category-btn" data-category="nutrition">
-                            <i class="fas fa-apple-alt"></i> Dinh dưỡng <span class="category-count">32</span>
-                        </button>
-                        <button class="category-btn" data-category="motivation">
-                            <i class="fas fa-bullhorn"></i> Động viên <span class="category-count">28</span>
-                        </button>
-                        <button class="category-btn" data-category="results">
-                            <i class="fas fa-chart-line"></i> Thành tích <span class="category-count">19</span>
-                        </button>
-                        <button class="category-btn" data-category="tips">
-                            <i class="fas fa-lightbulb"></i> Mẹo hay <span class="category-count">15</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Widget thịnh hành -->
-                <div class="sidebar-widget trending-widget">
-                    <h3 class="widget-title"><i class="fas fa-trending-up"></i> Đang thịnh hành</h3>
-                    <div class="trending-list">
-                        <div class="trending-item"><span class="trend-number">#1</span><span class="trend-text">HIIT Training</span><span class="trend-count">2.3K</span></div>
-                        <div class="trending-item"><span class="trend-number">#2</span><span class="trend-text">Meal Prep Ideas</span><span class="trend-count">1.8K</span></div>
-                        <div class="trending-item"><span class="trend-number">#3</span><span class="trend-text">30 Day Challenge</span><span class="trend-count">1.5K</span></div>
-                        <div class="trending-item"><span class="trend-number">#4</span><span class="trend-text">Weight Loss Journey</span><span class="trend-count">1.2K</span></div>
-                        <div class="trending-item"><span class="trend-number">#5</span><span class="trend-text">Yoga Morning</span><span class="trend-count">980</span></div>
-                    </div>
-                </div>
-
-                <!-- Widget top contributor -->
-                <div class="sidebar-widget contributors-widget">
-                    <h3 class="widget-title"><i class="fas fa-star"></i> Top đóng góp</h3>
-                    <div class="contributors-list">
-                        <div class="contributor-item">
-                            <img src="https://i.pravatar.cc/150?img=1" alt="User" class="contributor-avatar">
-                            <div class="contributor-info">
-                                <div class="contributor-name">Nguyễn Văn A</div>
-                                <div class="contributor-points">12.5K điểm</div>
-                            </div>
-                            <div class="contributor-badge"><i class="fas fa-medal"></i></div>
-                        </div>
-                        <div class="contributor-item">
-                            <img src="https://i.pravatar.cc/150?img=2" alt="User" class="contributor-avatar">
-                            <div class="contributor-info">
-                                <div class="contributor-name">Trần Thị B</div>
-                                <div class="contributor-points">9.8K điểm</div>
-                            </div>
-                            <div class="contributor-badge"><i class="fas fa-medal"></i></div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Sidebar widgets removed as per request -->
             </aside>
 
             <!-- Phần bài viết -->
@@ -141,9 +74,16 @@
                     <article class="post-card" data-category="all">
                         <div class="post-header">
                             <div class="post-author">
-                                <img src="https://i.pravatar.cc/150?u={{ $post->accountID }}" alt="Author" class="author-avatar">
+                                @php
+                                    $avatar = $post->account->avatar ?? null;
+                                    $avatarUrl = $avatar 
+                                        ? (Str::startsWith($avatar, 'http') ? $avatar : asset('storage/' . $avatar)) 
+                                        : 'https://i.pravatar.cc/150?u=' . ($post->accountID ?? '0');
+                                    $authorName = $post->account->fullname ?? 'Người dùng #' . ($post->accountID ?? 'Unknown');
+                                @endphp
+                                <img src="{{ $avatarUrl }}" alt="Author" class="author-avatar">
                                 <div class="author-info">
-                                    <div class="author-name">Người dùng #{{ $post->accountID }}</div>
+                                    <div class="author-name">{{ $authorName }}</div>
                                     <div class="post-time">{{ $post->created_at->diffForHumans() }}</div>
                                 </div>
                             </div>
@@ -158,6 +98,8 @@
                                 </div>
                             @endif
                         </div>
+
+                        <!-- Interaction and comments removed as per request -->
                     </article>
                     @endforeach
 

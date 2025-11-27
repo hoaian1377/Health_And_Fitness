@@ -132,7 +132,8 @@ likeButtons.forEach(button => { // Duyệt qua từng nút thích
         e.stopPropagation(); // Ngăn sự kiện lan tỏa
         const isLiked = button.getAttribute('data-liked') === 'true'; // Kiểm tra đã thích chưa
         const heartIcon = button.querySelector('i'); // Lấy icon tim
-        const statItem = button.closest('.post-stats').querySelector('.stat-item'); // Lấy item thống kê like
+        const postCard = button.closest('.post-card'); // Lấy post card
+        const statItem = postCard.querySelector('.post-stats .stat-item'); // Lấy item thống kê like từ post card
         const likeCount = statItem.querySelector('span'); // Lấy span số like
         let count = parseInt(likeCount.textContent); // Chuyển số like thành số nguyên
         

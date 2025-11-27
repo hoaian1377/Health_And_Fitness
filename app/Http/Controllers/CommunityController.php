@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-use App\Models\Comment;
-use App\Models\Like;
+use App\Models\Comments;
+use App\Models\Postlike;
 use Illuminate\Support\Facades\Auth;
 
 class CommunityController extends Controller
@@ -13,7 +13,7 @@ class CommunityController extends Controller
     // Hiển thị danh sách bài viết
     public function index()
     {
-        $posts = Post::with(['comments.user', 'likes'])->latest()->get();
+        $posts = Post::with(['comments.account', 'likes', 'account'])->latest()->get();
         return view('community', compact('posts'));
     }
 
@@ -31,7 +31,7 @@ class CommunityController extends Controller
             : null;
 
         Post::create([
-            'accountID' => Auth::id(),
+            'accountID' => Auth::user()->account->accountID,
             'title' => $request->title,
             'content' => $request->content,
             'img' => $path,
@@ -44,9 +44,9 @@ class CommunityController extends Controller
     public function storeComment(Request $request, $postId)
     {
         $request->validate(['content' => 'required|string']);
-        Comment::create([
+        Comments::create([
             'postID' => $postId,
-            'accountID' => Auth::id(),
+            'accountID' => Auth::user()->account->accountID,
             'content' => $request->content,
         ]);
         return back();
@@ -55,13 +55,12 @@ class CommunityController extends Controller
     // Like / Unlike bài viết
     public function toggleLike($postId)
     {
-        $userId = Auth::id();
-        $like = Like::where('postID', $postId)->where('accountID', $userId)->first();
-
+        $userId = Auth::user()->account->accountID;
+        $like = Postlike::where('postID', $postId)->where('accountID', $userId)->first();
         if ($like) {
             $like->delete(); // Bỏ like
         } else {
-            Like::create(['postID' => $postId, 'accountID' => $userId]);
+            Postlike::create(['postID' => $postId, 'accountID' => $userId]);
         }
 
         return back();

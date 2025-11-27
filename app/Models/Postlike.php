@@ -23,4 +23,9 @@ class Postlike extends Model
         // ✅ Quan hệ ngược: 1 like thuộc về 1 bài viết
         return $this->belongsTo(Post::class, 'postID', 'postID');
     }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'accountID', 'accountID');
+    }
 }
