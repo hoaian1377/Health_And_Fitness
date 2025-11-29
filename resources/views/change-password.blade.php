@@ -336,6 +336,13 @@
             if (/[^a-zA-Z0-9]/.test(pw)) s++;
             return s;
         }
+        // Nút đổi chế độ nền
+const btn = document.getElementById("toggleBtn");
+
+btn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+});
+
     </script>
 </body>
 </html>
