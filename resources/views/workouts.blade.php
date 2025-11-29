@@ -3,6 +3,809 @@
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="{{ asset('css/fitness.css') }}">
+<style>/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Cấu hình cơ bản cho html và body */
+html, body {
+  height: auto;
+  scroll-behavior: smooth;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #f7f9ff, #e4edff);
+  color: #222;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+}
+
+
+
+/* ================= MAIN CONTENT ================= */
+/* Thêm padding-top để nội dung không bị che bởi navbar fixed */
+.app-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background: white;
+  min-height: calc(100vh - 70px);
+  padding-top: 70px; /* Chiều cao của navbar */
+}
+
+.main-content {
+  padding: 30px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ================= HERO BANNER ================= */
+.hero-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 40px;
+  margin-bottom: 30px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 55%;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+.hero-btn {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.hero-illustration {
+  flex: 0 0 40%;
+  text-align: right;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-illustration img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+}
+
+/* ================= SEARCH BAR ================= */
+.search-bar .search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6f86ff;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.hero-content .search-bar {
+  margin-top: 18px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+}
+
+.search-bar .search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6f86ff;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+#exercise-search {
+  flex: 1 1 auto;
+  padding: 12px 16px 12px 44px;
+  border-radius: 999px;
+  border: none;
+  font-size: 15px;
+  outline: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.95);
+  color: #222;
+}
+
+#exercise-search::placeholder {
+  color: #8aa0ff;
+  opacity: 0.9;
+}
+
+#exercise-search:focus {
+  box-shadow: 0 10px 30px rgba(102,126,234,0.22);
+}
+
+#search-clear {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.18s ease;
+  backdrop-filter: blur(6px);
+}
+
+#search-clear i {
+  font-size: 14px;
+  color: #fff;
+  display: inline-block;
+  line-height: 1;
+}
+
+#search-clear:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.22);
+}
+
+/* ================= SECTION HEADER ================= */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #212529;
+}
+
+.view-all-btn {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap 0.3s;
+}
+
+.view-all-btn:hover {
+  gap: 8px;
+}
+
+/* ================= TABS ================= */
+.tabs-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.tabs-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tabs-container::-webkit-scrollbar-thumb {
+  background: #dee2e6;
+  border-radius: 3px;
+}
+
+.tab {
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: 2px solid #e9ecef;
+  background: white;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6c757d;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* ================= WORKOUT GRID ================= */
+.workout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.workout-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 1px solid #f0f0f0;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.workout-card.hidden {
+  display: none;
+}
+
+.workout-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.workout-card-image {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.workout-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.workout-card:hover .workout-card-image img {
+  transform: scale(1.1);
+}
+
+.workout-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.difficulty-indicator {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  gap: 4px;
+}
+
+.difficulty-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.workout-card-content {
+  padding: 20px;
+}
+
+.workout-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.workout-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 13px;
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+.workout-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.workout-level {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.workout-level.beginner {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.workout-level.intermediate {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.workout-level.advanced {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.start-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* ================= ABOUT SECTION ================= */
+.about-section {
+  background: #fff;
+  padding: 80px 8%;
+  width: 100%;
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.about-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+
+.about-block.reverse {
+  flex-direction: row-reverse;
+}
+
+.about-text {
+  flex: 1 1 50%;
+}
+
+.about-text h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.about-text h2 span {
+  color: #ffea00;
+}
+
+.about-text p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 18px;
+  color: #444;
+}
+
+.about-text .btn-primary {
+  background: #ffea00;
+  color: #000;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: 0.3s;
+  display: inline-block;
+}
+
+.about-text .btn-primary:hover {
+  background: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.about-image {
+  flex: 1 1 45%;
+  text-align: center;
+}
+
+.about-image img {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  transition: transform 0.5s ease;
+}
+
+.about-image img:hover {
+  transform: scale(1.05);
+}
+
+/* ================= FOOTER ================= */
+footer {
+  text-align: center;
+  background: #000;
+  color: #fff;
+  padding: 25px 10px;
+  font-size: 0.95rem;
+  margin-top: 50px;
+  width: 100%;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+  .navbar {
+    padding: 12px 25px;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 230px;
+    background: #111;
+    padding: 20px 0;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  }
+
+  .menu.show {
+    display: flex;
+    animation: slideIn 0.3s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .menu a {
+    padding: 12px 25px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .menu a:hover {
+    background: #222;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .user-menu,
+  .auth-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 25px;
+    gap: 12px;
+  }
+
+  .slide-text h1 {
+    font-size: 2.2rem;
+  }
+
+  .slide-text p {
+    font-size: 1rem;
+  }
+
+  .about-block,
+  .about-block.reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-text h2 {
+    font-size: 1.6rem;
+  }
+
+  .about-image img {
+    max-width: 320px;
+  }
+
+  .hero-banner {
+    padding: 30px 25px;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .hero-title {
+    font-size: 24px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .workout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .slideshow-section {
+    height: 60vh;
+  }
+
+  .slide-text h1 {
+    font-size: 1.8rem;
+  }
+
+  .about-section {
+    padding: 60px 5%;
+  }
+
+  .hero-content .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  #search-clear {
+    padding: 12px 16px;
+  }
+}
+.difficulty-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ff914d;
+    display: inline-block;
+    margin-right: 4px;
+    opacity: 0.8;
+}
+.difficulty-indicator {
+    display: none !important;
+}
+@media (max-width: 992px) {
+  .navbar {
+    padding: 12px 25px;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 75px;
+    right: 15px;
+    width: 220px; /* ✅ Nhỏ gọn hơn */
+    background: #111;
+    padding: 15px 0;
+    border-radius: 20px; /* ✅ Bo tròn đều */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .menu.show {
+    display: flex;
+    animation: slideIn 0.3s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .menu a {
+    padding: 10px 20px;
+    width: 100%;
+    text-align: left;
+    border-radius: 12px;
+    transition: background 0.25s;
+    font-size: 15px;
+  }
+
+  .menu a:hover {
+    background: #222;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .user-menu,
+  .auth-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+    gap: 10px;
+  }
+}
+/* FIX: Tabs bị ảnh đè lên */
+.tabs {
+    position: relative;
+    z-index: 50;
+    background: #fff;
+    padding: 10px 0;
+    margin-top: -10px; /* đẩy về sát tiêu đề, tùy chỉnh */
+}
+
+/* FIX: Ảnh trong card không được tràn ra ngoài gây lệch layout */
+.workout-card-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+/* FIX: Grid bị tràn sang bên phải */
+.workout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* FIX: Hero banner ảnh không được tràn */
+.hero-illustration img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+/* ================================== FIX LỖI LỆCH LAYOUT ================================== */
+
+/* Fix hero banner đè lên tabs */
+.hero-banner {
+    position: relative;
+    z-index: 1;
+}
+
+/* Tabs luôn nằm trên cùng, không bị ảnh che */
+.tabs-container {
+    position: relative;
+    z-index: 5;
+    background: #fff;
+    padding: 12px 0;
+}
+
+/* Fix grid bị tràn sang phải */
+.workout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin: 0 auto;          /* ⭐ Giữ grid đúng giữa */
+    padding: 0 5px;          /* ⭐ Thêm padding để tránh đụng mép màn hình */
+    box-sizing: border-box;
+}
+
+/* Fix ảnh card bị làm layout nhảy */
+.workout-card-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;          /* ⭐ Ngăn img gây overflow */
+}
+
+/* Fix hero image không tràn */
+.hero-illustration img {
+    max-width: 100%;
+    display: block;
+}
+
+/* Mobile menu không bị che hoặc lệch */
+@media (max-width: 992px) {
+    .menu {
+        right: 10px;         /* ⭐ Tránh tràn khỏi màn hình */
+        width: 200px;
+    }
+}
+.section-header {
+    margin-top: 40px;      /* ⭐ kéo phần tiêu đề xuống */
+}
+.workout-grid {
+    margin-top: 35px !important;   /* ⭐ tăng khoảng cách giữa Tabs và Cards */
+}
+.tabs .tab {
+    position: relative;
+    text-decoration: none;
+}
+
+.workout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem; /* khoảng cách giữa card */
+}
+</style>
 <div class="app-container">
 
 

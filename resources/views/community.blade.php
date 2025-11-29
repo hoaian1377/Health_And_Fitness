@@ -1,8 +1,1660 @@
 @extends('base')
 @section('content')
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/community.css') }}">
-@endpush
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* ================= RESET ================= */
+/* Đặt lại margin, padding và box-sizing cho tất cả phần tử */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Cấu hình cơ bản cho html và body */
+html,
+body {
+    height: auto;
+    scroll-behavior: smooth;
+    /* cuộn mượt */
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #f7f9ff, #e4edff);
+    color: #222;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* bật lại cuộn dọc */
+}
+
+
+
+
+/* ================= AUTH BUTTONS ================= */
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-login,
+.btn-register {
+    border-radius: 25px;
+    padding: 8px 18px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-login {
+    background: #ffea00;
+    color: #222;
+}
+
+.btn-login:hover {
+    background: #fff;
+    color: #000;
+}
+
+.btn-register {
+    border: 2px solid #fff;
+    color: #fff;
+}
+
+.btn-register:hover {
+    background: #fff;
+    color: #000;
+}
+
+
+/* ================= COMMUNITY CONTAINER ================= */
+/* Container chính cho trang cộng đồng */
+.community-container {
+    max-width: 1400px;
+    /* Chiều rộng tối đa */
+    margin: 0 auto;
+    /* Căn giữa */
+    padding: 20px;
+    /* Khoảng đệm ngoài */
+}
+
+/* ================= HERO SECTION ================= */
+/* Phần hero: Giới thiệu nổi bật ở đầu trang */
+.community-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Nền gradient tím-xanh */
+    border-radius: 24px;
+    /* Bo góc lớn */
+    padding: 60px 50px;
+    /* Khoảng đệm lớn */
+    margin-bottom: 40px;
+    /* Khoảng cách dưới */
+    color: white;
+    /* Màu chữ trắng */
+    position: relative;
+    /* Vị trí tương đối cho pseudo-elements */
+    overflow: hidden;
+    /* Ẩn tràn */
+    display: flex;
+    /* Hiển thị flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    justify-content: space-between;
+    /* Căn đều hai bên */
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    /* Bóng đổ xanh */
+}
+
+.community-hero::before {
+    content: '';
+    /* Nội dung rỗng cho pseudo-element */
+    position: absolute;
+    /* Vị trí tuyệt đối */
+    top: -50%;
+    /* Cách đỉnh âm */
+    right: -10%;
+    /* Cách phải âm */
+    width: 500px;
+    /* Chiều rộng hình tròn */
+    height: 500px;
+    /* Chiều cao hình tròn */
+    background: rgba(255, 255, 255, 0.1);
+    /* Nền trắng mờ */
+    border-radius: 50%;
+    /* Hình tròn */
+    animation: float 6s ease-in-out infinite;
+    /* Hiệu ứng float */
+}
+
+.community-hero::after {
+    content: '';
+    /* Nội dung rỗng */
+    position: absolute;
+    bottom: -30%;
+    /* Cách đáy âm */
+    left: -5%;
+    /* Cách trái âm */
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.08);
+    /* Nền trắng mờ hơn */
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite reverse;
+    /* Hiệu ứng float ngược */
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+        /* Vị trí ban đầu */
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+        /* Di chuyển lên và xoay */
+    }
+}
+
+.hero-content {
+    position: relative;
+    /* Vị trí tương đối */
+    z-index: 2;
+    /* Lớp trên pseudo-elements */
+    flex: 1;
+    /* Chiếm không gian còn lại */
+}
+
+.hero-title {
+    font-size: 48px;
+    /* Kích thước chữ lớn */
+    font-weight: 800;
+    /* Độ đậm rất cao */
+    margin-bottom: 15px;
+    /* Khoảng cách dưới */
+    line-height: 1.2;
+    /* Chiều cao dòng */
+}
+
+.hero-title span {
+    color: #ffea00;
+    /* Màu vàng cho phần span */
+}
+
+.hero-subtitle {
+    font-size: 20px;
+    /* Kích thước chữ trung bình */
+    opacity: 0.95;
+    /* Độ mờ */
+    margin-bottom: 30px;
+    /* Khoảng cách dưới */
+    font-weight: 300;
+    /* Độ đậm nhẹ */
+}
+
+.hero-stats {
+    display: flex;
+    /* Flexbox cho thống kê */
+    gap: 40px;
+    /* Khoảng cách giữa item */
+    margin-bottom: 30px;
+    /* Khoảng cách dưới */
+}
+
+.stat-item {
+    text-align: center;
+    /* Căn giữa chữ */
+}
+
+.stat-number {
+    font-size: 32px;
+    /* Kích thước số lớn */
+    font-weight: 800;
+    /* Độ đậm cao */
+    margin-bottom: 5px;
+    /* Khoảng cách dưới */
+}
+
+.stat-label {
+    font-size: 14px;
+    /* Kích thước nhỏ */
+    opacity: 0.9;
+    /* Độ mờ */
+    text-transform: uppercase;
+    /* Chữ in hoa */
+    letter-spacing: 1px;
+    /* Khoảng cách chữ */
+}
+
+.create-post-btn {
+    background: white;
+    /* Nền trắng */
+    color: #667eea;
+    /* Màu chữ xanh */
+    border: none;
+    /* Bỏ viền */
+    padding: 14px 32px;
+    /* Khoảng đệm */
+    border-radius: 30px;
+    /* Bo góc lớn */
+    font-weight: 700;
+    /* Độ đậm cao */
+    font-size: 16px;
+    /* Kích thước chữ */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng chuyển mượt */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    /* Bóng đổ */
+    display: inline-flex;
+    /* Flexbox inline */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 8px;
+    /* Khoảng cách icon và text */
+    text-decoration: none;
+    /* Bỏ gạch chân cho link */
+}
+
+.create-post-btn:hover {
+    transform: translateY(-2px);
+    /* Nâng lên khi hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    /* Bóng đổ mạnh hơn */
+}
+
+.hero-illustration {
+    position: relative;
+    /* Vị trí tương đối */
+    z-index: 2;
+    /* Lớp trên */
+    width: 300px;
+    /* Chiều rộng */
+    height: 300px;
+    /* Chiều cao */
+}
+
+.floating-card {
+    position: absolute;
+    /* Vị trí tuyệt đối */
+    background: rgba(255, 255, 255, 0.2);
+    /* Nền trắng mờ */
+    backdrop-filter: blur(10px);
+    /* Lọc nền mờ */
+    border-radius: 20px;
+    /* Bo góc */
+    padding: 20px;
+    /* Khoảng đệm */
+    display: flex;
+    /* Flexbox */
+    flex-direction: column;
+    /* Hướng cột */
+    align-items: center;
+    /* Căn giữa ngang */
+    gap: 10px;
+    /* Khoảng cách */
+    color: white;
+    /* Màu chữ trắng */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    /* Bóng đổ */
+    animation: float 3s ease-in-out infinite;
+    /* Hiệu ứng float */
+}
+
+.floating-card i {
+    font-size: 32px;
+    /* Kích thước icon lớn */
+    margin-bottom: 5px;
+    /* Khoảng cách dưới */
+}
+
+.floating-card span {
+    font-size: 14px;
+    /* Kích thước chữ nhỏ */
+    font-weight: 600;
+    /* Độ đậm trung bình */
+}
+
+.card-1 {
+    top: 0;
+    /* Vị trí trên cùng */
+    left: 0;
+    /* Trái cùng */
+    animation-delay: 0s;
+    /* Không delay */
+}
+
+.card-2 {
+    top: 50%;
+    /* Giữa dọc */
+    right: 0;
+    /* Phải cùng */
+    transform: translateY(-50%);
+    /* Căn giữa dọc */
+    animation-delay: 1s;
+    /* Delay 1 giây */
+}
+
+.card-3 {
+    bottom: 0;
+    /* Dưới cùng */
+    left: 20%;
+    /* Cách trái 20% */
+    animation-delay: 2s;
+    /* Delay 2 giây */
+}
+
+/* ================= MAIN CONTENT ================= */
+/* Nội dung chính của trang */
+.community-main {
+    display: block;
+    /* Hiển thị khối để full width */
+}
+
+/* ================= SIDEBAR ================= */
+/* Thanh bên sidebar */
+.community-sidebar {
+    display: none;
+    /* Ẩn sidebar hoàn toàn */
+}
+
+.sidebar-widget {
+    background: white;
+    /* Nền trắng */
+    border-radius: 16px;
+    /* Bo góc */
+    padding: 24px;
+    /* Khoảng đệm */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    /* Bóng đổ nhẹ */
+}
+
+.widget-title {
+    font-size: 18px;
+    /* Kích thước chữ */
+    font-weight: 700;
+    /* Độ đậm cao */
+    color: #222;
+    /* Màu chữ đen */
+    margin-bottom: 20px;
+    /* Khoảng cách dưới */
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 10px;
+    /* Khoảng cách icon và text */
+}
+
+.widget-title i {
+    color: #667eea;
+    /* Màu icon xanh */
+}
+
+/* Search Widget: Widget tìm kiếm */
+.search-input-wrapper {
+    position: relative;
+    /* Vị trí tương đối cho icon */
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    /* Đầy đủ chiều rộng */
+    padding: 12px 16px 12px 42px;
+    /* Khoảng đệm, thụt trái cho icon */
+    border: 2px solid #e9ecef;
+    /* Viền xám nhạt */
+    border-radius: 12px;
+    /* Bo góc */
+    font-size: 14px;
+    /* Kích thước chữ */
+    transition: all 0.3s;
+    /* Hiệu ứng mượt */
+    outline: none;
+    /* Bỏ viền focus mặc định */
+}
+
+.search-input-wrapper input:focus {
+    border-color: #667eea;
+    /* Viền xanh khi focus */
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    /* Bóng xanh mờ */
+}
+
+.search-icon {
+    position: absolute;
+    /* Vị trí tuyệt đối */
+    left: 14px;
+    /* Cách trái */
+    top: 50%;
+    /* Giữa dọc */
+    transform: translateY(-50%);
+    /* Căn giữa dọc */
+    color: #6c757d;
+    /* Màu xám */
+    pointer-events: none;
+    /* Không tương tác */
+}
+
+/* Categories Widget: Widget danh mục */
+.categories-list {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+    gap: 10px;
+    /* Khoảng cách */
+}
+
+.category-btn {
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    justify-content: space-between;
+    /* Căn đều hai bên */
+    padding: 12px 16px;
+    /* Khoảng đệm */
+    border: none;
+    /* Bỏ viền */
+    background: #f8f9fa;
+    /* Nền xám nhạt */
+    border-radius: 12px;
+    /* Bo góc */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    font-size: 14px;
+    /* Kích thước chữ */
+    font-weight: 500;
+    /* Độ đậm trung bình */
+    color: #495057;
+    /* Màu chữ xám */
+    text-align: left;
+    /* Căn trái */
+    width: 100%;
+    /* Đầy đủ chiều rộng */
+}
+
+.category-btn i {
+    margin-right: 10px;
+    /* Khoảng cách phải icon */
+    color: #667eea;
+    /* Màu icon xanh */
+}
+
+.category-btn:hover {
+    background: #e9ecef;
+    /* Nền xám khi hover */
+    transform: translateX(5px);
+    /* Dịch sang phải */
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Nền gradient active */
+    color: white;
+    /* Màu chữ trắng */
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    /* Bóng xanh */
+}
+
+.category-btn.active i {
+    color: white;
+    /* Icon trắng khi active */
+}
+
+.category-count {
+    background: rgba(255, 255, 255, 0.2);
+    /* Nền trắng mờ */
+    padding: 4px 10px;
+    /* Khoảng đệm */
+    border-radius: 12px;
+    /* Bo góc */
+    font-size: 12px;
+    /* Kích thước nhỏ */
+    font-weight: 600;
+    /* Độ đậm */
+}
+
+.category-btn.active .category-count {
+    background: rgba(255, 255, 255, 0.3);
+    /* Nền trắng mờ hơn khi active */
+}
+
+/* Trending Widget: Widget chủ đề thịnh hành */
+.trending-list {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+    gap: 12px;
+    /* Khoảng cách */
+}
+
+.trending-item {
+    display: flex;
+    /* Flexbox ngang */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 12px;
+    /* Khoảng cách */
+    padding: 10px;
+    /* Khoảng đệm */
+    border-radius: 10px;
+    /* Bo góc */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    cursor: pointer;
+    /* Con trỏ tay */
+}
+
+.trending-item:hover {
+    background: #f8f9fa;
+    /* Nền xám khi hover */
+}
+
+.trend-number {
+    font-weight: 800;
+    /* Độ đậm cao */
+    color: #667eea;
+    /* Màu xanh */
+    font-size: 16px;
+    /* Kích thước */
+    min-width: 30px;
+    /* Chiều rộng tối thiểu */
+}
+
+.trend-text {
+    flex: 1;
+    /* Chiếm không gian còn lại */
+    font-weight: 500;
+    /* Độ đậm trung bình */
+    color: #495057;
+    /* Màu xám */
+}
+
+.trend-count {
+    font-size: 12px;
+    /* Kích thước nhỏ */
+    color: #6c757d;
+    /* Màu xám nhạt */
+    font-weight: 600;
+    /* Độ đậm */
+}
+
+/* Contributors Widget: Widget top đóng góp */
+.contributors-list {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+    gap: 15px;
+    /* Khoảng cách */
+}
+
+.contributor-item {
+    display: flex;
+    /* Flexbox ngang */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 12px;
+    /* Khoảng cách */
+    padding: 12px;
+    /* Khoảng đệm */
+    border-radius: 12px;
+    /* Bo góc */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+}
+
+.contributor-item:hover {
+    background: #f8f9fa;
+    /* Nền xám khi hover */
+}
+
+.contributor-avatar {
+    width: 50px;
+    /* Chiều rộng ảnh */
+    height: 50px;
+    /* Chiều cao ảnh */
+    border-radius: 50%;
+    /* Hình tròn */
+    object-fit: cover;
+    /* Giữ tỷ lệ */
+    border: 3px solid #667eea;
+    /* Viền xanh */
+}
+
+.contributor-info {
+    flex: 1;
+    /* Chiếm không gian còn lại */
+}
+
+.contributor-name {
+    font-weight: 600;
+    /* Độ đậm */
+    color: #222;
+    /* Màu đen */
+    font-size: 14px;
+    /* Kích thước */
+    margin-bottom: 4px;
+    /* Khoảng cách dưới */
+}
+
+.contributor-points {
+    font-size: 12px;
+    /* Kích thước nhỏ */
+    color: #6c757d;
+    /* Màu xám */
+}
+
+.contributor-badge {
+    color: #ffea00;
+    /* Màu vàng */
+    font-size: 20px;
+    /* Kích thước icon */
+}
+
+/* ================= POSTS FEED ================= */
+/* Phần feed bài viết */
+.posts-feed {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+    gap: 20px;
+    /* Khoảng cách */
+}
+
+/* Feed Tabs: Tab lọc feed */
+.feed-tabs {
+    display: flex;
+    /* Flexbox ngang */
+    gap: 12px;
+    /* Khoảng cách */
+    background: white;
+    /* Nền trắng */
+    padding: 16px;
+    /* Khoảng đệm */
+    border-radius: 16px;
+    /* Bo góc */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    /* Bóng đổ */
+    overflow-x: auto;
+    /* Cuộn ngang nếu tràn */
+}
+
+.feed-tab {
+    padding: 10px 20px;
+    /* Khoảng đệm */
+    border: none;
+    /* Bỏ viền */
+    background: #f8f9fa;
+    /* Nền xám nhạt */
+    border-radius: 20px;
+    /* Bo góc lớn */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    font-size: 14px;
+    /* Kích thước chữ */
+    font-weight: 600;
+    /* Độ đậm */
+    color: #6c757d;
+    /* Màu xám */
+    white-space: nowrap;
+    /* Không xuống dòng */
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 8px;
+    /* Khoảng cách icon text */
+}
+
+.feed-tab:hover {
+    background: #e9ecef;
+    /* Nền xám khi hover */
+    color: #667eea;
+    /* Màu xanh */
+}
+
+.feed-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Nền gradient active */
+    color: white;
+    /* Màu trắng */
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    /* Bóng xanh */
+}
+
+/* Posts List: Danh sách bài viết */
+.posts-list {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+    gap: 20px;
+    /* Khoảng cách */
+}
+
+.post-card {
+    background: white;
+    /* Nền trắng */
+    border-radius: 20px;
+    /* Bo góc lớn */
+    padding: 24px;
+    /* Khoảng đệm */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    /* Bóng đổ nhẹ */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    border: 1px solid transparent;
+    /* Viền trong suốt */
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    /* Nâng lên khi hover */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    /* Bóng mạnh hơn */
+    border-color: #e9ecef;
+    /* Viền xám */
+}
+
+.post-card.featured {
+    border: 2px solid #667eea;
+    /* Viền xanh cho bài nổi bật */
+    background: linear-gradient(135deg, #ffffff 0%, #f7f9ff 100%);
+    /* Nền gradient nhạt */
+}
+
+/* Post Header: Phần đầu bài viết */
+.post-header {
+    display: flex;
+    /* Flexbox */
+    justify-content: space-between;
+    /* Căn đều hai bên */
+    align-items: flex-start;
+    /* Căn đầu dọc */
+    margin-bottom: 20px;
+    /* Khoảng cách dưới */
+}
+
+.post-author {
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 12px;
+    /* Khoảng cách */
+}
+
+.author-avatar {
+    width: 50px;
+    /* Chiều rộng ảnh */
+    height: 50px;
+    /* Chiều cao ảnh */
+    border-radius: 50%;
+    /* Hình tròn */
+    object-fit: cover;
+    /* Giữ tỷ lệ */
+    border: 2px solid #667eea;
+    /* Viền xanh */
+}
+
+.author-info {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+}
+
+.author-name {
+    font-weight: 700;
+    /* Độ đậm cao */
+    color: #222;
+    /* Màu đen */
+    font-size: 15px;
+    /* Kích thước */
+}
+
+.post-time {
+    font-size: 13px;
+    /* Kích thước nhỏ */
+    color: #6c757d;
+    /* Màu xám */
+}
+
+.post-category-badge {
+    padding: 8px 16px;
+    /* Khoảng đệm */
+    border-radius: 20px;
+    /* Bo góc lớn */
+    font-size: 12px;
+    /* Kích thước nhỏ */
+    font-weight: 600;
+    /* Độ đậm */
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 6px;
+    /* Khoảng cách */
+}
+
+.post-category-badge.workout {
+    background: #fee2e2;
+    /* Nền đỏ nhạt cho tập luyện */
+    color: #991b1b;
+    /* Màu đỏ */
+}
+
+.post-category-badge.nutrition {
+    background: #d1fae5;
+    /* Nền xanh lá nhạt cho dinh dưỡng */
+    color: #065f46;
+    /* Màu xanh lá */
+}
+
+.post-category-badge.results {
+    background: #dbeafe;
+    /* Nền xanh dương nhạt cho thành tích */
+    color: #1e40af;
+    /* Màu xanh dương */
+}
+
+.post-category-badge.motivation {
+    background: #fef3c7;
+    /* Nền vàng nhạt cho động viên */
+    color: #92400e;
+    /* Màu nâu */
+}
+
+.post-category-badge.tips {
+    background: #e0e7ff;
+    /* Nền tím nhạt cho mẹo hay */
+    color: #3730a3;
+    /* Màu tím */
+}
+
+/* Post Content: Nội dung bài viết */
+.post-content {
+    margin-bottom: 20px;
+    /* Khoảng cách dưới */
+}
+
+.post-title {
+    font-size: 22px;
+    /* Kích thước tiêu đề */
+    font-weight: 700;
+    /* Độ đậm cao */
+    color: #222;
+    /* Màu đen */
+    margin-bottom: 12px;
+    /* Khoảng cách dưới */
+    line-height: 1.4;
+    /* Chiều cao dòng */
+}
+
+.post-text {
+    font-size: 15px;
+    /* Kích thước chữ */
+    color: #495057;
+    /* Màu xám */
+    line-height: 1.7;
+    /* Chiều cao dòng lớn */
+    margin-bottom: 16px;
+    /* Khoảng cách dưới */
+}
+
+.post-images {
+    display: grid;
+    /* Lưới cho hình ảnh */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* Cột tự động, tối thiểu 200px */
+    gap: 12px;
+    /* Khoảng cách */
+    margin-top: 16px;
+    /* Khoảng cách trên */
+}
+
+.post-images.single {
+    grid-template-columns: 1fr;
+    /* Một cột cho hình đơn */
+}
+
+.post-images img {
+    width: 100%;
+    /* Đầy đủ chiều rộng */
+    border-radius: 12px;
+    /* Bo góc */
+    object-fit: cover;
+    /* Giữ tỷ lệ */
+    height: 250px;
+    /* Chiều cao cố định */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: transform 0.3s;
+    /* Hiệu ứng scale */
+}
+
+.post-images img:hover {
+    transform: scale(1.05);
+    /* Phóng to nhẹ khi hover */
+}
+
+/* Post Stats: Thống kê bài viết */
+.post-stats {
+    display: flex;
+    /* Flexbox ngang */
+    gap: 24px;
+    /* Khoảng cách */
+    padding: 16px 0;
+    /* Khoảng đệm trên dưới */
+    border-top: 1px solid #e9ecef;
+    /* Viền trên xám */
+    border-bottom: 1px solid #e9ecef;
+    /* Viền dưới xám */
+    margin-bottom: 16px;
+    /* Khoảng cách dưới */
+}
+
+.stat-item {
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 8px;
+    /* Khoảng cách */
+    color: #6c757d;
+    /* Màu xám */
+    font-size: 14px;
+    /* Kích thước */
+    font-weight: 600;
+    /* Độ đậm */
+}
+
+.stat-item i {
+    color: #667eea;
+    /* Màu icon xanh */
+}
+
+/* Post Actions: Các nút hành động bài viết */
+.post-actions {
+    display: flex;
+    /* Flexbox ngang */
+    gap: 12px;
+    /* Khoảng cách */
+    margin-bottom: 16px;
+    /* Khoảng cách dưới */
+}
+
+.action-btn {
+    flex: 1;
+    /* Chiếm đều không gian */
+    padding: 12px;
+    /* Khoảng đệm */
+    border: 2px solid #e9ecef;
+    /* Viền xám */
+    background: white;
+    /* Nền trắng */
+    border-radius: 12px;
+    /* Bo góc */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    font-size: 14px;
+    /* Kích thước chữ */
+    font-weight: 600;
+    /* Độ đậm */
+    color: #495057;
+    /* Màu xám */
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    justify-content: center;
+    /* Căn giữa ngang */
+    gap: 8px;
+    /* Khoảng cách icon text */
+}
+
+.action-btn:hover {
+    border-color: #667eea;
+    /* Viền xanh khi hover */
+    color: #667eea;
+    /* Màu xanh */
+    background: #f7f9ff;
+    /* Nền xanh nhạt */
+}
+
+.action-btn.like-btn.liked {
+    background: #fee2e2;
+    /* Nền đỏ nhạt khi liked */
+    border-color: #fca5a5;
+    /* Viền đỏ */
+    color: #dc2626;
+    /* Màu đỏ */
+}
+
+.action-btn.like-btn.liked i {
+    color: #dc2626;
+    /* Icon đỏ khi liked */
+}
+
+/* Post Comments: Phần bình luận bài viết */
+.post-comments {
+    margin-top: 16px;
+    /* Khoảng cách trên */
+    padding-top: 16px;
+    /* Khoảng đệm trên */
+    border-top: 1px solid #e9ecef;
+    /* Viền trên xám */
+}
+
+.comment-form {
+    display: flex;
+    /* Flexbox ngang */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 12px;
+    /* Khoảng cách */
+}
+
+.comment-avatar {
+    width: 40px;
+    /* Chiều rộng ảnh */
+    height: 40px;
+    /* Chiều cao ảnh */
+    border-radius: 50%;
+    /* Hình tròn */
+    object-fit: cover;
+    /* Giữ tỷ lệ */
+    border: 2px solid #667eea;
+    /* Viền xanh */
+}
+
+.comment-input {
+    flex: 1;
+    /* Chiếm không gian còn lại */
+    padding: 12px 16px;
+    /* Khoảng đệm */
+    border: 2px solid #e9ecef;
+    /* Viền xám */
+    border-radius: 24px;
+    /* Bo góc lớn */
+    font-size: 14px;
+    /* Kích thước chữ */
+    outline: none;
+    /* Bỏ viền focus mặc định */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+}
+
+.comment-input:focus {
+    border-color: #667eea;
+    /* Viền xanh khi focus */
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    /* Bóng xanh */
+}
+
+.comment-submit {
+    width: 44px;
+    /* Chiều rộng nút */
+    height: 44px;
+    /* Chiều cao nút */
+    border: none;
+    /* Bỏ viền */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Nền gradient */
+    color: white;
+    /* Màu trắng */
+    border-radius: 50%;
+    /* Hình tròn */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    justify-content: center;
+    /* Căn giữa ngang */
+}
+
+.comment-submit:hover {
+    transform: scale(1.1);
+    /* Phóng to khi hover */
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    /* Bóng xanh */
+}
+
+/* Load More: Nút tải thêm */
+.load-more-container {
+    text-align: center;
+    /* Căn giữa */
+    padding: 30px 0;
+    /* Khoảng đệm trên dưới */
+}
+
+.load-more-btn {
+    padding: 14px 32px;
+    /* Khoảng đệm */
+    border: 2px solid #667eea;
+    /* Viền xanh */
+    background: white;
+    /* Nền trắng */
+    color: #667eea;
+    /* Màu xanh */
+    border-radius: 30px;
+    /* Bo góc lớn */
+    font-weight: 700;
+    /* Độ đậm cao */
+    font-size: 15px;
+    /* Kích thước chữ */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    display: inline-flex;
+    /* Flexbox inline */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 8px;
+    /* Khoảng cách */
+}
+
+.load-more-btn:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Nền gradient khi hover */
+    color: white;
+    /* Màu trắng */
+    transform: translateY(-2px);
+    /* Nâng lên */
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    /* Bóng xanh */
+}
+
+/* ================= MODAL ================= */
+/* Phần modal: Cửa sổ popup */
+.modal-overlay {
+    display: none;
+    /* Ẩn mặc định */
+    position: fixed;
+    /* Vị trí cố định */
+    top: 0;
+    /* Đỉnh màn hình */
+    left: 0;
+    /* Trái màn hình */
+    right: 0;
+    /* Phải màn hình */
+    bottom: 0;
+    /* Đáy màn hình */
+    background: rgba(0, 0, 0, 0.6);
+    /* Nền đen mờ */
+    backdrop-filter: blur(5px);
+    /* Lọc mờ nền */
+    z-index: 1000;
+    /* Lớp cao nhất */
+    align-items: center;
+    /* Căn giữa dọc */
+    justify-content: center;
+    /* Căn giữa ngang */
+    padding: 20px;
+    /* Khoảng đệm */
+}
+
+.modal-overlay.active {
+    display: flex;
+    /* Hiển thị khi active */
+}
+
+.modal-content {
+    background: white;
+    /* Nền trắng */
+    border-radius: 24px;
+    /* Bo góc lớn */
+    width: 100%;
+    /* Đầy đủ chiều rộng */
+    max-width: 600px;
+    /* Chiều rộng tối đa */
+    max-height: 90vh;
+    /* Chiều cao tối đa 90% viewport */
+    overflow-y: auto;
+    /* Cuộn dọc nếu tràn */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    /* Bóng đổ mạnh */
+    animation: modalSlideIn 0.3s ease;
+    /* Hiệu ứng slide in */
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        /* Mờ ban đầu */
+        transform: translateY(-50px);
+        /* Dịch lên trên */
+    }
+
+    to {
+        opacity: 1;
+        /* Rõ ràng */
+        transform: translateY(0);
+        /* Vị trí gốc */
+    }
+}
+
+.modal-header {
+    display: flex;
+    /* Flexbox */
+    justify-content: space-between;
+    /* Căn đều hai bên */
+    align-items: center;
+    /* Căn giữa dọc */
+    padding: 24px;
+    /* Khoảng đệm */
+    border-bottom: 1px solid #e9ecef;
+    /* Viền dưới xám */
+}
+
+.modal-header h2 {
+    font-size: 24px;
+    /* Kích thước tiêu đề */
+    font-weight: 700;
+    /* Độ đậm cao */
+    color: #222;
+    /* Màu đen */
+}
+
+.modal-close {
+    width: 40px;
+    /* Chiều rộng nút */
+    height: 40px;
+    /* Chiều cao nút */
+    border: none;
+    /* Bỏ viền */
+    background: #f8f9fa;
+    /* Nền xám nhạt */
+    border-radius: 50%;
+    /* Hình tròn */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    display: flex;
+    /* Flexbox */
+    align-items: center;
+    /* Căn giữa dọc */
+    justify-content: center;
+    /* Căn giữa ngang */
+    color: #6c757d;
+    /* Màu xám */
+}
+
+.modal-close:hover {
+    background: #e9ecef;
+    /* Nền xám khi hover */
+    color: #222;
+    /* Màu đen */
+}
+
+.modal-body {
+    padding: 24px;
+    /* Khoảng đệm */
+}
+
+.modal-footer {
+    display: flex;
+    /* Flexbox ngang */
+    gap: 12px;
+    /* Khoảng cách */
+    justify-content: flex-end;
+    /* Căn phải */
+    padding: 24px;
+    /* Khoảng đệm */
+    border-top: 1px solid #e9ecef;
+    /* Viền trên xám */
+}
+
+/* Form Elements: Các phần tử form trong modal */
+.post-form {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+    gap: 20px;
+    /* Khoảng cách */
+}
+
+.form-group {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+    gap: 8px;
+    /* Khoảng cách */
+}
+
+.form-group label {
+    font-weight: 600;
+    /* Độ đậm */
+    color: #222;
+    /* Màu đen */
+    font-size: 14px;
+    /* Kích thước */
+}
+
+.form-select,
+.form-input,
+.form-textarea {
+    padding: 12px 16px;
+    /* Khoảng đệm */
+    border: 2px solid #e9ecef;
+    /* Viền xám */
+    border-radius: 12px;
+    /* Bo góc */
+    font-size: 15px;
+    /* Kích thước chữ */
+    font-family: inherit;
+    /* Kế thừa font */
+    outline: none;
+    /* Bỏ viền focus mặc định */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+}
+
+.form-select:focus,
+.form-input:focus,
+.form-textarea:focus {
+    border-color: #667eea;
+    /* Viền xanh khi focus */
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    /* Bóng xanh */
+}
+
+.form-textarea {
+    resize: vertical;
+    /* Chỉ resize dọc */
+    min-height: 120px;
+    /* Chiều cao tối thiểu */
+}
+
+.image-upload {
+    display: flex;
+    /* Flexbox dọc */
+    flex-direction: column;
+    /* Hướng cột */
+    gap: 12px;
+    /* Khoảng cách */
+}
+
+.upload-btn {
+    padding: 12px 20px;
+    /* Khoảng đệm */
+    border: 2px dashed #667eea;
+    /* Viền đứt nét xanh */
+    background: #f7f9ff;
+    /* Nền xanh nhạt */
+    border-radius: 12px;
+    /* Bo góc */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+    font-size: 14px;
+    /* Kích thước chữ */
+    font-weight: 600;
+    /* Độ đậm */
+    color: #667eea;
+    /* Màu xanh */
+    display: inline-flex;
+    /* Flexbox inline */
+    align-items: center;
+    /* Căn giữa dọc */
+    gap: 8px;
+    /* Khoảng cách */
+    width: fit-content;
+    /* Chiều rộng tự động */
+}
+
+.upload-btn:hover {
+    background: #e4edff;
+    /* Nền xanh đậm hơn khi hover */
+    border-color: #764ba2;
+    /* Viền tím */
+}
+
+.btn-cancel,
+.btn-submit {
+    padding: 12px 24px;
+    /* Khoảng đệm */
+    border: none;
+    /* Bỏ viền */
+    border-radius: 12px;
+    /* Bo góc */
+    font-weight: 600;
+    /* Độ đậm */
+    font-size: 15px;
+    /* Kích thước chữ */
+    cursor: pointer;
+    /* Con trỏ tay */
+    transition: all 0.3s;
+    /* Hiệu ứng */
+}
+
+.btn-cancel {
+    background: #f8f9fa;
+    /* Nền xám nhạt cho hủy */
+    color: #6c757d;
+    /* Màu xám */
+}
+
+.btn-cancel:hover {
+    background: #e9ecef;
+    /* Nền xám khi hover */
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Nền gradient cho submit */
+    color: white;
+    /* Màu trắng */
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    /* Bóng xanh */
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    /* Nâng lên khi hover */
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    /* Bóng mạnh hơn */
+}
+
+/* ================= RESPONSIVE ================= */
+/* Phần responsive: Thiết kế thích ứng với các kích thước màn hình khác nhau */
+@media (max-width: 1200px) {
+    .community-main {
+        grid-template-columns: 280px 1fr;
+        /* Giảm chiều rộng sidebar trên màn hình lớn */
+    }
+}
+
+@media (max-width: 992px) {
+    .community-main {
+        display: flex;
+        /* Chuyển sang flex để điều khiển thứ tự */
+        flex-direction: column;
+        /* Một cột trên tablet/mobile */
+    }
+
+    .community-sidebar {
+        position: relative;
+        /* Bỏ sticky */
+        top: 0;
+        /* Vị trí gốc */
+        order: 1;
+        /* Sidebar lên trước feed */
+    }
+
+    .posts-feed {
+        order: 2;
+        /* Feed sau sidebar */
+    }
+
+    .hero-stats {
+        gap: 20px;
+        /* Giảm khoảng cách thống kê */
+    }
+
+    .hero-illustration {
+        display: none;
+        /* Ẩn minh họa trên tablet */
+    }
+}
+
+@media (max-width: 768px) {
+    .community-container {
+        /* Giữ khoảng trống trên cùng bằng chiều cao navbar để nội dung không bị che */
+        padding: 86px 15px 15px;
+        /* top right/left bottom */
+    }
+
+    .community-hero {
+        padding: 80px 24px 40px;
+        /* Tăng top để không bị navbar che */
+        flex-direction: column;
+        /* Chuyển sang cột */
+        text-align: center;
+        /* Căn giữa chữ */
+    }
+
+    .hero-title {
+        font-size: 32px;
+        /* Giảm kích thước tiêu đề */
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+        /* Xuống dòng linh hoạt */
+        word-break: break-word;
+        /* Phòng từ quá dài */
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+        /* Giảm kích thước phụ đề */
+        line-height: 1.5;
+        margin-bottom: 18px;
+        /* Tạo khoảng cách rõ ràng với stats */
+    }
+
+    /* Ẩn thống kê trên mobile để tránh che chữ */
+    .hero-stats {
+        display: none !important;
+    }
+
+    .hero-stats {
+        justify-content: center;
+        /* Căn giữa thống kê */
+        gap: 30px;
+        /* Khoảng cách */
+    }
+
+    .feed-tabs {
+        flex-wrap: wrap;
+        /* Cho phép xuống dòng tab */
+    }
+
+    .post-actions {
+        flex-direction: column;
+        /* Chuyển nút hành động sang cột */
+    }
+
+    .post-images {
+        grid-template-columns: 1fr;
+        /* Một cột hình ảnh */
+    }
+
+    .categories-list {
+        display: grid;
+        /* Lưới cho danh mục */
+        grid-template-columns: repeat(2, 1fr);
+        /* Hai cột */
+    }
+
+    .trending-list,
+    .contributors-list {
+        display: grid;
+        /* Lưới cho trending và contributors */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        /* Tự động cột */
+    }
+
+    /* Giữ hero đứng yên trên mobile: tắt animation và phần tử nổi */
+    .community-hero::before,
+    .community-hero::after {
+        animation: none !important;
+        display: none !important;
+        /* Ẩn các hình tròn động để không gây xê dịch */
+    }
+
+    .floating-card {
+        animation: none !important;
+        /* Tắt hiệu ứng nổi */
+        transform: none !important;
+        /* Tránh dịch chuyển */
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 28px;
+        /* Giảm thêm tiêu đề trên mobile nhỏ */
+    }
+
+    .hero-stats {
+        gap: 15px;
+        /* Giảm khoảng cách thống kê */
+    }
+
+    .stat-number {
+        font-size: 24px;
+        /* Giảm kích thước số */
+    }
+
+    .post-card {
+        padding: 18px;
+        /* Giảm padding bài viết */
+    }
+
+    .post-title {
+        font-size: 18px;
+        /* Giảm tiêu đề bài viết */
+    }
+
+    .modal-content {
+        margin: 10px;
+        /* Thêm lề modal */
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 18px;
+        /* Giảm padding modal */
+    }
+}
+    </style>
+</head>
+<body>
+
 
     <!-- Container chính bao bọc toàn bộ nội dung trang cộng đồng -->
     <div class="community-container">
@@ -158,7 +1810,9 @@
         </div>
     </div>
 
-@push('scripts')
     <script src="{{ asset('js/community.js') }}"></script>
-@endpush
+
 @endsection
+
+</body>
+</html>
